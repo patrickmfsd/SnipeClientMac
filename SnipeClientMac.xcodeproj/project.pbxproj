@@ -1,0 +1,626 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		778D72DC2C06A30F0035829C /* SnipeClientMacApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 778D72DB2C06A30F0035829C /* SnipeClientMacApp.swift */; };
+		778D72DE2C06A30F0035829C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 778D72DD2C06A30F0035829C /* ContentView.swift */; };
+		778D72E02C06A30F0035829C /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 778D72DF2C06A30F0035829C /* Item.swift */; };
+		778D72E22C06A3100035829C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 778D72E12C06A3100035829C /* Assets.xcassets */; };
+		778D72E62C06A3100035829C /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 778D72E52C06A3100035829C /* Preview Assets.xcassets */; };
+		778D72F02C06A3100035829C /* SnipeClientMacTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 778D72EF2C06A3100035829C /* SnipeClientMacTests.swift */; };
+		778D72FA2C06A3100035829C /* SnipeClientMacUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 778D72F92C06A3100035829C /* SnipeClientMacUITests.swift */; };
+		778D72FC2C06A3100035829C /* SnipeClientMacUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 778D72FB2C06A3100035829C /* SnipeClientMacUITestsLaunchTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		778D72EC2C06A3100035829C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 778D72D02C06A30F0035829C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 778D72D72C06A30F0035829C;
+			remoteInfo = SnipeClientMac;
+		};
+		778D72F62C06A3100035829C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 778D72D02C06A30F0035829C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 778D72D72C06A30F0035829C;
+			remoteInfo = SnipeClientMac;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		778D72D82C06A30F0035829C /* SnipeClientMac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SnipeClientMac.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		778D72DB2C06A30F0035829C /* SnipeClientMacApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnipeClientMacApp.swift; sourceTree = "<group>"; };
+		778D72DD2C06A30F0035829C /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		778D72DF2C06A30F0035829C /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
+		778D72E12C06A3100035829C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		778D72E32C06A3100035829C /* SnipeClientMac.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SnipeClientMac.entitlements; sourceTree = "<group>"; };
+		778D72E52C06A3100035829C /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		778D72EB2C06A3100035829C /* SnipeClientMacTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SnipeClientMacTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		778D72EF2C06A3100035829C /* SnipeClientMacTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnipeClientMacTests.swift; sourceTree = "<group>"; };
+		778D72F52C06A3100035829C /* SnipeClientMacUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SnipeClientMacUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		778D72F92C06A3100035829C /* SnipeClientMacUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnipeClientMacUITests.swift; sourceTree = "<group>"; };
+		778D72FB2C06A3100035829C /* SnipeClientMacUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnipeClientMacUITestsLaunchTests.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		778D72D52C06A30F0035829C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		778D72E82C06A3100035829C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		778D72F22C06A3100035829C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		778D72CF2C06A30F0035829C = {
+			isa = PBXGroup;
+			children = (
+				778D72DA2C06A30F0035829C /* SnipeClientMac */,
+				778D72EE2C06A3100035829C /* SnipeClientMacTests */,
+				778D72F82C06A3100035829C /* SnipeClientMacUITests */,
+				778D72D92C06A30F0035829C /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		778D72D92C06A30F0035829C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				778D72D82C06A30F0035829C /* SnipeClientMac.app */,
+				778D72EB2C06A3100035829C /* SnipeClientMacTests.xctest */,
+				778D72F52C06A3100035829C /* SnipeClientMacUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		778D72DA2C06A30F0035829C /* SnipeClientMac */ = {
+			isa = PBXGroup;
+			children = (
+				778D72DB2C06A30F0035829C /* SnipeClientMacApp.swift */,
+				778D72DD2C06A30F0035829C /* ContentView.swift */,
+				778D72DF2C06A30F0035829C /* Item.swift */,
+				778D72E12C06A3100035829C /* Assets.xcassets */,
+				778D72E32C06A3100035829C /* SnipeClientMac.entitlements */,
+				778D72E42C06A3100035829C /* Preview Content */,
+			);
+			path = SnipeClientMac;
+			sourceTree = "<group>";
+		};
+		778D72E42C06A3100035829C /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				778D72E52C06A3100035829C /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		778D72EE2C06A3100035829C /* SnipeClientMacTests */ = {
+			isa = PBXGroup;
+			children = (
+				778D72EF2C06A3100035829C /* SnipeClientMacTests.swift */,
+			);
+			path = SnipeClientMacTests;
+			sourceTree = "<group>";
+		};
+		778D72F82C06A3100035829C /* SnipeClientMacUITests */ = {
+			isa = PBXGroup;
+			children = (
+				778D72F92C06A3100035829C /* SnipeClientMacUITests.swift */,
+				778D72FB2C06A3100035829C /* SnipeClientMacUITestsLaunchTests.swift */,
+			);
+			path = SnipeClientMacUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		778D72D72C06A30F0035829C /* SnipeClientMac */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 778D72FF2C06A3100035829C /* Build configuration list for PBXNativeTarget "SnipeClientMac" */;
+			buildPhases = (
+				778D72D42C06A30F0035829C /* Sources */,
+				778D72D52C06A30F0035829C /* Frameworks */,
+				778D72D62C06A30F0035829C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SnipeClientMac;
+			productName = SnipeClientMac;
+			productReference = 778D72D82C06A30F0035829C /* SnipeClientMac.app */;
+			productType = "com.apple.product-type.application";
+		};
+		778D72EA2C06A3100035829C /* SnipeClientMacTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 778D73022C06A3100035829C /* Build configuration list for PBXNativeTarget "SnipeClientMacTests" */;
+			buildPhases = (
+				778D72E72C06A3100035829C /* Sources */,
+				778D72E82C06A3100035829C /* Frameworks */,
+				778D72E92C06A3100035829C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				778D72ED2C06A3100035829C /* PBXTargetDependency */,
+			);
+			name = SnipeClientMacTests;
+			productName = SnipeClientMacTests;
+			productReference = 778D72EB2C06A3100035829C /* SnipeClientMacTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		778D72F42C06A3100035829C /* SnipeClientMacUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 778D73052C06A3100035829C /* Build configuration list for PBXNativeTarget "SnipeClientMacUITests" */;
+			buildPhases = (
+				778D72F12C06A3100035829C /* Sources */,
+				778D72F22C06A3100035829C /* Frameworks */,
+				778D72F32C06A3100035829C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				778D72F72C06A3100035829C /* PBXTargetDependency */,
+			);
+			name = SnipeClientMacUITests;
+			productName = SnipeClientMacUITests;
+			productReference = 778D72F52C06A3100035829C /* SnipeClientMacUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		778D72D02C06A30F0035829C /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1540;
+				LastUpgradeCheck = 1540;
+				TargetAttributes = {
+					778D72D72C06A30F0035829C = {
+						CreatedOnToolsVersion = 15.4;
+					};
+					778D72EA2C06A3100035829C = {
+						CreatedOnToolsVersion = 15.4;
+						TestTargetID = 778D72D72C06A30F0035829C;
+					};
+					778D72F42C06A3100035829C = {
+						CreatedOnToolsVersion = 15.4;
+						TestTargetID = 778D72D72C06A30F0035829C;
+					};
+				};
+			};
+			buildConfigurationList = 778D72D32C06A30F0035829C /* Build configuration list for PBXProject "SnipeClientMac" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 778D72CF2C06A30F0035829C;
+			productRefGroup = 778D72D92C06A30F0035829C /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				778D72D72C06A30F0035829C /* SnipeClientMac */,
+				778D72EA2C06A3100035829C /* SnipeClientMacTests */,
+				778D72F42C06A3100035829C /* SnipeClientMacUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		778D72D62C06A30F0035829C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				778D72E62C06A3100035829C /* Preview Assets.xcassets in Resources */,
+				778D72E22C06A3100035829C /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		778D72E92C06A3100035829C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		778D72F32C06A3100035829C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		778D72D42C06A30F0035829C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				778D72DE2C06A30F0035829C /* ContentView.swift in Sources */,
+				778D72E02C06A30F0035829C /* Item.swift in Sources */,
+				778D72DC2C06A30F0035829C /* SnipeClientMacApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		778D72E72C06A3100035829C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				778D72F02C06A3100035829C /* SnipeClientMacTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		778D72F12C06A3100035829C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				778D72FA2C06A3100035829C /* SnipeClientMacUITests.swift in Sources */,
+				778D72FC2C06A3100035829C /* SnipeClientMacUITestsLaunchTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		778D72ED2C06A3100035829C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 778D72D72C06A30F0035829C /* SnipeClientMac */;
+			targetProxy = 778D72EC2C06A3100035829C /* PBXContainerItemProxy */;
+		};
+		778D72F72C06A3100035829C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 778D72D72C06A30F0035829C /* SnipeClientMac */;
+			targetProxy = 778D72F62C06A3100035829C /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		778D72FD2C06A3100035829C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		778D72FE2C06A3100035829C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		778D73002C06A3100035829C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = SnipeClientMac/SnipeClientMac.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"SnipeClientMac/Preview Content\"";
+				DEVELOPMENT_TEAM = PU8ES8CS9S;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = patrickmfsd.SnipeClientMac;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		778D73012C06A3100035829C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = SnipeClientMac/SnipeClientMac.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"SnipeClientMac/Preview Content\"";
+				DEVELOPMENT_TEAM = PU8ES8CS9S;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = patrickmfsd.SnipeClientMac;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		778D73032C06A3100035829C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = PU8ES8CS9S;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				MACOSX_DEPLOYMENT_TARGET = 14.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = patrickmfsd.SnipeClientMacTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SnipeClientMac.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/SnipeClientMac";
+			};
+			name = Debug;
+		};
+		778D73042C06A3100035829C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = PU8ES8CS9S;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				MACOSX_DEPLOYMENT_TARGET = 14.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = patrickmfsd.SnipeClientMacTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SnipeClientMac.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/SnipeClientMac";
+			};
+			name = Release;
+		};
+		778D73062C06A3100035829C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = PU8ES8CS9S;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				MACOSX_DEPLOYMENT_TARGET = 14.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = patrickmfsd.SnipeClientMacUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = SnipeClientMac;
+			};
+			name = Debug;
+		};
+		778D73072C06A3100035829C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = PU8ES8CS9S;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				MACOSX_DEPLOYMENT_TARGET = 14.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = patrickmfsd.SnipeClientMacUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = SnipeClientMac;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		778D72D32C06A30F0035829C /* Build configuration list for PBXProject "SnipeClientMac" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				778D72FD2C06A3100035829C /* Debug */,
+				778D72FE2C06A3100035829C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		778D72FF2C06A3100035829C /* Build configuration list for PBXNativeTarget "SnipeClientMac" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				778D73002C06A3100035829C /* Debug */,
+				778D73012C06A3100035829C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		778D73022C06A3100035829C /* Build configuration list for PBXNativeTarget "SnipeClientMacTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				778D73032C06A3100035829C /* Debug */,
+				778D73042C06A3100035829C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		778D73052C06A3100035829C /* Build configuration list for PBXNativeTarget "SnipeClientMacUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				778D73062C06A3100035829C /* Debug */,
+				778D73072C06A3100035829C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 778D72D02C06A30F0035829C /* Project object */;
+}
