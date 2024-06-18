@@ -10,85 +10,88 @@ import Foundation
     // ResponseBody Model
 struct  MaintenancesResponse: Codable {
     let total: Int
-    let rows: [Maintenances]
+    let rows: [MaintenanceItem]
 }
 
-    // Row Model
-struct Maintenances: Codable, Identifiable {
+struct MaintenanceItem: Codable, Identifiable {
     let id: Int
     let asset: Asset
+    let title: String
+    let location: MaintenanceLocation
+    let notes: String?
+    let supplier: MaintenanceSupplier?
+    let cost: Double?
+    let assetMaintenanceType: String
+    let startDate: MaintenanceStartDate
+    let assetMaintenanceTime: Int
+    let completionDate: MaintenanceCompletionDate
+    let userId: MaintenanceUser
+    let createdAt: MaintenanceCreatedDate
+    let updatedAt: MaintenanceUpdateDate
+    let availableActions: MaintenanceAvailableActions
+    
+    enum CodingKeys: String, CodingKey {
+        case id, asset, title, location, notes, supplier, cost
+        case assetMaintenanceType = "asset_maintenance_type"
+        case startDate = "start_date"
+        case assetMaintenanceTime = "asset_maintenance_time"
+        case completionDate = "completion_date"
+        case userId = "user_id"
+        case createdAt = "created_at"
+        case updatedAt = "updated_at"
+        case availableActions = "available_actions"
+    }
 }
 
-    // Asset Model
 struct Asset: Codable {
     let id: Int
     let name: String
     let assetTag: String
-    let title: String
-    let location: Location
-}
-
-    // Location Model
-struct Location: Codable {
-    let id: Int
-    let name: String
-    let notes: String
-    let supplier: Supplier
-    let assetMaintenanceType: String
     
     enum CodingKeys: String, CodingKey {
         case id
         case name
-        case notes
-        case supplier
-        case assetMaintenanceType = "asset_maintenance_type"
+        case assetTag = "asset_tag"
     }
 }
 
-    // Supplier Model
-struct Supplier: Codable {
-    let cost: String
-    let assetMaintenanceType: String
-    let startDate: StartDate
-}
-
-    // StartDate Model
-struct StartDate: Codable {
-    let datetime: String
-    let formatted: String
-    let assetMaintenanceTime: Int
-    let completionDate: CompletionDate
-}
-
-    // CompletionDate Model
-struct CompletionDate: Codable {
-    let datetime: String
-    let formatted: String
-    let userId: UserId
-}
-
-    // UserId Model
-struct UserId: Codable {
+struct MaintenanceLocation: Codable {
     let id: Int
     let name: String
-    let createdAt: CreatedAt
 }
 
-    // CreatedAt Model
-struct CreatedAt: Codable {
-    let datetime: String
-    let formatted: String
-    let updatedAt: UpdatedAt
+struct MaintenanceSupplier: Codable {
+    let id: Int
+    let name: String
 }
 
-    // UpdatedAt Model
-struct UpdatedAt: Codable {
-    let datetime: String
-    let formatted: String
+struct MaintenanceUser: Codable {
+    let id: Int
+    let name: String
 }
 
-    // AvailableActions Model
-struct MaintenancesAvailableActions: Codable {
-    let update: Bool
+struct MaintenanceStartDate: Codable {
+    let datetime: Int
+    let formated: String
+}
+
+struct MaintenanceCompletionDate: Codable {
+    let datetime: Int
+    let formated: String
+}
+
+struct MaintenanceCreatedDate: Codable {
+    let datetime: Int
+    let formated: String
+}
+
+struct MaintenanceUpdateDate: Codable {
+    let datetime: Int
+    let formated: String
+}
+
+struct MaintenanceAvailableActions: Codable {
     let delete: Bool
+    let update: Bool
+        // Add other relevant properties
 }
