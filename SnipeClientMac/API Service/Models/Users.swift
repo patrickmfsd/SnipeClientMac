@@ -7,6 +7,8 @@
 
 import Foundation
 
+import Foundation
+
 struct UserResponse: Codable {
     let total: Int
     let rows: [User]
@@ -14,7 +16,7 @@ struct UserResponse: Codable {
 
 struct User: Codable, Identifiable {
     let id: Int
-    let avatar: String
+    let avatar: URL
     let name: String
     let firstName: String
     let lastName: String
@@ -23,7 +25,7 @@ struct User: Codable, Identifiable {
     let locale: String
     let employeeNum: String
     let manager: String?
-    let jobtitle: String
+    let jobTitle: String
     let vip: Bool
     let phone: String
     let website: String?
@@ -34,8 +36,8 @@ struct User: Codable, Identifiable {
     let zip: String
     let email: String
     let department: UserDepartment
-    let location: UserLocation?
-    let notes: String?
+    let location: String?
+    let notes: String
     let permissions: UserPermissions
     let activated: Bool
     let autoassignLicenses: Bool
@@ -50,14 +52,62 @@ struct User: Codable, Identifiable {
     let managesLocationsCount: Int
     let company: UserCompany
     let createdBy: String?
-    let createdAt: UserDateTimeInfo
-    let updatedAt: UserDateTimeInfo
+    let createdAt: UserTimestamp
+    let updatedAt: UserTimestamp
     let startDate: String?
     let endDate: String?
     let lastLogin: String?
     let deletedAt: String?
     let availableActions: UserAvailableActions
-    let groups: [UserGroup]?
+    let groups: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case id
+        case avatar
+        case name
+        case firstName = "first_name"
+        case lastName = "last_name"
+        case username
+        case remote
+        case locale
+        case employeeNum = "employee_num"
+        case manager
+        case jobTitle = "jobtitle"
+        case vip
+        case phone
+        case website
+        case address
+        case city
+        case state
+        case country
+        case zip
+        case email
+        case department
+        case location
+        case notes
+        case permissions
+        case activated
+        case autoassignLicenses = "autoassign_licenses"
+        case ldapImport = "ldap_import"
+        case twoFactorEnrolled = "two_factor_enrolled"
+        case twoFactorOptin = "two_factor_optin"
+        case assetsCount = "assets_count"
+        case licensesCount = "licenses_count"
+        case accessoriesCount = "accessories_count"
+        case consumablesCount = "consumables_count"
+        case managesUsersCount = "manages_users_count"
+        case managesLocationsCount = "manages_locations_count"
+        case company
+        case createdBy = "created_by"
+        case createdAt = "created_at"
+        case updatedAt = "updated_at"
+        case startDate = "start_date"
+        case endDate = "end_date"
+        case lastLogin = "last_login"
+        case deletedAt = "deleted_at"
+        case availableActions = "available_actions"
+        case groups
+    }
 }
 
 struct UserDepartment: Codable {
@@ -65,17 +115,8 @@ struct UserDepartment: Codable {
     let name: String
 }
 
-struct UserLocation: Codable {
-    let id: Int
-    let name: String
-}
-
 struct UserPermissions: Codable {
-    let assetsView: String
-    
-    enum CodingKeys: String, CodingKey {
-        case assetsView = "assets.view"
-    }
+    let superuser: String
 }
 
 struct UserCompany: Codable {
@@ -83,7 +124,7 @@ struct UserCompany: Codable {
     let name: String
 }
 
-struct UserDateTimeInfo: Codable {
+struct UserTimestamp: Codable {
     let datetime: String
     let formatted: String
 }
@@ -93,9 +134,4 @@ struct UserAvailableActions: Codable {
     let delete: Bool
     let clone: Bool
     let restore: Bool
-}
-
-struct UserGroup: Codable {
-    let id: Int
-    let name: String
 }
