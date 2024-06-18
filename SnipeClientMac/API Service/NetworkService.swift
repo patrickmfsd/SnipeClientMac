@@ -51,22 +51,35 @@ class NetworkService {
         request.timeoutInterval = 10
         headers.forEach { request.setValue($0.value, forHTTPHeaderField: $0.key) }
         
+        // Debug print statements
+        print("Request URL: \(url.absoluteString)")
+        print("Request Headers: \(headers)")
+        
         URLSession.shared.dataTask(with: request) { data, response, error in
             if let error = error {
                 completion(.failure(.requestFailed(error)))
+                print("Request failed: \(error.localizedDescription)")
                 return
             }
             
             guard let data = data else {
                 completion(.failure(.noData))
+                print("No data received")
                 return
+            }
+            
+            // Print raw JSON data for debugging
+            if let jsonString = String(data: data, encoding: .utf8) {
+                print("Raw JSON response: \(jsonString)")
             }
             
             do {
                 let decodedData = try JSONDecoder().decode(T.self, from: data)
                 completion(.success(decodedData))
+                print("Decoded data: \(decodedData)")
             } catch {
                 completion(.failure(.decodingFailed(error)))
+                print("Decoding failed: \(error.localizedDescription)")
             }
         }.resume()
     }
