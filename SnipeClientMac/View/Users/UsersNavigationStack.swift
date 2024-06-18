@@ -10,13 +10,15 @@ import SwiftUI
 struct UsersNavigationStack: View {
     var body: some View {
         NavigationStack {
-            #if os(iOS)
-            UserListView()
-            #else
-            UserTableView()
-            #endif
+            Group {
+                #if os(iOS)
+                UserListView()
+                #else
+                UserTableView()
+                #endif
+            }
+            .navigationTitle("All Users")
         }
-        .navigationTitle("All Users")
     }
 }
 

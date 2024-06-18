@@ -11,6 +11,7 @@ struct DashboardNavigationStack: View {
     var body: some View {
         NavigationStack {
             DashboardView()
+                .navigationTitle("Dashboard")
         }
     }
 }

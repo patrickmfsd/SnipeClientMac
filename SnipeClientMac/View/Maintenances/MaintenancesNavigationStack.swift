@@ -11,8 +11,8 @@ struct MaintenancesNavigationStack: View {
     var body: some View {
         NavigationStack {
             MaintenancesListView()
+                .navigationTitle("Maintenances")
         }
-        .navigationTitle("All Users")
     }
 }
 

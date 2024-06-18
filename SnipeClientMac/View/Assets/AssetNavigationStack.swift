@@ -10,13 +10,15 @@ import SwiftUI
 struct AssetNavigationStack: View {
     var body: some View {
         NavigationStack {
-            #if os(iOS)
-            AssetListView()
-            #else
-            AssetTableView()
-            #endif
+            Group {
+                #if os(iOS)
+                AssetListView()
+                #else
+                AssetTableView()
+                #endif
+            }
+            .navigationTitle("Assets")
         }
-        .navigationTitle("All Assets")
     }
 }
 
