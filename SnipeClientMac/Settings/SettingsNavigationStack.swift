@@ -8,10 +8,17 @@
 import SwiftUI
 
 struct SettingsNavigationStack: View {
+    @Environment(\.prefersTabNavigation) private var prefersTabNavigation
+    
     var body: some View {
-        NavigationStack {
-            SettingsView()
-                .navigationTitle("Settings")
+        Group {
+            if prefersTabNavigation {
+                SettingsView()
+            } else {
+                NavigationStack {
+                    SettingsView()
+                }
+            }
         }
     }
 }

@@ -26,6 +26,7 @@ struct SettingsView: View {
                 Label("API Connection", systemImage: "link")
             }
         }
+        .navigationTitle("Settings")
     }
     
     var tabView: some View {
@@ -43,13 +44,13 @@ struct SettingsView: View {
         }
         .padding(20)
         .frame(width: 400, height: 400)
+        .navigationTitle("Settings")
     }
 }
 
 struct APISettingsView: View {
     @AppStorage("apiURL") var apiURL = DefaultSettings.apiURL
     @AppStorage("apiKey") var apiKey = DefaultSettings.apiKey
-    
     
     var body: some View {
         Form {
@@ -60,6 +61,7 @@ struct APISettingsView: View {
             }
         }
         .formStyle(.grouped)
+        .navigationTitle("API Settings")
     }
 }
 
