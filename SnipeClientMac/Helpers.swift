@@ -41,7 +41,9 @@ struct MaterialGroupBox: GroupBoxStyle {
     func makeBody(configuration: Configuration) -> some View {
         VStack(alignment: .leading) {
             configuration.label
-                .font(.headline)
+                .font(.title3)
+                .fontWeight(.semibold)
+                .padding(.bottom, 2)
             configuration.content
         }
         .padding(spacing)
