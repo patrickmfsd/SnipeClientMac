@@ -23,8 +23,6 @@ enum AppScreen: Codable, Hashable, Identifiable, CaseIterable {
     case maintenance
     /// The value for the ``User``.
     case users
-    /// The value for the ``SettingsView``.
-    case settings
     
     var id: AppScreen { self }
 }
@@ -39,8 +37,6 @@ extension AppScreen {
                 Label("Assets", systemImage: "laptopcomputer.and.iphone")
             case .users:
                 Label("Users", systemImage: "person.2")
-            case .settings:
-                Label("Settings", systemImage: "gear")
             case .components:
                 Label("Components", systemImage: "cpu")
             case .consumables:
@@ -62,8 +58,6 @@ extension AppScreen {
                 AssetNavigationStack()
             case.users:
                 UsersNavigationStack()
-            case .settings:
-                SettingsView()
             case .components:
                 ComponentsNavigationStack()
             case .consumables:

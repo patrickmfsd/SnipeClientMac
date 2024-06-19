@@ -21,6 +21,11 @@ struct AppTabView: View {
                     .tag(screen as AppScreen?)
                     .tabItem { screen.label }
             }
+            SettingsNavigationStack()
+                .tabItem {
+                    Label("Settings", systemImage: "gear")
+                }
+                .tag("settings")
         }
     }
 }

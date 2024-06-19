@@ -21,6 +21,11 @@ struct AppSidebarList: View {
                     screen.label
                 }
             }
+            #if os(iOS)
+            NavigationLink(destination: SettingsNavigationStack()) {
+                Label("Settings", systemImage: "gear")
+            }
+            #endif
         }
         .navigationTitle("\(appName ?? "")")
         .onAppear {
