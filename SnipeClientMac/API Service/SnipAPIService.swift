@@ -14,7 +14,9 @@ class SnipeAPIService: ObservableObject {
 
     @Published var userItem: [User] = []
     @Published var categoryItem: [Category] = []
-    @Published var maintenances: [Maintenances] = []
+    @Published var maintenancesItem: [MaintenanceItem] = []
+    @Published var components: [Component] = []
+
 
     @Published var hardwareTotal: Int = 0
     @Published var userTotal: Int = 0
@@ -48,7 +50,7 @@ class SnipeAPIService: ObservableObject {
                         self.hardwareItems = response.rows
                         self.hardwareTotal = response.total
                     case .failure(let error):
-                    self.errorMessage = IdentifiableError(message: error.localizedDescription)
+                        self.errorMessage = IdentifiableError(message: error.localizedDescription)
                 }
             }
         }
@@ -79,14 +81,13 @@ class SnipeAPIService: ObservableObject {
     }
     
     // MARK: - Fetch Users
-    func fetchUsers(limit: Int = 50, offset: Int = 0, sort: String = "created_at", order: String = "desc", deletedUsersOnly: Bool = false, includeDeleted: Bool = false) {
+    func fetchUsers(offset: Int = 0, sort: String = "created_at", order: String = "desc", deletedUsersOnly: Bool = false, includeDeleted: Bool = false) {
         let queryItems = [
-            URLQueryItem(name: "limit", value: String(limit)),
             URLQueryItem(name: "offset", value: String(offset)),
             URLQueryItem(name: "sort", value: sort),
             URLQueryItem(name: "order", value: order),
             URLQueryItem(name: "deleted", value: "\(deletedUsersOnly.description)"),
-            URLQueryItem(name: "all", value: "\(includeDeleted.description)"),
+            URLQueryItem(name: "all", value: "\(includeDeleted.description)")
         ]
         let headers = [
             "accept": "application/json",
@@ -152,7 +153,7 @@ class SnipeAPIService: ObservableObject {
             DispatchQueue.main.async {
                 switch result {
                     case .success(let response):
-                        self.maintenances = response.rows
+                        self.maintenancesItem = response.rows
                         self.maintenancesTotal = response.total
                         
                         print(self.maintenancesTotal)
@@ -179,10 +180,35 @@ class SnipeAPIService: ObservableObject {
             DispatchQueue.main.async {
                 switch result {
                     case .success(let response):
-                        self.maintenances = response.rows
+                        self.maintenancesItem = response.rows
                         self.maintenancesTotal = response.total
-                        
-                        print(self.maintenancesTotal)
+                    case .failure(let error):
+                        self.errorMessage = IdentifiableError(message: error.localizedDescription)
+                }
+            }
+        }
+    }
+    
+    // MARK: - Fetch asset maintenances
+    func fetchAllComponents(offset: Int = 0, sort: String = "created_at", order: String = "desc") {
+        let queryItems = [
+            URLQueryItem(name: "offset", value: "0"),
+            URLQueryItem(name: "order_number", value: "null"),
+            URLQueryItem(name: "sort", value: sort),
+            URLQueryItem(name: "order", value: order),
+            URLQueryItem(name: "expand", value: "true"),
+        ]
+        let headers = [
+            "accept": "application/json",
+            "Authorization": "Bearer \(apiKey)"
+        ]
+        
+        networkService.fetchData(urlString: "\(apiURL)components", queryItems: queryItems, headers: headers) { (result: Result<ComponentsResponse, NetworkError>) in
+            DispatchQueue.main.async {
+                switch result {
+                    case .success(let response):
+                        self.components = response.rows
+                        self.maintenancesTotal = response.total
                     case .failure(let error):
                         self.errorMessage = IdentifiableError(message: error.localizedDescription)
                 }
