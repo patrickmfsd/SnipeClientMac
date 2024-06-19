@@ -13,6 +13,8 @@ enum AppScreen: Codable, Hashable, Identifiable, CaseIterable {
     case dashboard
     /// The value for the ``Assets``.
     case assets
+    /// The value for the ``Components``.
+    case components
     /// The value for the ``Consumables``.
     case consumables
     /// The value for the ``Accessories``.
@@ -39,6 +41,8 @@ extension AppScreen {
                 Label("Users", systemImage: "person.2")
             case .settings:
                 Label("Settings", systemImage: "gear")
+            case .components:
+                Label("Components", systemImage: "cpu")
             case .consumables:
                 Label("Consumables", systemImage: "drop.halffull")
             case .accessories:
@@ -59,7 +63,9 @@ extension AppScreen {
             case.users:
                 UsersNavigationStack()
             case .settings:
-                SettingsNavigationStack()
+                SettingsView()
+            case .components:
+                ComponentsNavigationStack()
             case .consumables:
                 EmptyView()
             case .accessories:
