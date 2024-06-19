@@ -10,6 +10,9 @@
 		7704A7E72C1ABFA800E49CC4 /* Maintenances.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7704A7E62C1ABFA800E49CC4 /* Maintenances.swift */; };
 		7704A7EA2C1BFAF300E49CC4 /* MaintenancesNavigationStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7704A7E92C1BFAF300E49CC4 /* MaintenancesNavigationStack.swift */; };
 		7704A7EC2C1BFB1E00E49CC4 /* MaintenancesListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7704A7EB2C1BFB1E00E49CC4 /* MaintenancesListView.swift */; };
+		776A06972C228DC600F91B5F /* ComponentsNavigationStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 776A06962C228DC600F91B5F /* ComponentsNavigationStack.swift */; };
+		776A06992C228E0E00F91B5F /* ComponentsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 776A06982C228E0D00F91B5F /* ComponentsListView.swift */; };
+		776A069B2C22909600F91B5F /* Components.swift in Sources */ = {isa = PBXBuildFile; fileRef = 776A069A2C22909600F91B5F /* Components.swift */; };
 		77712EFB2C09EFB900E64AA8 /* AssetListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77712EFA2C09EFB900E64AA8 /* AssetListView.swift */; };
 		778D72DC2C06A30F0035829C /* SnipeClientMacApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 778D72DB2C06A30F0035829C /* SnipeClientMacApp.swift */; };
 		778D72DE2C06A30F0035829C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 778D72DD2C06A30F0035829C /* ContentView.swift */; };
@@ -64,6 +67,9 @@
 		7704A7E62C1ABFA800E49CC4 /* Maintenances.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Maintenances.swift; sourceTree = "<group>"; };
 		7704A7E92C1BFAF300E49CC4 /* MaintenancesNavigationStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaintenancesNavigationStack.swift; sourceTree = "<group>"; };
 		7704A7EB2C1BFB1E00E49CC4 /* MaintenancesListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaintenancesListView.swift; sourceTree = "<group>"; };
+		776A06962C228DC600F91B5F /* ComponentsNavigationStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComponentsNavigationStack.swift; sourceTree = "<group>"; };
+		776A06982C228E0D00F91B5F /* ComponentsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComponentsListView.swift; sourceTree = "<group>"; };
+		776A069A2C22909600F91B5F /* Components.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Components.swift; sourceTree = "<group>"; };
 		77712EFA2C09EFB900E64AA8 /* AssetListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetListView.swift; sourceTree = "<group>"; };
 		778D72D82C06A30F0035829C /* SnipeClientMac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SnipeClientMac.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		778D72DB2C06A30F0035829C /* SnipeClientMacApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnipeClientMacApp.swift; sourceTree = "<group>"; };
@@ -133,6 +139,15 @@
 				7704A7EB2C1BFB1E00E49CC4 /* MaintenancesListView.swift */,
 			);
 			path = Maintenances;
+			sourceTree = "<group>";
+		};
+		776A06952C228D7100F91B5F /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				776A06962C228DC600F91B5F /* ComponentsNavigationStack.swift */,
+				776A06982C228E0D00F91B5F /* ComponentsListView.swift */,
+			);
+			path = Components;
 			sourceTree = "<group>";
 		};
 		778D72CF2C06A30F0035829C = {
@@ -246,6 +261,7 @@
 				778D73232C06E6D80035829C /* Users.swift */,
 				77A932C52C0AFAAA00F4B730 /* Categories.swift */,
 				7704A7E62C1ABFA800E49CC4 /* Maintenances.swift */,
+				776A069A2C22909600F91B5F /* Components.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -256,6 +272,7 @@
 				778D73132C06A5370035829C /* Dashboard */,
 				778D732A2C0976340035829C /* Assets */,
 				77A932BE2C0AE24500F4B730 /* Users */,
+				776A06952C228D7100F91B5F /* Components */,
 				7704A7E82C1BFAA900E49CC4 /* Maintenances */,
 			);
 			path = View;
@@ -422,12 +439,14 @@
 				778D72DC2C06A30F0035829C /* SnipeClientMacApp.swift in Sources */,
 				778D73242C06E6D80035829C /* Users.swift in Sources */,
 				778D73262C0974CD0035829C /* NetworkService.swift in Sources */,
+				776A06972C228DC600F91B5F /* ComponentsNavigationStack.swift in Sources */,
 				77A932C02C0AE26B00F4B730 /* UsersNavigationStack.swift in Sources */,
 				77712EFB2C09EFB900E64AA8 /* AssetListView.swift in Sources */,
 				77A932C82C0D42A900F4B730 /* AssetDetailView.swift in Sources */,
 				778D73102C06A3CC0035829C /* AppTabView.swift in Sources */,
 				778D730F2C06A3CC0035829C /* AppSidebarList.swift in Sources */,
 				778D73302C098A6F0035829C /* AssetTableView.swift in Sources */,
+				776A069B2C22909600F91B5F /* Components.swift in Sources */,
 				778D73282C09750B0035829C /* SnipAPIService.swift in Sources */,
 				778D730E2C06A3CC0035829C /* AppScreen.swift in Sources */,
 				77A932C62C0AFAAA00F4B730 /* Categories.swift in Sources */,
@@ -436,6 +455,7 @@
 				778D73162C06A74B0035829C /* SettingsNavigationStack.swift in Sources */,
 				77A932C42C0AE2C400F4B730 /* UserListView.swift in Sources */,
 				778D731F2C06A9DF0035829C /* DashboardNavigationStack.swift in Sources */,
+				776A06992C228E0E00F91B5F /* ComponentsListView.swift in Sources */,
 				7704A7EA2C1BFAF300E49CC4 /* MaintenancesNavigationStack.swift in Sources */,
 				778D732E2C0989F70035829C /* AssetNavigationStack.swift in Sources */,
 				778D73222C06E0080035829C /* Hardware.swift in Sources */,
