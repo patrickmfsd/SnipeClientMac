@@ -17,7 +17,7 @@ struct UsersNavigationStack: View {
                 UserTableView()
                 #endif
             }
-            .navigationTitle("All Users")
+            .navigationTitle("Users")
         }
     }
 }

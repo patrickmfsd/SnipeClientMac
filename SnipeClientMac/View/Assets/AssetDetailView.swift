@@ -9,6 +9,8 @@ import SwiftUI
 
 enum views: String, CaseIterable {
     case details = "Details"
+    case components = "Components"
+    case consumables = "Consumables"
     case maintenance = "Maintenance"
 }
 
@@ -23,9 +25,13 @@ struct AssetDetailView: View {
         VStack {
             DetailHeader(hardwareID: hardwareID)
             switch selectedSegment {
-                case views.details:
+                case .details:
                     AboutAssetView(hardwareID: hardwareID)
-                case views.maintenance:
+                case .components:
+                    EmptyView()
+                case .consumables:
+                    EmptyView()
+                case .maintenance:
                     MaintenanceList(hardwareID: hardwareID)
             }
         }
@@ -241,23 +247,23 @@ struct MaintenanceList: View {
     var hardwareID: Int32
 
     var body: some View {
-        List(service.maintenances, id: \.asset.id) { maint in
+        List(service.maintenancesItem) { maintenance in
             HStack {
                 VStack {
-                    Text(maint.asset.title)
-                        .onAppear {
-                           print(maint.asset.title)
-                        }
+                    Text(maintenance.title)
                 }
             }
         }
         .overlay {
-            if service.maintenances.isEmpty {
+            if service.maintenancesItem.isEmpty {
                 ContentUnavailableView("No Maintenances", systemImage: "screwdriver", description: Text("No maintenance jobs logged for this asset."))
             }
         }
         .onAppear {
             service.fetchAssetMaintenances(assetID: hardwareID)
+            print(service.maintenancesItem)
+            print(service.maintenancesTotal)
+
         }
         .refreshable {
             service.fetchAssetMaintenances(assetID: hardwareID)

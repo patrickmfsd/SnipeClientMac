@@ -42,6 +42,7 @@ struct AssetTableView: View {
                 NavigationLink(destination:  AssetDetailView(hardwareID: Int32(hardware.id))) {
                     if hardware.name != "" {
                         Text(hardware.name ?? "")
+                            .multilineTextAlignment(.leading)
                     } else {
                         Text(hardware.assetTag)
                     }

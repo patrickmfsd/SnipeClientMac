@@ -46,7 +46,7 @@ struct UsersWidgetView: View {
                         HStack {
                             VStack(alignment: .leading) {
                                 Text("\(users.firstName) \(users.lastName)")
-                                Text("Total Assets: \(users.assetsCount)")
+                                Text("Total Assets: \(service.userTotal)")
                             }
                             Spacer()
                         }
@@ -58,6 +58,7 @@ struct UsersWidgetView: View {
             }
             .onAppear {
                 service.fetchHardware()
+                service.fetchUsers()
             }
             .alert(item: $service.errorMessage) { error in
                 Alert(title: Text("Error"), message: Text(error.message), dismissButton: .default(Text("OK")))
