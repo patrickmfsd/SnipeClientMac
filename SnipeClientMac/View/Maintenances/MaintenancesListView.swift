@@ -9,13 +9,16 @@ import SwiftUI
 
 struct MaintenancesListView: View {
     @StateObject private var viewModel = SnipeAPIService()
+    
+    @State private var selection: MaintenanceItem.ID?
 
     var body: some View {
-        List(viewModel.maintenances) { maint in
-            Text(maint.asset.title)
+        List(viewModel.maintenancesItem, selection: $selection) { maintenance in
+            Text(maintenance.title)
         }
         .onAppear {
             viewModel.fetchAllMaintenances()
+            print(viewModel.maintenancesItem)
         }
         .refreshable {
             viewModel.fetchAllMaintenances()
