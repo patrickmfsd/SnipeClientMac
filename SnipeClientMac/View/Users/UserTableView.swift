@@ -73,6 +73,15 @@ struct UserTableView: View {
                 secondaryButton: .cancel()
             )
         }
+        .toolbar {
+            ToolbarItem(placement: .automatic) {
+                Button(action: {
+                    viewModel.fetchUsers()
+                }, label: {
+                    Label("Refresh", systemImage: "arrow.clockwise")
+                })
+            }
+        }
     }
 }
 

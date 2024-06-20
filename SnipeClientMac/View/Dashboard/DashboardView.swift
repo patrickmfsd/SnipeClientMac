@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct DashboardView: View {
+    @StateObject private var service = SnipeAPIService()
     
     let columns = [
         GridItem(.adaptive(minimum: 300, maximum: 520)),
@@ -29,6 +30,16 @@ struct DashboardView: View {
             }
             .padding()
             #endif
+        }
+        .toolbar {
+            ToolbarItem(placement: .automatic) {
+                Button(action: {
+                    service.fetchHardware()
+                    service.fetchUsers()
+                }, label: {
+                    Label("Refresh", systemImage: "arrow.clockwise")
+                })
+            }
         }
     }
 }

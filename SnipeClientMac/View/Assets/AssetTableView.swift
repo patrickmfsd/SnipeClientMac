@@ -99,6 +99,15 @@ struct AssetTableView: View {
                 secondaryButton: .cancel()
             )
         }
+        .toolbar {
+            ToolbarItem(placement: .automatic) {
+                Button(action: {
+                    viewModel.fetchHardware()
+                }, label: {
+                    Label("Refresh", systemImage: "arrow.clockwise")
+                })
+            }
+        }
     }
 }
 

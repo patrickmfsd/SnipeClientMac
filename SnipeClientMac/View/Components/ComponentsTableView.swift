@@ -86,6 +86,15 @@ struct ComponentsTableView: View {
                 secondaryButton: .cancel()
             )
         }
+        .toolbar {
+            ToolbarItem(placement: .automatic) {
+                Button(action: {
+                    viewModel.fetchAllComponents()
+                }, label: {
+                    Label("Refresh", systemImage: "arrow.clockwise")
+                })
+            }
+        }
     }
 }
 

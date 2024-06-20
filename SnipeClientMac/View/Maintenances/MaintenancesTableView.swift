@@ -69,6 +69,15 @@ struct MaintenancesTableView: View {
                 secondaryButton: .cancel()
             )
         }
+        .toolbar {
+            ToolbarItem(placement: .automatic) {
+                Button(action: {
+                    viewModel.fetchAllMaintenances()
+                }, label: {
+                    Label("Refresh", systemImage: "arrow.clockwise")
+                })
+            }
+        }
     }
 }
 
