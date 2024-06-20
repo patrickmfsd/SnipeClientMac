@@ -34,7 +34,10 @@ struct AssetDetailView: View {
                 case .maintenance:
                     MaintenanceList(hardwareID: hardwareID)
             }
+            Spacer()
         }
+        .background(.background)
+        .toolbarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .principal) {
                 Picker("Select View", selection: $selectedSegment) {
@@ -42,15 +45,37 @@ struct AssetDetailView: View {
                         Text(segment.rawValue).tag(segment)
                     }
                 }
-                .pickerStyle(.segmented)
-                .labelsHidden()
+                .pickerStyle(.menu)
+                .menuIndicator(.visible)
+//                .labelsHidden()
             }
-            ToolbarItem(placement: .primaryAction) {
-                Spacer()
+            #if os(iOS)
+            ToolbarItem(placement: .automatic) {
+                Menu {
+                    Button(action: {
+                            // Action
+                    }, label: {
+                        Label("New Maintenance Job", systemImage: "screwdriver")
+                    })
+                    Divider()
+                    Button(action: {
+                            // Action
+                    }, label: {
+                        Label("Edit", systemImage: "pencil")
+                    })
+                    Button(action: {
+                            // Action
+                    }, label: {
+                        Label("Delete", systemImage: "trash")
+                    })
+                } label: {
+                    Label("More", systemImage: "ellipsis.circle")
+                }
             }
-            ToolbarItem(placement: .primaryAction) {
+            #else
+            ToolbarItem(placement: .automatic) {
                 Button(action: {
-                    // Action
+                        // Action
                 }, label: {
                     Label("Create Maintenance Job", systemImage: "screwdriver")
                 })
@@ -62,6 +87,8 @@ struct AssetDetailView: View {
                     Text("Edit")
                 })
             }
+            #endif
+            
         }
         .refreshable {
             service.fetchSpecificHardware(id: hardwareID)
@@ -75,15 +102,15 @@ struct DetailHeader: View {
     var hardwareID: Int32
     
     var body: some View {
-        HStack(spacing: 15) {
+        HStack(spacing: 10) {
             AsyncImage(url: URL(string: service.hardwareDetailItem?.image ?? "")) { image in
                 image
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .frame(width: 200)
+                    .frame(minWidth: 100, maxWidth: 200)
             } placeholder: {
                 Image(systemName: "laptopcomputer")
-                    .font(.system(size: 200))
+                    .frame(minWidth: 100, maxWidth: 200)
             }
             VStack(alignment: .leading, spacing: 10) {
                 if let manufacturerName = service.hardwareDetailItem?.manufacturer?.name,
@@ -108,12 +135,22 @@ struct DetailHeader: View {
                 }
                 VStack(alignment: .leading, spacing: 5) {
                     if let serial = service.hardwareDetailItem?.serial {
-                        Text("Serial: \(serial)")
-                            .foregroundStyle(.secondary)
+                        HStack(spacing: 5) {
+                            Text("Serial:")
+                                .foregroundStyle(.secondary)
+                            Text(serial)
+                                .textSelection(.enabled)
+                                .foregroundStyle(.secondary)
+                        }
                     }
                     if let assetTag = service.hardwareDetailItem?.assetTag {
-                        Text("Asset Tag: \(assetTag)")
-                            .foregroundStyle(.secondary)
+                        HStack(spacing: 5) {
+                            Text("Asset Tag:")
+                                .foregroundStyle(.secondary)
+                            Text(assetTag)
+                                .textSelection(.enabled)
+                                .foregroundStyle(.secondary)
+                        }
                     }
                 }
                 HStack(spacing: 5) {
@@ -184,7 +221,7 @@ struct DetailHeader: View {
 }
 
 
-
+// ABout Asset
 struct AboutAssetView: View {
     @StateObject private var service = SnipeAPIService()
     var hardwareID: Int32
@@ -192,19 +229,45 @@ struct AboutAssetView: View {
     var body: some View {
         List {
             Section {
-                DetailRow(title: "EOL", value: "\(String(describing: service.hardwareDetailItem?.eol ?? "Unknown")) Months (\(String(describing: service.hardwareDetailItem?.assetEolDate?.date ?? "")))")
-                DetailRow(title: "Book Value", value: "\(String(describing: service.hardwareDetailItem?.bookValue ?? "Unknown"))")
-                DetailRow(title: "Notes", value: "\(String(describing: service.hardwareDetailItem?.notes ?? "Unknown"))")
+                if let eol = service.hardwareDetailItem?.eol,
+                   let assetEolDate = service.hardwareDetailItem?.assetEolDate?.date {
+                    DetailRow(title: "EOL", value: "\(eol) (\(assetEolDate))")
+                }
+                if let bookValue = service.hardwareDetailItem?.bookValue {
+                    DetailRow(title: "Book Value", value: bookValue)
+                }
+                if let notes = service.hardwareDetailItem?.notes {
+                    DetailRow(title: "Notes", value: notes)
+                }
+                if let updated = service.hardwareDetailItem?.updatedAt?.formatted {
+                    DetailRow(title: "Updated", value: updated)
+                }
+                if let created = service.hardwareDetailItem?.createdAt?.formatted,
+                   let age = service.hardwareDetailItem?.age {
+                    DetailRow(title: "Created", value: "\(age) (\(created))")
+                }
             }
             Section("Supplier") {
-                DetailRow(title: "Supplier", value: "\(String(describing: service.hardwareDetailItem?.supplier?.name ?? "Unknown"))")
-                DetailRow(title: "Purchase Cost", value: "\(String(describing: service.hardwareDetailItem?.purchaseCost ?? "Unknown"))")
-                DetailRow(title: "Order Number", value: "\(String(describing: service.hardwareDetailItem?.orderNumber ?? "Unknown"))")
-                DetailRow(title: "Purchase Date", value: "\(String(describing: service.hardwareDetailItem?.purchaseDate?.formatted ?? "Unknown"))")
+                if let name = service.hardwareDetailItem?.supplier?.name {
+                    DetailRow(title: "Supplier", value: name)
+                }
+                if let purchaseCost = service.hardwareDetailItem?.purchaseCost {
+                    DetailRow(title: "Purchase Cost", value: purchaseCost)
+                }
+                if let orderNumber = service.hardwareDetailItem?.orderNumber {
+                    DetailRow(title: "Order Number", value: orderNumber)
+                }
+                if let purchaseDate = service.hardwareDetailItem?.purchaseDate?.formatted {
+                    DetailRow(title: "Purchase Date", value: purchaseDate)
+                }
             }
             Section("Loan Status") {
-                DetailRow(title: "Location", value: "\(String(describing: service.hardwareDetailItem?.location?.name ?? "Unknown"))")
-                DetailRow(title: "Default Location", value: "\(String(describing: service.hardwareDetailItem?.rtdLocation?.name ?? "Unknown"))")
+                if let location = service.hardwareDetailItem?.location?.name {
+                    DetailRow(title: "Location", value: location)
+                }
+                if let defaultLocation = service.hardwareDetailItem?.rtdLocation?.name {
+                    DetailRow(title: "Default Location", value: defaultLocation)
+                }
                 DetailRow(title: "Checked Out To", value: "\(String(describing: service.hardwareDetailItem?.assignedTo?.name ?? "Unknown"))")
                 DetailRow(title: "Checked Out On", value: "\(String(describing: service.hardwareDetailItem?.lastCheckout ?? "Unknown"))")
                 DetailRow(title: "Expected Check-In", value: "\(String(describing: service.hardwareDetailItem?.expectedCheckin ?? "Unknown"))")
@@ -213,12 +276,8 @@ struct AboutAssetView: View {
                 DetailRow(title: "Requests Counter", value: "\(String(describing: service.hardwareDetailItem?.requestsCounter ?? 0))")
                 
             }
-            Section {
-                DetailRow(title: "Updated", value: "\(String(describing: service.hardwareDetailItem?.updatedAt?.formatted ?? "Unknown"))")
-                DetailRow(title: "Created", value: "\(String(describing: service.hardwareDetailItem?.createdAt?.formatted ?? "Unknown"))")
-                DetailRow(title: "Age", value: "\(String(describing: service.hardwareDetailItem?.age ?? "Unknown"))")
-            }
         }
+        .listStyle(.inset)
         .onAppear {
             service.fetchSpecificHardware(id: hardwareID)
         }
