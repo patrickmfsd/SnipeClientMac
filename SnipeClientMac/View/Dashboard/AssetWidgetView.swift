@@ -13,22 +13,13 @@ struct AssetWidget: View {
     var body: some View {
         GroupBox {
             VStack(alignment: .leading, spacing: 10) {
-                GroupBox {
-                    HStack(alignment: .center) {
-                        Text("Recent Assets")
-                            .font(.title2)
-                            .fontWeight(.medium)
-                        Spacer()
-                        VStack(alignment: .center) {
-                            Text("\(service.hardwareTotal)")
-                                .font(.title3)
-                                .foregroundStyle(.secondary)
-                            Text("Total Assets")
-                                .font(.footnote)
-                        }
-                    }
-                }
-                .groupBoxStyle(MaterialGroupBox(spacing: 10, radius: 20, material: .thick))
+                VStack(alignment: .leading) {
+                    Text("Recent Assets")
+                        .font(.title2)
+                        .fontWeight(.medium)
+                    Text("\(service.hardwareTotal) Assets")
+                        .foregroundStyle(.secondary)
+                }.padding(10)
                 if service.hardwareItems.isEmpty {
                     HStack {
                         Spacer()
@@ -43,7 +34,8 @@ struct AssetWidget: View {
                     .padding()
                 } else {
                     ForEach(service.hardwareItems.prefix(5)) { hardware in
-                        HStack {
+                        Divider()
+                        HStack(spacing: 10) {
                             AsyncImage(url: URL(string: hardware.image ?? "")) { image in
                                 image
                                     .resizable()
@@ -51,18 +43,33 @@ struct AssetWidget: View {
                                     .frame(width: 80)
                             } placeholder: {
                                 Image(systemName: "laptopcomputer")
-                                    .font(.system(size: 50))
+                                    .font(.system(size: 60))
                             }
-                            VStack(alignment: .leading) {
-                                Text("\(hardware.name ?? hardware.assetTag)")
-                                Text("\(hardware.manufacturer?.name ?? "") - \(hardware.modelNumber ?? "")")
+                            VStack(alignment: .leading, spacing: 5) {
+                                if let manufacturerName = hardware.manufacturer?.name,
+                                   let modelName = hardware.model?.name,
+                                   let deviceName = hardware.name {
+                                    VStack(alignment: .leading, spacing: 5) {
+                                        if manufacturerName != "" {
+                                            Text("\(manufacturerName)")
+                                                .font(.footnote)
+                                        }
+                                        
+                                        if modelName != "" && modelName != deviceName {
+                                            Text("\(modelName)")
+                                                .font(modelName != "" ? .body : .footnote)
+                                        }
+                                        
+                                        if deviceName != "" {
+                                            Text("\(deviceName)")
+                                        }
+                                    }
+                                }
                             }
                             Spacer()
                         }
-                        .padding()
-                        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 25, style: .continuous))
-                        .frame(minWidth: 300, maxWidth: 500)
                     }
+                    .padding(.horizontal, 5)
                 }
             }
             .onAppear {
