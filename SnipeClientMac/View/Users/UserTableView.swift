@@ -64,7 +64,14 @@ struct UserTableView: View {
             viewModel.fetchUsers()
         }
         .alert(item: $viewModel.errorMessage) { error in
-            Alert(title: Text("Error"), message: Text(error.message), dismissButton: .default(Text("OK")))
+            Alert(
+                title: Text("Unable to retrieve Users"),
+                message: Text(error.message),
+                primaryButton: .default(Text("Retry"), action: {
+                    viewModel.fetchUsers()
+                }),
+                secondaryButton: .cancel()
+            )
         }
     }
 }

@@ -90,7 +90,14 @@ struct AssetTableView: View {
             viewModel.fetchHardware()
         }
         .alert(item: $viewModel.errorMessage) { error in
-            Alert(title: Text("Error"), message: Text(error.message), dismissButton: .default(Text("OK")))
+            Alert(
+                title: Text("Unable to retrieve Assets"),
+                message: Text(error.message),
+                primaryButton: .default(Text("Retry"), action: {
+                    viewModel.fetchHardware()
+                }),
+                secondaryButton: .cancel()
+            )
         }
     }
 }

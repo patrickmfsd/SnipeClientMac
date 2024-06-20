@@ -60,7 +60,14 @@ struct MaintenancesTableView: View {
             viewModel.fetchAllMaintenances()
         }
         .alert(item: $viewModel.errorMessage) { error in
-            Alert(title: Text("Error"), message: Text(error.message), dismissButton: .default(Text("OK")))
+            Alert(
+                title: Text("Unable to retrieve Maintenances"),
+                message: Text(error.message),
+                primaryButton: .default(Text("Retry"), action: {
+                    viewModel.fetchAllMaintenances()
+                }),
+                secondaryButton: .cancel()
+            )
         }
     }
 }
