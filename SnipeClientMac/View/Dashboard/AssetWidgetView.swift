@@ -75,12 +75,9 @@ struct AssetWidget: View {
             .onAppear {
                 service.fetchHardware()
             }
-            .alert(item: $service.errorMessage) { error in
-                Alert(title: Text("Error"), message: Text(error.message), dismissButton: .default(Text("OK")))
-            }
         }
         .groupBoxStyle(MaterialGroupBox(spacing: 10, radius: 25, material: .thin))
-        .frame(maxWidth: 500)
+        .frame(minWidth: 320, maxWidth: 500)
     }
 }
 
