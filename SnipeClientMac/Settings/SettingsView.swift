@@ -43,7 +43,7 @@ struct SettingsView: View {
                 .tag(Tabs.api)
         }
         .padding(20)
-        .frame(width: 400, height: 400)
+        .frame(width: 550, height: 400)
         .navigationTitle("Settings")
     }
 }
@@ -57,7 +57,9 @@ struct APISettingsView: View {
             Section {
                 Text("Use your Personal API to connect with SnipeIT.")
                 TextField("URL", text: $apiURL)
-                TextField("Key", text: $apiKey)
+                    .textContentType(.URL)
+                TextField("API Key", text: $apiKey, axis: .vertical)
+                    .lineLimit(8, reservesSpace: true)
             }
         }
         .formStyle(.grouped)
