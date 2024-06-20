@@ -17,7 +17,7 @@ struct AssetListView: View {
 
     var body: some View {
         List(viewModel.hardwareItems, selection: $selection) { hardware in
-//            NavigationLink(destination:  AssetDetailView(hardwareID: Int32(hardware.id))) {
+            NavigationLink(destination:  AssetDetailView(hardwareID: Int32(hardware.id))) {
                 AssetRowView(
                     image: hardware.image ?? "",
                     name: hardware.name ?? "",
@@ -27,15 +27,7 @@ struct AssetListView: View {
                     serialNumber: hardware.serial ?? ""
                 )
                 .tag(hardware.id)
-                    //            .onTapGesture {
-                    //                isShowingInspector.toggle()
-                    //
-                    //               id = Int32(selection ?? 0)
-                    //            }
-                    //            .sheet(isPresented: $isShowingInspector) {
-                    //                AssetDetailView(hardwareID: id)
-                    //            }
-//            }
+            }
         }
         .onAppear {
             viewModel.fetchHardware()
