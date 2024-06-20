@@ -16,11 +16,19 @@ struct DashboardView: View {
     
     var body: some View {
         ScrollView {
+            #if os(iOS)
+            VStack(spacing: 10) {
+                AssetWidget()
+                UsersWidgetView()
+            }
+            .padding(.horizontal)
+            #else
             LazyVGrid(columns: columns) {
                 AssetWidget()
                 UsersWidgetView()
             }
             .padding()
+            #endif
         }
     }
 }
