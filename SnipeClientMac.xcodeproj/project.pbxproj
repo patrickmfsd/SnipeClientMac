@@ -14,6 +14,7 @@
 		776A06992C228E0E00F91B5F /* ComponentsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 776A06982C228E0D00F91B5F /* ComponentsListView.swift */; };
 		776A069B2C22909600F91B5F /* Components.swift in Sources */ = {isa = PBXBuildFile; fileRef = 776A069A2C22909600F91B5F /* Components.swift */; };
 		776A069D2C23A82600F91B5F /* ComponentsTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 776A069C2C23A82600F91B5F /* ComponentsTableView.swift */; };
+		776A069F2C23AB8100F91B5F /* MaintenancesTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 776A069E2C23AB8100F91B5F /* MaintenancesTableView.swift */; };
 		77712EFB2C09EFB900E64AA8 /* AssetListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77712EFA2C09EFB900E64AA8 /* AssetListView.swift */; };
 		778D72DC2C06A30F0035829C /* SnipeClientMacApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 778D72DB2C06A30F0035829C /* SnipeClientMacApp.swift */; };
 		778D72DE2C06A30F0035829C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 778D72DD2C06A30F0035829C /* ContentView.swift */; };
@@ -72,6 +73,7 @@
 		776A06982C228E0D00F91B5F /* ComponentsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComponentsListView.swift; sourceTree = "<group>"; };
 		776A069A2C22909600F91B5F /* Components.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Components.swift; sourceTree = "<group>"; };
 		776A069C2C23A82600F91B5F /* ComponentsTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComponentsTableView.swift; sourceTree = "<group>"; };
+		776A069E2C23AB8100F91B5F /* MaintenancesTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaintenancesTableView.swift; sourceTree = "<group>"; };
 		77712EFA2C09EFB900E64AA8 /* AssetListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetListView.swift; sourceTree = "<group>"; };
 		778D72D82C06A30F0035829C /* SnipeClientMac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SnipeClientMac.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		778D72DB2C06A30F0035829C /* SnipeClientMacApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnipeClientMacApp.swift; sourceTree = "<group>"; };
@@ -138,6 +140,7 @@
 			isa = PBXGroup;
 			children = (
 				7704A7E92C1BFAF300E49CC4 /* MaintenancesNavigationStack.swift */,
+				776A069E2C23AB8100F91B5F /* MaintenancesTableView.swift */,
 				7704A7EB2C1BFB1E00E49CC4 /* MaintenancesListView.swift */,
 			);
 			path = Maintenances;
@@ -443,6 +446,7 @@
 				778D73242C06E6D80035829C /* Users.swift in Sources */,
 				778D73262C0974CD0035829C /* NetworkService.swift in Sources */,
 				776A06972C228DC600F91B5F /* ComponentsNavigationStack.swift in Sources */,
+				776A069F2C23AB8100F91B5F /* MaintenancesTableView.swift in Sources */,
 				77A932C02C0AE26B00F4B730 /* UsersNavigationStack.swift in Sources */,
 				77712EFB2C09EFB900E64AA8 /* AssetListView.swift in Sources */,
 				77A932C82C0D42A900F4B730 /* AssetDetailView.swift in Sources */,

@@ -10,8 +10,14 @@ import SwiftUI
 struct MaintenancesNavigationStack: View {
     var body: some View {
         NavigationStack {
-            MaintenancesListView()
-                .navigationTitle("Maintenances")
+            Group {
+                #if os(iOS)
+                MaintenancesListView()
+                #else
+                MaintenancesTableView()
+                #endif
+            }
+            .navigationTitle("Maintenances")
         }
     }
 }
