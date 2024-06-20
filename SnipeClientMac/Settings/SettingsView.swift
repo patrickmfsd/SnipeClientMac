@@ -27,6 +27,9 @@ struct SettingsView: View {
             }
         }
         .navigationTitle("Settings")
+        #if os(iOS)
+        .navigationBarTitleDisplayMode(.inline)
+        #endif
     }
     
     var tabView: some View {
@@ -44,7 +47,6 @@ struct SettingsView: View {
         }
         .padding(20)
         .frame(width: 550, height: 400)
-        .navigationTitle("Settings")
     }
 }
 
@@ -55,7 +57,19 @@ struct APISettingsView: View {
     var body: some View {
         Form {
             Section {
-                Text("Use your Personal API to connect with SnipeIT.")
+                VStack(alignment: .center) {
+                    Text("API Settings")
+                        .font(.title2)
+                        .fontWeight(.bold)
+                        .padding(.bottom, 15)
+                    Text("To access your asset database, you'll need to generate an API key that will be associated with your user.")
+                        .multilineTextAlignment(.center)
+                    Link(destination: URL(string: "https://snipe-it.readme.io/reference/generating-api-tokens")!, label: {
+                        Text("Learn more...")
+                    })
+                }
+            }
+            Section {
                 TextField("URL", text: $apiURL)
                     .textContentType(.URL)
                 TextField("API Key", text: $apiKey, axis: .vertical)
@@ -64,6 +78,9 @@ struct APISettingsView: View {
         }
         .formStyle(.grouped)
         .navigationTitle("API Settings")
+        #if os(iOS)
+        .navigationBarTitleDisplayMode(.inline)
+        #endif
     }
 }
 
