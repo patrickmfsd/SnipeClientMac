@@ -14,7 +14,7 @@ struct ComponentsNavigationStack: View {
                 #if os(iOS)
                 ComponentsListView()
                 #else
-                ComponentsListView()
+                ComponentsTableView()
                 #endif
             }
             .navigationTitle("Components")
