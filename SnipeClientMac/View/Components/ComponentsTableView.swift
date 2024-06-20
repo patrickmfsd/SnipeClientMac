@@ -59,7 +59,7 @@ struct ComponentsTableView: View {
                         Text("\(component.supplier)")
                     }
                     .customizationID("supplier")
-                    TableColumn("Licenses") { component in
+                    TableColumn("Purchase Date") { component in
                         Text("\(component.purchaseDate)")
                     }
                     .customizationID("purchaseDate")
