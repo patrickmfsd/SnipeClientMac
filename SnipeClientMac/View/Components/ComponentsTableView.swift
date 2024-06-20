@@ -10,7 +10,7 @@ import SwiftUI
 struct ComponentsTableView: View {
     @StateObject private var viewModel = SnipeAPIService()
     
-    @SceneStorage("AssetTableConfig")
+    @SceneStorage("ComponentsTableConfig")
     private var columnCustomization: TableColumnCustomization<Component>
     
     @State private var selection: Component.ID?
@@ -71,10 +71,10 @@ struct ComponentsTableView: View {
             }
         }
         .onAppear {
-            viewModel.fetchUsers()
+            viewModel.fetchAllComponents()
         }
         .refreshable {
-            viewModel.fetchUsers()
+            viewModel.fetchAllComponents()
         }
         .alert(item: $viewModel.errorMessage) { error in
             Alert(title: Text("Error"), message: Text(error.message), dismissButton: .default(Text("OK")))
