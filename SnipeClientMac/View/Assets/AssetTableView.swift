@@ -31,10 +31,11 @@ struct AssetTableView: View {
                     image
                         .resizable()
                         .aspectRatio(contentMode: .fit)
-                        .frame(width: 80)
+                        .frame(width: 80, height: 80)
                 } placeholder: {
                     Image(systemName: "laptopcomputer")
                         .font(.system(size: 50))
+                        .frame(width: 80, height: 80)
                 }
             }
             .width(85)
