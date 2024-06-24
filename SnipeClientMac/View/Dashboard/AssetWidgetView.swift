@@ -35,41 +35,47 @@ struct AssetWidget: View {
                 } else {
                     ForEach(service.hardwareItems.prefix(5)) { hardware in
                         Divider()
-                        HStack(spacing: 10) {
-                            AsyncImage(url: URL(string: hardware.image ?? "")) { image in
-                                image
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                                    .frame(width: 80)
-                            } placeholder: {
-                                Image(systemName: "laptopcomputer")
-                                    .font(.system(size: 60))
-                            }
-                            VStack(alignment: .leading, spacing: 5) {
-                                if let manufacturerName = hardware.manufacturer?.name,
-                                   let modelName = hardware.model?.name,
-                                   let deviceName = hardware.name {
-                                    VStack(alignment: .leading, spacing: 5) {
-                                        if manufacturerName != "" {
-                                            Text("\(manufacturerName)")
-                                                .font(.footnote)
-                                        }
-                                        
-                                        if modelName != "" && modelName != deviceName {
-                                            Text("\(modelName)")
-                                                .font(modelName != "" ? .body : .footnote)
-                                        }
-                                        
-                                        if deviceName != "" {
-                                            Text("\(deviceName)")
+                        NavigationLink(destination:  AssetDetailView(hardwareID: Int32(hardware.id))) {
+                            HStack(spacing: 10) {
+                                AsyncImage(url: URL(string: hardware.image ?? "")) { image in
+                                    image
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                        .frame(width: 80, height: 80)
+                                        .padding(5)
+                                        .background(.white, in: RoundedRectangle(cornerRadius: 15, style: .continuous))
+                                } placeholder: {
+                                    Image(systemName: "laptopcomputer")
+                                        .font(.system(size: 60))
+                                }
+                                VStack(alignment: .leading, spacing: 5) {
+                                    if let manufacturerName = hardware.manufacturer?.name,
+                                       let modelName = hardware.model?.name,
+                                       let deviceName = hardware.name {
+                                        VStack(alignment: .leading, spacing: 5) {
+                                            if manufacturerName != "" {
+                                                Text("\(manufacturerName)")
+                                                    .font(.footnote)
+                                            }
+                                            
+                                            if modelName != "" && modelName != deviceName {
+                                                Text("\(modelName)")
+                                                    .font(modelName != "" ? .body : .footnote)
+                                            }
+                                            
+                                            if deviceName != "" {
+                                                Text("\(deviceName)")
+                                            }
                                         }
                                     }
                                 }
+                                .foregroundColor(.primary)
+                                Spacer()
+                                Image(systemName: "chevron.right")
                             }
-                            Spacer()
                         }
+                        .padding(.horizontal, 5)
                     }
-                    .padding(.horizontal, 5)
                 }
             }
             .onAppear {
