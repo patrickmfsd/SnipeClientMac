@@ -38,7 +38,7 @@ struct HardwareItem: Codable, Identifiable {
     let qr: String?
     let altBarcode: String?
     let assignedTo: HardwareAssignedTo?
-    let warrantyMonths: Int?
+    let warrantyMonths: String?
     let warrantyExpires: String?
     let createdAt: HardwareDateTimeInfo?
     let updatedAt: HardwareDateTimeInfo?
@@ -60,8 +60,9 @@ struct HardwareItem: Codable, Identifiable {
     let availableActions: HardwareAvailableActions?
     
     enum CodingKeys: String, CodingKey {
-        case id, name, serial, model, byod, requestable, eol, notes, company, location, image, qr, altBarcode, assignedTo, warrantyMonths, warrantyExpires, lastAuditDate, nextAuditDate, deletedAt, age, lastCheckout, lastCheckin, expectedCheckin, purchaseCost, checkinCounter, checkoutCounter, requestsCounter, userCanCheckout, bookValue, customFields, availableActions
+        case id, name, serial, model, byod, requestable, eol, notes, company, location, image, qr, altBarcode, /*lastAuditDate, nextAuditDate,*/ deletedAt, age, bookValue, availableActions, customFields, lastCheckout, lastCheckin, expectedCheckin
         case assetTag = "asset_tag"
+        case assignedTo = "assigned_to"
         case modelNumber = "model_number"
         case assetEolDate = "asset_eol_date"
         case statusLabel = "status_label"
@@ -73,40 +74,19 @@ struct HardwareItem: Codable, Identifiable {
         case createdAt = "created_at"
         case updatedAt = "updated_at"
         case purchaseDate = "purchase_date"
-//        case warrantyMonths = "warranty_months"
-//        case warrantyExpires = "warranty_expires"
-    }
-    
-//    enum CodingKeys: String, CodingKey {
-//        case id, name, serial, model, byod, requestable, eol, notes, company, location, image, qr, age, category, manufacturer,supplier
-//        case altBarcode = "alt_barcode"
-//        case assignedTo = "assigned_to"
-//        case warrantyMonths = "warranty_months"
-//        case warrantyExpires = "warranty_expires"
-//        case lastAuditDate = "last_audit_date"
-//        case nextAuditDate = "next_audit_date"
-//        case deletedAt = "deleted_at"
+        case warrantyMonths
+        case warrantyExpires
+        case lastAuditDate = "last_audit_date"
+        case nextAuditDate = "next_audit_date"
 //        case lastCheckout = "last_checkout"
 //        case lastCheckin = "last_checkin"
 //        case expectedCheckin = "expected_checkin"
-//        case purchaseCost = "purchase_cost"
-//        case checkinCounter = "checkin_counter"
-//        case checkoutCounter = "checkout_counter"
-//        case requestsCounter = "requests_counter"
-//        case userCanCheckout = "user_can_checkout"
-//        case bookValue = "book_value"
-//        case customFields = "custom_fields"
-//        case availableActions = "available_actions"
-//        case assetTag = "asset_tag"
-//        case modelNumber = "model_number"
-//        case assetEolDate = "asset_eol_date"
-//        case statusLabel = "status_label"
-//        case orderNumber = "order_number"
-//        case rtdLocation = "rtd_location"
-//        case createdAt = "created_at"
-//        case updatedAt = "updated_at"
-//        case purchaseDate = "purchase_date"
-//    }
+        case purchaseCost = "purchase_cost"
+        case checkinCounter = "checkin_counter"
+        case checkoutCounter = "checkout_counter"
+        case requestsCounter = "requests_counter"
+        case userCanCheckout = "user_can_checkout"
+    }
 }
 
 // MARK: - HardwareModel
