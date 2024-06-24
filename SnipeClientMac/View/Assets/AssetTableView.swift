@@ -32,6 +32,8 @@ struct AssetTableView: View {
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(width: 80, height: 80)
+                        .padding(5)
+                        .background(.white, in: RoundedRectangle(cornerRadius: 15, style: .continuous))
                 } placeholder: {
                     Image(systemName: "laptopcomputer")
                         .font(.system(size: 50))
