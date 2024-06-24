@@ -106,12 +106,14 @@ struct DetailHeader: View {
     var hardwareID: Int32
     
     var body: some View {
-        HStack(spacing: 5) {
+        HStack(spacing: 10) {
             AsyncImage(url: URL(string: service.hardwareDetailItem?.image ?? "")) { image in
                 image
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .frame(minWidth: 80, maxWidth: 200)
+                    .frame(minWidth: 80, maxWidth: 120, minHeight: 80, maxHeight: 120)
+                    .padding(5)
+                    .background(.white, in: RoundedRectangle(cornerRadius: 15, style: .continuous))
             } placeholder: {
                 Image(systemName: "laptopcomputer")
                     .frame(minWidth: 80, maxWidth: 200)
@@ -237,11 +239,8 @@ struct AboutAssetView: View {
         ScrollView {
             VStack {
                 loanStatusGroupBox()
-                if prefersTabNavigation {
-                    tabNavigationGroupBoxes()
-                } else {
-                    sideBySideGroupBoxes()
-                }
+                detailsGroupBox()
+                supplierGroupBox()
             }
             .padding(.horizontal)
         }
@@ -306,20 +305,6 @@ struct AboutAssetView: View {
         }
     }
     
-    private func tabNavigationGroupBoxes() -> some View {
-        Group {
-            detailsGroupBox()
-            supplierGroupBox()
-        }
-    }
-    
-    private func sideBySideGroupBoxes() -> some View {
-        HStack {
-            detailsGroupBox()
-            supplierGroupBox()
-        }
-    }
-    
     private func detailsGroupBox() -> some View {
         GroupBox("Details") {
             VStack(alignment: .leading) {
@@ -351,6 +336,10 @@ struct AboutAssetView: View {
                 if let purchaseDate = service.hardwareDetailItem?.purchaseDate?.formatted {
                     DetailRow(title: "Purchase Date", value: purchaseDate)
                 }
+            }
+            if service.hardwareDetailItem?.supplier?.name == nil  {
+                ContentUnavailableView("No Supplier Information", systemImage: "truck.box")
+                    .frame(maxWidth: .infinity)
             }
         }
         .groupBoxStyle(MaterialGroupBox(spacing: 10, radius: 15, material: .thin))
