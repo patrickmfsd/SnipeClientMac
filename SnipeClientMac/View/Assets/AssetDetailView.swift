@@ -8,7 +8,7 @@
 import SwiftUI
 
 enum views: String, CaseIterable {
-    case details = "Details"
+    case details = "About"
     case components = "Components"
     case consumables = "Consumables"
     case maintenance = "Maintenance"
@@ -45,8 +45,12 @@ struct AssetDetailView: View {
                         Text(segment.rawValue).tag(segment)
                     }
                 }
+                #if os(macOS)
+                .pickerStyle(.segmented)
+                #else
                 .pickerStyle(.menu)
                 .menuIndicator(.visible)
+                #endif
 //                .labelsHidden()
             }
             #if os(iOS)
@@ -102,15 +106,15 @@ struct DetailHeader: View {
     var hardwareID: Int32
     
     var body: some View {
-        HStack(spacing: 10) {
+        HStack(spacing: 5) {
             AsyncImage(url: URL(string: service.hardwareDetailItem?.image ?? "")) { image in
                 image
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .frame(minWidth: 100, maxWidth: 200)
+                    .frame(minWidth: 80, maxWidth: 200)
             } placeholder: {
                 Image(systemName: "laptopcomputer")
-                    .frame(minWidth: 100, maxWidth: 200)
+                    .frame(minWidth: 80, maxWidth: 200)
             }
             VStack(alignment: .leading, spacing: 10) {
                 if let manufacturerName = service.hardwareDetailItem?.manufacturer?.name,
@@ -221,69 +225,184 @@ struct DetailHeader: View {
 }
 
 
-// ABout Asset
+// About Asset
 struct AboutAssetView: View {
     @StateObject private var service = SnipeAPIService()
+    @Environment(\.prefersTabNavigation) private var prefersTabNavigation
+    @State private var showCreatedDate: Bool = false
+    
     var hardwareID: Int32
-
+    
     var body: some View {
-        List {
-            Section {
-                if let eol = service.hardwareDetailItem?.eol,
-                   let assetEolDate = service.hardwareDetailItem?.assetEolDate?.date {
-                    DetailRow(title: "EOL", value: "\(eol) (\(assetEolDate))")
-                }
-                if let bookValue = service.hardwareDetailItem?.bookValue {
-                    DetailRow(title: "Book Value", value: bookValue)
-                }
-                if let notes = service.hardwareDetailItem?.notes {
-                    DetailRow(title: "Notes", value: notes)
-                }
-                if let updated = service.hardwareDetailItem?.updatedAt?.formatted {
-                    DetailRow(title: "Updated", value: updated)
-                }
-                if let created = service.hardwareDetailItem?.createdAt?.formatted,
-                   let age = service.hardwareDetailItem?.age {
-                    DetailRow(title: "Created", value: "\(age) (\(created))")
+        ScrollView {
+            VStack {
+                loanStatusGroupBox()
+                if prefersTabNavigation {
+                    tabNavigationGroupBoxes()
+                } else {
+                    sideBySideGroupBoxes()
                 }
             }
-            Section("Supplier") {
-                if let name = service.hardwareDetailItem?.supplier?.name {
-                    DetailRow(title: "Supplier", value: name)
-                }
-                if let purchaseCost = service.hardwareDetailItem?.purchaseCost {
-                    DetailRow(title: "Purchase Cost", value: purchaseCost)
-                }
-                if let orderNumber = service.hardwareDetailItem?.orderNumber {
-                    DetailRow(title: "Order Number", value: orderNumber)
-                }
-                if let purchaseDate = service.hardwareDetailItem?.purchaseDate?.formatted {
-                    DetailRow(title: "Purchase Date", value: purchaseDate)
-                }
-            }
-            Section("Loan Status") {
-                if let location = service.hardwareDetailItem?.location?.name {
-                    DetailRow(title: "Location", value: location)
-                }
-                if let defaultLocation = service.hardwareDetailItem?.rtdLocation?.name {
-                    DetailRow(title: "Default Location", value: defaultLocation)
-                }
-                DetailRow(title: "Checked Out To", value: "\(String(describing: service.hardwareDetailItem?.assignedTo?.name ?? "Unknown"))")
-                DetailRow(title: "Checked Out On", value: "\(String(describing: service.hardwareDetailItem?.lastCheckout ?? "Unknown"))")
-                DetailRow(title: "Expected Check-In", value: "\(String(describing: service.hardwareDetailItem?.expectedCheckin ?? "Unknown"))")
-                DetailRow(title: "Check-In Counter", value: "\(String(describing: service.hardwareDetailItem?.checkinCounter ?? 0))")
-                DetailRow(title: "Check-Out Counter", value: "\(String(describing: service.hardwareDetailItem?.checkoutCounter ?? 0))")
-                DetailRow(title: "Requests Counter", value: "\(String(describing: service.hardwareDetailItem?.requestsCounter ?? 0))")
-                
-            }
+            .padding(.horizontal)
         }
-        .listStyle(.inset)
         .onAppear {
             service.fetchSpecificHardware(id: hardwareID)
         }
         .refreshable {
             service.fetchSpecificHardware(id: hardwareID)
         }
+    }
+    
+    private func loanStatusGroupBox() -> some View {
+        GroupBox("Loan Status") {
+            VStack {
+                if let assignedTo = service.hardwareDetailItem?.assignedTo?.name {
+                    GroupBox {
+                        HStack {
+                            Image(systemName: "person.circle.fill")
+                                .symbolRenderingMode(.hierarchical)
+                                .font(.largeTitle)
+                            VStack(alignment: .leading) {
+                                Text("Assigned To")
+                                    .font(.footnote)
+                                    .foregroundStyle(.secondary)
+                                Text(assignedTo)
+                                    .font(.title2)
+                                    .fontWeight(.medium)
+                            }
+                            Spacer()
+                        }
+                    }
+                }
+                detailRows()
+            }
+        }
+        .groupBoxStyle(MaterialGroupBox(spacing: 10, radius: 15, material: .thin))
+    }
+    
+    private func detailRows() -> some View {
+        Group {
+            if let location = service.hardwareDetailItem?.location?.name {
+                DetailRow(title: "Location", value: location)
+            }
+            if let defaultLocation = service.hardwareDetailItem?.rtdLocation?.name {
+                DetailRow(title: "Default Location", value: defaultLocation)
+            }
+            if let lastCheckout = service.hardwareDetailItem?.lastCheckout {
+                DetailRow(title: "Last Checkout", value: lastCheckout)
+            }
+            if let expectedCheckin = service.hardwareDetailItem?.expectedCheckin {
+                DetailRow(title: "Expected Check-In", value: expectedCheckin)
+            }
+            if let checkinCounter = service.hardwareDetailItem?.checkinCounter {
+                DetailRow(title: "Check-In Counter", value: "\(checkinCounter)")
+            }
+            if let checkoutCounter = service.hardwareDetailItem?.checkoutCounter {
+                DetailRow(title: "Check-Out Counter", value: "\(checkoutCounter)")
+            }
+            if let requestsCounter = service.hardwareDetailItem?.requestsCounter {
+                DetailRow(title: "Requests Counter", value: "\(requestsCounter)")
+            }
+        }
+    }
+    
+    private func tabNavigationGroupBoxes() -> some View {
+        Group {
+            detailsGroupBox()
+            supplierGroupBox()
+        }
+    }
+    
+    private func sideBySideGroupBoxes() -> some View {
+        HStack {
+            detailsGroupBox()
+            supplierGroupBox()
+        }
+    }
+    
+    private func detailsGroupBox() -> some View {
+        GroupBox("Details") {
+            VStack(alignment: .leading) {
+                Text(service.hardwareDetailItem?.notes ?? "No Asset Notes.")
+                    .multilineTextAlignment(.leading)
+                    .padding(5)
+                eolDetailRow()
+                auditDetailRows()
+                bookValueDetailRow()
+                updatedDetailRow()
+                createdDetailRow()
+            }
+        }
+        .groupBoxStyle(MaterialGroupBox(spacing: 10, radius: 15, material: .thin))
+    }
+    
+    private func supplierGroupBox() -> some View {
+        GroupBox("Supplier") {
+            VStack {
+                if let name = service.hardwareDetailItem?.supplier?.name {
+                    DetailRow(title: "Supplier", value: name)
+                }
+                if let purchaseCost = service.hardwareDetailItem?.purchaseCost {
+                    DetailRow(title: "Purchase Cost", value: "$\(purchaseCost)")
+                }
+                if let orderNumber = service.hardwareDetailItem?.orderNumber {
+                    DetailRow(title: "Order Number", value: "#\(orderNumber)")
+                }
+                if let purchaseDate = service.hardwareDetailItem?.purchaseDate?.formatted {
+                    DetailRow(title: "Purchase Date", value: purchaseDate)
+                }
+            }
+        }
+        .groupBoxStyle(MaterialGroupBox(spacing: 10, radius: 15, material: .thin))
+    }
+    
+    private func eolDetailRow() -> some View {
+        if let eol = service.hardwareDetailItem?.eol, let assetEolDate = service.hardwareDetailItem?.assetEolDate?.date {
+            return DetailRow(title: "EOL", value: "\(eol) (\(assetEolDate))").eraseToAnyView()
+        }
+        return EmptyView().eraseToAnyView()
+    }
+    
+    private func auditDetailRows() -> some View {
+        Group {
+            if let lastAuditDate = service.hardwareDetailItem?.lastAuditDate {
+                DetailRow(title: "Last Audit", value: lastAuditDate)
+            }
+            if let nextAuditDate = service.hardwareDetailItem?.nextAuditDate {
+                DetailRow(title: "Last Audit", value: nextAuditDate)
+            }
+        }
+    }
+    
+    private func bookValueDetailRow() -> some View {
+        if let bookValue = service.hardwareDetailItem?.bookValue {
+            return DetailRow(title: "Book Value", value: bookValue).eraseToAnyView()
+        }
+        return EmptyView().eraseToAnyView()
+    }
+    
+    private func updatedDetailRow() -> some View {
+        if let updated = service.hardwareDetailItem?.updatedAt?.formatted {
+            return DetailRow(title: "Updated", value: updated).eraseToAnyView()
+        }
+        return EmptyView().eraseToAnyView()
+    }
+    
+    private func createdDetailRow() -> some View {
+        if let created = service.hardwareDetailItem?.createdAt?.formatted, let age = service.hardwareDetailItem?.age {
+            return DetailRow(title: "Created", value: showCreatedDate ? "\(age)" : "\(created)")
+                .onTapGesture {
+                    showCreatedDate.toggle()
+                }
+                .eraseToAnyView()
+        }
+        return EmptyView().eraseToAnyView()
+    }
+}
+
+extension View {
+    func eraseToAnyView() -> AnyView {
+        AnyView(self)
     }
 }
 
@@ -292,11 +411,13 @@ struct DetailRow: View {
     var value: String
     
     var body: some View {
-        HStack {
-            Text(title)
-                .foregroundStyle(.secondary)
-            Spacer()
-            Text(value)
+        GroupBox {
+            HStack {
+                Text(title)
+                    .foregroundStyle(.secondary)
+                Spacer()
+                Text(value)
+            }
         }
     }
 }
