@@ -16,11 +16,14 @@ class SnipeAPIService: ObservableObject {
     @Published var categoryItem: [Category] = []
     @Published var maintenancesItem: [MaintenanceItem] = []
     @Published var components: [Component] = []
+    @Published var consumablesItems: [ConsumableItem] = []
 
 
     @Published var hardwareTotal: Int = 0
     @Published var userTotal: Int = 0
     @Published var maintenancesTotal: Int = 0
+    @Published var categoryTotal: Int = 0
+    @Published var consumablesTotal: Int = 0
 
     @Published var errorMessage: IdentifiableError?
 
@@ -108,12 +111,9 @@ class SnipeAPIService: ObservableObject {
     }
     
     // MARK: - Fetch all categories
-    func fetchCategories(category: String, useDefaultEula: Bool = false, requireAcceptance: Bool = false, checkinEmail: Bool = false, offset: Int = 0, sort: String = "created_at", order: String = "desc") {
+//    func fetchCategories(offset: Int = 0, sort: String = "created_at", order: String = "desc", category: String) {
+    func fetchCategories(offset: Int = 0, sort: String = "created_at", order: String = "desc") {
         let queryItems = [
-            URLQueryItem(name: "category_type", value: String(category)),
-            URLQueryItem(name: "use_default_eula", value: String(useDefaultEula.description)),
-            URLQueryItem(name: "require_acceptance", value: String(requireAcceptance.description)),
-            URLQueryItem(name: "checkin_email", value: String(checkinEmail.description)),
             URLQueryItem(name: "offset", value: String(offset)),
             URLQueryItem(name: "sort", value: sort),
             URLQueryItem(name: "order", value: order)
@@ -127,10 +127,12 @@ class SnipeAPIService: ObservableObject {
             DispatchQueue.main.async {
                 switch result {
                     case .success(let response):
+                            // Assuming self.categoryItem and self.categoryTotal are properties in your class
                         self.categoryItem = response.rows
-                        self.userTotal = response.total
+                        self.categoryTotal = response.total
                     case .failure(let error):
                         self.errorMessage = IdentifiableError(message: error.localizedDescription)
+                            // Handle error as needed (e.g., show alert, log, etc.)
                 }
             }
         }
@@ -189,7 +191,7 @@ class SnipeAPIService: ObservableObject {
         }
     }
     
-    // MARK: - Fetch asset maintenances
+    // MARK: - Fetch all Components
     func fetchAllComponents(offset: Int = 0, sort: String = "created_at", order: String = "desc") {
         let queryItems = [
             URLQueryItem(name: "offset", value: "0"),
@@ -209,6 +211,33 @@ class SnipeAPIService: ObservableObject {
                     case .success(let response):
                         self.components = response.rows
                         self.maintenancesTotal = response.total
+                    case .failure(let error):
+                        self.errorMessage = IdentifiableError(message: error.localizedDescription)
+                }
+            }
+        }
+    }
+    
+    // MARK: - Fetch all Consumables
+    func fetchAllConsumables(offset: Int = 0, sort: String = "created_at", order: String = "desc") {
+        let queryItems = [
+            URLQueryItem(name: "offset", value: "0"),
+            URLQueryItem(name: "order_number", value: "null"),
+            URLQueryItem(name: "sort", value: sort),
+            URLQueryItem(name: "order", value: order),
+            URLQueryItem(name: "expand", value: "true"),
+        ]
+        let headers = [
+            "accept": "application/json",
+            "Authorization": "Bearer \(apiKey)"
+        ]
+        
+        networkService.fetchData(urlString: "\(apiURL)consumables", queryItems: queryItems, headers: headers) { (result: Result<ConsumablesResponse, NetworkError>) in
+            DispatchQueue.main.async {
+                switch result {
+                    case .success(let response):
+                        self.consumablesItems = response.rows
+                        self.consumablesTotal = response.total
                     case .failure(let error):
                         self.errorMessage = IdentifiableError(message: error.localizedDescription)
                 }
