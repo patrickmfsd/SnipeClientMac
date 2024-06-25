@@ -33,48 +33,61 @@ struct AssetWidget: View {
                     }
                     .padding()
                 } else {
-                    ForEach(service.hardwareItems.prefix(5)) { hardware in
-                        Divider()
-                        NavigationLink(destination:  AssetDetailView(hardwareID: Int32(hardware.id))) {
-                            HStack(spacing: 10) {
-                                AsyncImage(url: URL(string: hardware.image ?? "")) { image in
-                                    image
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fit)
-                                        .frame(width: 80, height: 80)
-                                        .padding(5)
-                                        .background(.white, in: RoundedRectangle(cornerRadius: 15, style: .continuous))
-                                } placeholder: {
-                                    Image(systemName: "laptopcomputer")
-                                        .font(.system(size: 60))
-                                }
-                                VStack(alignment: .leading, spacing: 5) {
-                                    if let manufacturerName = hardware.manufacturer?.name,
-                                       let modelName = hardware.model?.name,
-                                       let deviceName = hardware.name {
-                                        VStack(alignment: .leading, spacing: 5) {
-                                            if manufacturerName != "" {
-                                                Text("\(manufacturerName)")
-                                                    .font(.footnote)
+                    ScrollView(.horizontal) {
+                        HStack {
+                            ForEach(service.hardwareItems.prefix(10)) { hardware in
+                                NavigationLink(destination:  AssetDetailView(hardwareID: Int32(hardware.id))) {
+                                    VStack(alignment: .center, spacing: 10) {
+                                        AsyncImage(url: URL(string: hardware.image ?? "")) { image in
+                                            image
+                                                .resizable()
+                                                .aspectRatio(contentMode: .fit)
+                                                .frame(width: 125, height: 125)
+                                                .padding(5)
+                                                .background(.white, in: RoundedRectangle(cornerRadius: 15, style: .continuous))
+                                        } placeholder: {
+                                            Image(systemName: "laptopcomputer")
+                                                .font(.system(size: 60))
+                                        }
+                                        if let manufacturerName = hardware.manufacturer?.name,
+                                           let modelName = hardware.model?.name,
+                                           let deviceName = hardware.name {
+                                            HStack {
+                                                VStack(alignment: .leading, spacing: 2) {
+                                                    HStack(spacing: 5){
+                                                        if manufacturerName != "" {
+                                                            Text("\(manufacturerName)")
+                                                                .foregroundStyle(Color.secondary)
+                                                                .fontWeight(.medium)
+                                                                .font(.caption)
+                                                        }
+                                                        
+                                                        if modelName != "" && modelName != deviceName {
+                                                            Text("\(modelName)")
+                                                                .font(.caption)
+                                                                .foregroundStyle(Color.secondary)
+                                                        }
+                                                    }
+                                                    if deviceName != "" {
+                                                        Text("\(deviceName)")
+                                                            .fontWeight(.semibold)
+                                                            .truncationMode(.tail)
+                                                    } else {
+                                                        Text("\(modelName)")
+                                                            .fontWeight(.semibold)
+                                                            .truncationMode(.tail)
+                                                    }
+                                                }
+                                                Spacer()
                                             }
-                                            
-                                            if modelName != "" && modelName != deviceName {
-                                                Text("\(modelName)")
-                                                    .font(modelName != "" ? .body : .footnote)
-                                            }
-                                            
-                                            if deviceName != "" {
-                                                Text("\(deviceName)")
-                                            }
+                                            .foregroundColor(.primary)
                                         }
                                     }
+                                    .padding(10)
+                                    .frame(width: 150, height: 200)
                                 }
-                                .foregroundColor(.primary)
-                                Spacer()
-                                Image(systemName: "chevron.right")
                             }
                         }
-                        .padding(.horizontal, 5)
                     }
                 }
             }
@@ -83,7 +96,6 @@ struct AssetWidget: View {
             }
         }
         .groupBoxStyle(MaterialGroupBox(spacing: 10, radius: 25, material: .thin))
-        .frame(minWidth: 320, maxWidth: 500)
     }
 }
 

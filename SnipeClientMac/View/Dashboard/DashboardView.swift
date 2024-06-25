@@ -11,8 +11,8 @@ struct DashboardView: View {
     @StateObject private var service = SnipeAPIService()
     
     let columns = [
-        GridItem(.adaptive(minimum: 300, maximum: 520)),
-        GridItem(.adaptive(minimum: 300, maximum: 520)),
+        GridItem(.adaptive(minimum: 300, maximum: 800)),
+        GridItem(.adaptive(minimum: 300, maximum: 800)),
     ]
     
     var body: some View {
@@ -21,14 +21,18 @@ struct DashboardView: View {
             VStack(spacing: 10) {
                 AssetWidget()
                 UsersWidgetView()
+                MaintenanceWidgetView()
             }
             .padding(.horizontal)
             #else
-            LazyVGrid(columns: columns) {
+            VStack(spacing: 10) {
                 AssetWidget()
-                UsersWidgetView()
+                LazyVGrid(columns: columns) {                   
+                    UsersWidgetView()
+                    MaintenanceWidgetView()
+                }
             }
-            .padding()
+            .padding(10)
             #endif
         }
         .toolbar {
