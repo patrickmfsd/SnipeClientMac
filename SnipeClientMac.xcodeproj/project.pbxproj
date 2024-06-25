@@ -46,6 +46,7 @@
 		77A932C42C0AE2C400F4B730 /* UserListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A932C32C0AE2C400F4B730 /* UserListView.swift */; };
 		77A932C62C0AFAAA00F4B730 /* Categories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A932C52C0AFAAA00F4B730 /* Categories.swift */; };
 		77A932C82C0D42A900F4B730 /* AssetDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77A932C72C0D42A900F4B730 /* AssetDetailView.swift */; };
+		77DEB3272C2952640061D228 /* MaintenanceWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77DEB3262C2952640061D228 /* MaintenanceWidgetView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -109,6 +110,7 @@
 		77A932C32C0AE2C400F4B730 /* UserListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserListView.swift; sourceTree = "<group>"; };
 		77A932C52C0AFAAA00F4B730 /* Categories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Categories.swift; sourceTree = "<group>"; };
 		77A932C72C0D42A900F4B730 /* AssetDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetDetailView.swift; sourceTree = "<group>"; };
+		77DEB3262C2952640061D228 /* MaintenanceWidgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaintenanceWidgetView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -236,6 +238,7 @@
 				778D732B2C0976560035829C /* DashboardView.swift */,
 				778D73312C09B78A0035829C /* AssetWidgetView.swift */,
 				778D73332C09B8490035829C /* UsersWidgetView.swift */,
+				77DEB3262C2952640061D228 /* MaintenanceWidgetView.swift */,
 			);
 			path = Dashboard;
 			sourceTree = "<group>";
@@ -449,6 +452,7 @@
 				776A069F2C23AB8100F91B5F /* MaintenancesTableView.swift in Sources */,
 				77A932C02C0AE26B00F4B730 /* UsersNavigationStack.swift in Sources */,
 				77712EFB2C09EFB900E64AA8 /* AssetListView.swift in Sources */,
+				77DEB3272C2952640061D228 /* MaintenanceWidgetView.swift in Sources */,
 				77A932C82C0D42A900F4B730 /* AssetDetailView.swift in Sources */,
 				778D73102C06A3CC0035829C /* AppTabView.swift in Sources */,
 				778D730F2C06A3CC0035829C /* AppSidebarList.swift in Sources */,
