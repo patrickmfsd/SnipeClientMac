@@ -60,7 +60,7 @@ struct HardwareItem: Codable, Identifiable {
     let availableActions: HardwareAvailableActions?
     
     enum CodingKeys: String, CodingKey {
-        case id, name, serial, model, byod, requestable, eol, notes, company, location, image, qr, altBarcode, /*lastAuditDate, nextAuditDate,*/ deletedAt, age, bookValue, availableActions, customFields, lastCheckout, lastCheckin, expectedCheckin
+        case id, name, serial, model, byod, requestable, eol, notes, company, location, image, qr, altBarcode, deletedAt, age, bookValue, availableActions, customFields, lastCheckout, lastCheckin, expectedCheckin
         case assetTag = "asset_tag"
         case assignedTo = "assigned_to"
         case modelNumber = "model_number"
