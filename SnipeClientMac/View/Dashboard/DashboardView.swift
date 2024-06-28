@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct DashboardView: View {
+    @Environment(\.prefersTabNavigation) private var prefersTabNavigation
+
     @StateObject private var service = SnipeAPIService()
     
     let columns = [
@@ -18,33 +20,52 @@ struct DashboardView: View {
     var body: some View {
         ScrollView {
             #if os(iOS)
-            VStack(spacing: 10) {
-                AssetWidget()
-                UsersWidgetView()
-                MaintenanceWidgetView()
-            }
-            .padding(.horizontal)
-            #else
-            VStack(spacing: 10) {
-                AssetWidget()
-                LazyVGrid(columns: columns) {                   
-                    UsersWidgetView()
-                    MaintenanceWidgetView()
+                if prefersTabNavigation {
+                    listView
+                } else {
+                    gridView
                 }
-            }
-            .padding(10)
+            #else
+            gridView
             #endif
         }
         .toolbar {
             ToolbarItem(placement: .automatic) {
-                Button(action: {
-                    service.fetchHardware()
-                    service.fetchUsers()
-                }, label: {
-                    Label("Refresh", systemImage: "arrow.clockwise")
-                })
+                if service.isLoading {
+                    ProgressView()
+                        .scaleEffect(0.6)
+                        .progressViewStyle(.circular)
+                } else {
+                    Button(action: {
+                        service.fetchHardware()
+                        service.fetchUsers()
+                        service.fetchAllMaintenances()
+                    }, label: {
+                        Label("Refresh", systemImage: "arrow.clockwise")
+                    })
+                }
             }
         }
+    }
+    
+    var gridView: some View {
+        VStack(spacing: 10) {
+            AssetWidget()
+            LazyVGrid(columns: columns) {
+                UsersWidgetView()
+                MaintenanceWidgetView()
+            }
+        }
+        .padding(10)
+    }
+    
+    var listView: some View {
+        VStack(spacing: 10) {
+            AssetListWidget()
+            UsersWidgetView()
+            MaintenanceWidgetView()
+        }
+        .padding(.horizontal)
     }
 }
 
