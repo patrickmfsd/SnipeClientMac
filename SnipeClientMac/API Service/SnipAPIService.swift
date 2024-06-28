@@ -8,35 +8,51 @@
 import SwiftUI
 import Combine
 
+struct AnyCacheable {
+    let value: Any
+}
+
 class SnipeAPIService: ObservableObject {
     @Published var hardwareItems: [HardwareItem] = []
     @Published var hardwareDetailItem: HardwareItem?
-
+    
     @Published var userItem: [User] = []
     @Published var categoryItem: [Category] = []
     @Published var maintenancesItem: [MaintenanceItem] = []
     @Published var components: [Component] = []
     @Published var consumablesItems: [ConsumableItem] = []
-
-
+    
     @Published var hardwareTotal: Int = 0
     @Published var userTotal: Int = 0
     @Published var maintenancesTotal: Int = 0
     @Published var categoryTotal: Int = 0
     @Published var consumablesTotal: Int = 0
-
+    
     @Published var errorMessage: IdentifiableError?
-
+    
     @AppStorage("apiURL") var apiURL = DefaultSettings.apiURL
     @AppStorage("apiKey") var apiKey = DefaultSettings.apiKey
     
+    @Published var isLoading: Bool = false
+    
     private let networkService = NetworkService()
+    private var cache: [String: AnyCacheable] = [:]
+    private var lastRequestTime: [String: Date] = [:]
+    private let requestInterval: TimeInterval = 30 //Seconds interval between requests
+    
+    private func isRequestAllowed(for key: String) -> Bool {
+        guard let lastTime = lastRequestTime[key] else {
+            return true
+        }
+        return Date().timeIntervalSince(lastTime) >= requestInterval
+    }
+    
     
     // MARK: - Fetch Hardware Assets
-    // limit: Int?
-    func fetchHardware(offset: Int = 0, sort: String = "created_at", order: String = "desc") {
+    func fetchHardware(limit: Int = 20, offset: Int = 0, sort: String = "created_at", order: String = "desc") {
+        let cacheKey = "hardwareItems\(limit)_\(offset)_\(sort)_\(order)"
         let queryItems = [
-            // URLQueryItem(name: "limit", value: String(limit)),
+            URLQueryItem(name: "limit", value: String(limit)),
             URLQueryItem(name: "offset", value: String(offset)),
             URLQueryItem(name: "sort", value: sort),
             URLQueryItem(name: "order", value: order)
@@ -45,13 +61,29 @@ class SnipeAPIService: ObservableObject {
             "accept": "application/json",
             "Authorization": "Bearer \(apiKey)"
         ]
+        if let cachedResponse = cache[cacheKey]?.value as? HardwareResponse {
+            self.hardwareItems = cachedResponse.rows
+            self.hardwareTotal = cachedResponse.total
+            return
+        }
         
+        guard isRequestAllowed(for: cacheKey) else { return }
+        self.isLoading = true
+
         networkService.fetchData(urlString: "\(apiURL)hardware", queryItems: queryItems, headers: headers) { (result: Result<HardwareResponse, NetworkError>) in
             DispatchQueue.main.async {
+                self.isLoading = false
+
                 switch result {
                     case .success(let response):
-                        self.hardwareItems = response.rows
+                        if offset == 0 {
+                            self.hardwareItems = response.rows
+                        } else {
+                            self.hardwareItems.append(contentsOf: response.rows)
+                        }
                         self.hardwareTotal = response.total
+                        self.cache[cacheKey] = AnyCacheable(value: response) // Store the item directly in the cache
+                        self.lastRequestTime[cacheKey] = Date()
                     case .failure(let error):
                         self.errorMessage = IdentifiableError(message: error.localizedDescription)
                 }
@@ -60,8 +92,9 @@ class SnipeAPIService: ObservableObject {
     }
     
     func fetchSpecificHardware(id: Int32 = 0, offset: Int = 0, sort: String = "created_at", order: String = "desc") {
+        let cacheKey = "hardwareDetailItem-\(id)"
+        
         let queryItems = [
-            // URLQueryItem(name: "limit", value: String(limit)),
             URLQueryItem(name: "offset", value: String(offset)),
             URLQueryItem(name: "sort", value: sort),
             URLQueryItem(name: "order", value: order)
@@ -71,11 +104,22 @@ class SnipeAPIService: ObservableObject {
             "Authorization": "Bearer \(apiKey)"
         ]
         
+        // Check the cache first
+        if let cachedResponse = cache[cacheKey]?.value as? HardwareItem {
+            self.hardwareDetailItem = cachedResponse
+            return
+        }
+        
+        // Check if the request is allowed
+        guard isRequestAllowed(for: cacheKey) else { return }
+        
         networkService.fetchData(urlString: "\(apiURL)hardware/\(id)", queryItems: queryItems, headers: headers) { (result: Result<HardwareItem, NetworkError>) in
             DispatchQueue.main.async {
                 switch result {
                     case .success(let response):
                         self.hardwareDetailItem = response
+                        self.cache[cacheKey] = AnyCacheable(value: response) // Store the item directly in the cache
+                        self.lastRequestTime[cacheKey] = Date()
                     case .failure(let error):
                         self.errorMessage = IdentifiableError(message: error.localizedDescription)
                 }

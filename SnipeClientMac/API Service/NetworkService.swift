@@ -84,3 +84,68 @@ class NetworkService {
         }.resume()
     }
 }
+
+
+//class NetworkService {
+//    private let cache = URLCache.shared
+//    private var requestTimestamps: [URL: Date] = [:]
+//    private let rateLimit: TimeInterval = 1 // e.g., 1 request per second
+//    
+//    func fetchData<T: Decodable>(urlString: String, queryItems: [URLQueryItem] = [], headers: [String: String] = [:], completion: @escaping (Result<T, NetworkError>) -> Void) {
+//        guard var components = URLComponents(string: urlString) else {
+//            completion(.failure(.invalidURL))
+//            return
+//        }
+//        
+//        components.queryItems = queryItems
+//        
+//        guard let url = components.url else {
+//            completion(.failure(.invalidURL))
+//            return
+//        }
+//        
+//        if let lastRequestTime = requestTimestamps[url], Date().timeIntervalSince(lastRequestTime) < rateLimit {
+//            completion(.failure(.requestFailed(NSError(domain: "", code: 429, userInfo: [NSLocalizedDescriptionKey: "Rate limit exceeded"]))))
+//            return
+//        }
+//        
+//        requestTimestamps[url] = Date()
+//        
+//        var request = URLRequest(url: url)
+//        request.httpMethod = "GET"
+//        request.timeoutInterval = 10
+//        headers.forEach { request.setValue($0.value, forHTTPHeaderField: $0.key) }
+//        
+//            // Check cache first
+//        if let cachedResponse = cache.cachedResponse(for: request),
+//           let data = cachedResponse.data as? T {
+//            completion(.success(data))
+//            return
+//        }
+//        
+//        URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
+//            if let error = error {
+//                completion(.failure(.requestFailed(error)))
+//                return
+//            }
+//            
+//            guard let data = data else {
+//                completion(.failure(.noData))
+//                return
+//            }
+//            
+//                // Cache the response
+//            if let response = response {
+//                let cachedResponse = CachedURLResponse(response: response, data: data)
+//                self?.cache.storeCachedResponse(cachedResponse, for: request)
+//            }
+//            
+//            do {
+//                let decodedData = try JSONDecoder().decode(T.self, from: data)
+//                completion(.success(decodedData))
+//            } catch {
+//                completion(.failure(.decodingFailed(error)))
+//            }
+//        }.resume()
+//    }
+//}
