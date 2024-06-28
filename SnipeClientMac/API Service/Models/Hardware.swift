@@ -14,7 +14,7 @@ struct HardwareResponse: Codable {
 }
 
 // MARK: - HardwareItem
-struct HardwareItem: Codable, Identifiable {
+struct HardwareItem: Codable, Identifiable, Equatable {
     let id: Int
     let name: String?
     let assetTag: String
@@ -78,14 +78,26 @@ struct HardwareItem: Codable, Identifiable {
         case warrantyExpires
         case lastAuditDate = "last_audit_date"
         case nextAuditDate = "next_audit_date"
-//        case lastCheckout = "last_checkout"
-//        case lastCheckin = "last_checkin"
-//        case expectedCheckin = "expected_checkin"
         case purchaseCost = "purchase_cost"
         case checkinCounter = "checkin_counter"
         case checkoutCounter = "checkout_counter"
         case requestsCounter = "requests_counter"
         case userCanCheckout = "user_can_checkout"
+    }
+    
+    // Conformance to Equatable
+    static func ==(lhs: HardwareItem, rhs: HardwareItem) -> Bool {
+        return lhs.id == rhs.id &&
+        lhs.name == rhs.name &&
+        lhs.assetTag == rhs.assetTag &&
+        lhs.serial == rhs.serial &&
+        lhs.manufacturer?.name == rhs.manufacturer?.name &&
+        lhs.modelNumber == rhs.modelNumber &&
+        lhs.category?.name == rhs.category?.name &&
+        lhs.location?.name == rhs.location?.name &&
+        lhs.assignedTo?.name == rhs.assignedTo?.name &&
+        lhs.expectedCheckin == rhs.expectedCheckin &&
+        lhs.image == rhs.image
     }
 }
 
