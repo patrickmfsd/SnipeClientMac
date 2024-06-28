@@ -61,7 +61,7 @@ extension AppScreen {
             case .components:
                 ComponentsNavigationStack()
             case .consumables:
-                EmptyView()
+                ConsumablesNavigationStack()
             case .accessories:
                 EmptyView()
             case .maintenance:
