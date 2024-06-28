@@ -22,19 +22,25 @@ struct AssetDetailView: View {
     @State private var selectedSegment: views = .details
 
     var body: some View {
-        VStack {
-            DetailHeader(hardwareID: hardwareID)
-            switch selectedSegment {
-                case .details:
-                    AboutAssetView(hardwareID: hardwareID)
-                case .components:
-                    EmptyView()
-                case .consumables:
-                    EmptyView()
-                case .maintenance:
-                    MaintenanceList(hardwareID: hardwareID)
+        ScrollView(.vertical) {
+            VStack(alignment: .leading) {
+                DetailHeader(hardwareID: hardwareID)
+                DeviceTags(hardwareID: hardwareID)
+                switch selectedSegment {
+                    case .details:
+                        AboutAssetView(hardwareID: hardwareID)
+                    case .components:
+                        EmptyView()
+                    case .consumables:
+                        EmptyView()
+                    case .maintenance:
+                        MaintenanceList(hardwareID: hardwareID)
+                }
+                Spacer()
             }
-            Spacer()
+        }
+        .refreshable {
+            service.fetchSpecificHardware(id: hardwareID)
         }
         .background(.background)
         .toolbarTitleDisplayMode(.inline)
@@ -93,9 +99,6 @@ struct AssetDetailView: View {
             }
             #endif
             
-        }
-        .refreshable {
-            service.fetchSpecificHardware(id: hardwareID)
         }
     }
 }
@@ -159,41 +162,6 @@ struct DetailHeader: View {
                         }
                     }
                 }
-                HStack(spacing: 5) {
-                    Text("\(String(describing: service.hardwareDetailItem?.statusLabel?.statusMeta?.capitalized ?? "Unknown"))")
-                        .font(.callout)
-                        .fontWeight(.medium)
-                        .foregroundStyle(.white)
-                        .padding(8)
-                        .background("\(String(describing: service.hardwareDetailItem?.statusLabel?.statusMeta?.capitalized ?? "Unknown"))" == "deployed" ? .gray : .green)
-                        .clipShape(RoundedRectangle(cornerRadius: 5, style: .continuous))
-                    
-                    if service.hardwareDetailItem?.requestable == true {
-                        Text("Requestable")
-                            .font(.callout)
-                            .fontWeight(.medium)
-                            .foregroundStyle(.white)
-                            .padding(8)
-                            .background(.green, in: RoundedRectangle(cornerRadius: 5, style: .continuous))
-                    }
-                    if service.hardwareDetailItem?.byod == true {
-                        Text("BYOD")
-                            .font(.callout)
-                            .fontWeight(.medium)
-                            .foregroundStyle(.white)
-                            .padding(8)
-                            .background(.green, in: RoundedRectangle(cornerRadius: 5, style: .continuous))
-                    }
-                    if let warrantyTime = service.hardwareDetailItem?.warrantyMonths,
-                       let warrantyExpires = service.hardwareDetailItem?.warrantyExpires {
-                        Text("\(warrantyTime) Months (\(warrantyExpires))")
-                            .font(.callout)
-                            .fontWeight(.medium)
-                            .foregroundStyle(.white)
-                            .padding(8)
-                            .background(.green, in: RoundedRectangle(cornerRadius: 5, style: .continuous))
-                    }
-                }
             }
             Spacer()
             if let qr = service.hardwareDetailItem?.qr {
@@ -219,13 +187,60 @@ struct DetailHeader: View {
                 }
             }
         }
-        .padding(10)
+        .padding()
         .onAppear {
             service.fetchSpecificHardware(id: hardwareID)
         }
     }
 }
 
+struct DeviceTags: View {
+    @StateObject private var service = SnipeAPIService()
+    
+    var hardwareID: Int32
+    
+    var body: some View {
+        HStack(spacing: 5) {
+            Text("\(String(describing: service.hardwareDetailItem?.statusLabel?.statusMeta?.capitalized ?? "Unknown"))")
+                .font(.callout)
+                .fontWeight(.medium)
+                .foregroundStyle(.white)
+                .padding(8)
+                .background("\(String(describing: service.hardwareDetailItem?.statusLabel?.statusMeta?.capitalized ?? "Unknown"))" == "deployed" ? .gray : .green)
+                .clipShape(RoundedRectangle(cornerRadius: 5, style: .continuous))
+            
+            if service.hardwareDetailItem?.requestable == true {
+                Text("Requestable")
+                    .font(.callout)
+                    .fontWeight(.medium)
+                    .foregroundStyle(.white)
+                    .padding(8)
+                    .background(.green, in: RoundedRectangle(cornerRadius: 5, style: .continuous))
+            }
+            if service.hardwareDetailItem?.byod == true {
+                Text("BYOD")
+                    .font(.callout)
+                    .fontWeight(.medium)
+                    .foregroundStyle(.white)
+                    .padding(8)
+                    .background(.green, in: RoundedRectangle(cornerRadius: 5, style: .continuous))
+            }
+            if let warrantyTime = service.hardwareDetailItem?.warrantyMonths,
+               let warrantyExpires = service.hardwareDetailItem?.warrantyExpires {
+                Text("\(warrantyTime) Months (\(warrantyExpires))")
+                    .font(.callout)
+                    .fontWeight(.medium)
+                    .foregroundStyle(.white)
+                    .padding(8)
+                    .background(.green, in: RoundedRectangle(cornerRadius: 5, style: .continuous))
+            }
+        }
+        .padding(.horizontal)
+        .onAppear {
+            service.fetchSpecificHardware(id: hardwareID)
+        }
+    }
+}
 
 // About Asset
 struct AboutAssetView: View {
@@ -236,14 +251,19 @@ struct AboutAssetView: View {
     var hardwareID: Int32
     
     var body: some View {
-        ScrollView {
-            VStack {
-                loanStatusGroupBox()
-                detailsGroupBox()
-                supplierGroupBox()
-            }
-            .padding(.horizontal)
+        VStack {
+            GroupBox("Notes") {
+                HStack {
+                    Text(service.hardwareDetailItem?.notes ?? "No Asset Notes.")
+                        .multilineTextAlignment(.leading)
+                    Spacer()
+                }
+            }.groupBoxStyle(MaterialGroupBox(spacing: 10, radius: 15, material: .thin))
+            loanStatusGroupBox()
+            detailsGroupBox()
+            supplierGroupBox()
         }
+        .padding(.horizontal)
         .onAppear {
             service.fetchSpecificHardware(id: hardwareID)
         }
@@ -274,7 +294,7 @@ struct AboutAssetView: View {
                     }
                 }
                 detailRows()
-            }
+            }            
         }
         .groupBoxStyle(MaterialGroupBox(spacing: 10, radius: 15, material: .thin))
     }
@@ -308,9 +328,6 @@ struct AboutAssetView: View {
     private func detailsGroupBox() -> some View {
         GroupBox("Details") {
             VStack(alignment: .leading) {
-                Text(service.hardwareDetailItem?.notes ?? "No Asset Notes.")
-                    .multilineTextAlignment(.leading)
-                    .padding(5)
                 eolDetailRow()
                 auditDetailRows()
                 bookValueDetailRow()
