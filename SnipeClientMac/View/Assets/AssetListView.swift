@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct AssetListView: View {
-    @StateObject private var viewModel = SnipeAPIService()
+    @StateObject private var service = SnipeAPIService()
     @State private var isShowingInspector = false
     
     @State private var selection: HardwareItem.ID?
@@ -16,7 +16,7 @@ struct AssetListView: View {
     @State var id: Int32 = 0
 
     var body: some View {
-        List(viewModel.hardwareItems, selection: $selection) { hardware in
+        List(service.hardwareItems, selection: $selection) { hardware in
             NavigationLink(destination:  AssetDetailView(hardwareID: Int32(hardware.id))) {
                 AssetRowView(
                     image: hardware.image ?? "",
@@ -28,12 +28,17 @@ struct AssetListView: View {
                 )
                 .tag(hardware.id)
             }
+            .onAppear {
+                if hardware == service.hardwareItems.last {
+                    service.fetchHardware(offset: service.hardwareItems.count)
+                }
+            }
         }
         .onAppear {
-            viewModel.fetchHardware()
+            service.fetchHardware()
         }
         .refreshable {
-            viewModel.fetchHardware()
+            service.fetchHardware()
         }
     }
 }
