@@ -23,23 +23,22 @@ struct AssetNavigationStack: View {
 }
 
 struct AssetCategoryListView: View {
-    @StateObject private var viewModel = SnipeAPIService()
+    @StateObject private var service = SnipeAPIService()
     
     var body: some View {
         VStack(alignment: .leading, spacing: 5) {
-            Text("Categories")
+            Text("Categories \(service.categoryTotal)")
                 .font(.headline)
-            ForEach(viewModel.categoryItem) { category in
+            ForEach(service.categoryItem) { category in
                 HStack {
-                    Text(category.name)
+                    Text(category.categoryType)
                     Spacer()
                     Text("\(category.assetsCount)")
                 }
             }
         }
         .onAppear {
-            viewModel.fetchCategories(category: "Asset")
-            print(viewModel.hardwareItems)
+            service.fetchCategories()
         }
     }
 }
@@ -50,12 +49,20 @@ struct AssetsView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack {
-                FeaturedNavigation(symbol: "laptopcomputer.and.iphone", color: .blue, label: "Hardware", count: "\(service.hardwareTotal)")
-                FeaturedNavigation(symbol: "cube.box", color: .blue, label: "Accessories")
+                NavigationLink(destination: AssetListView().navigationTitle("Hardware")) {
+                    FeaturedNavigation(symbol: "laptopcomputer.and.iphone", color: .blue, label: "Hardware", count: "\(service.hardwareTotal)")
+                }
+                NavigationLink(destination: EmptyView().navigationTitle("Accessories")) {
+                    FeaturedNavigation(symbol: "cube.box", color: .blue, label: "Accessories")
+                }
             }
             HStack {
-                FeaturedNavigation(symbol: "cpu", color: .green, label: "Components")
-                FeaturedNavigation(symbol: "drop.halffull", color: .orange, label: "Consumables")
+                NavigationLink(destination: ComponentsListView().navigationTitle("Components")) {
+                    FeaturedNavigation(symbol: "cpu", color: .green, label: "Components")
+                }
+                NavigationLink(destination: EmptyView().navigationTitle("Consumables")) {
+                    FeaturedNavigation(symbol: "drop.halffull", color: .orange, label: "Consumables")
+                }
             }
             AssetCategoryListView()
             Spacer()
