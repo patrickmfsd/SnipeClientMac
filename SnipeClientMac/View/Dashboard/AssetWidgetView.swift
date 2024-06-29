@@ -131,16 +131,16 @@ struct AssetListWidget: View {
                         VStack {
                             ForEach(service.hardwareItems.prefix(5)) { hardware in
                                 NavigationLink(destination:  AssetDetailView(hardwareID: Int32(hardware.id))) {
-                                    HStack(alignment: .center, spacing: 10) {
+                                    HStack(alignment: .center, spacing: 15) {
                                         AsyncImage(url: URL(string: hardware.image ?? "")) { image in
                                             image
                                                 .resizable()
                                                 .aspectRatio(contentMode: .fit)
                                         } placeholder: {
                                             Image(systemName: "laptopcomputer")
-                                                .font(.system(size: 60))
+                                                .font(.system(size: 50))
                                         }
-                                        .frame(width: 125, height: 125)
+                                        .frame(width: 60, height: 60)
                                         .padding(5)
                                         .background(.white, in: RoundedRectangle(cornerRadius: 15, style: .continuous))
                                         if let manufacturerName = hardware.manufacturer?.name,
