@@ -93,11 +93,17 @@ struct ConsumablesTableView: View {
         }
         .toolbar {
             ToolbarItem(placement: .automatic) {
-                Button(action: {
-                    service.fetchAllConsumables()
-                }, label: {
-                    Label("Refresh", systemImage: "arrow.clockwise")
-                })
+                if service.isLoading {
+                    ProgressView()
+                        .scaleEffect(0.6)
+                        .progressViewStyle(.circular)
+                } else {
+                    Button(action: {
+                        service.fetchAllConsumables()
+                    }, label: {
+                        Label("Refresh", systemImage: "arrow.clockwise")
+                    })
+                }
             }
         }
     }

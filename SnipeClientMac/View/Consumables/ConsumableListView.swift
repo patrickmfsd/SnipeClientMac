@@ -7,14 +7,23 @@
 
 import SwiftUI
 
-struct ConsumableListView: View {
+struct ConsumablesListView: View {
     @StateObject private var service = SnipeAPIService()
     
     @State private var selection: ConsumableItem.ID?
     
     var body: some View {
         List(service.consumablesItems, selection: $selection) { consumable in
-            Text(consumable.name)
+            VStack(alignment: .leading, spacing: 5) {
+                Text(consumable.name)
+                    .fontWeight(.medium)
+                HStack(spacing: 10) {
+                    Text(consumable.category.name)
+                    Spacer()
+                    Text("\(consumable.qty)")
+                }
+                .font(.callout)
+            }
         }
         .overlay {
             if service.consumablesItems.isEmpty {
@@ -32,5 +41,5 @@ struct ConsumableListView: View {
 }
 
 #Preview {
-    ConsumableListView()
+    ConsumablesListView()
 }
