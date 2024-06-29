@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ComponentsTableView: View {
-    @StateObject private var viewModel = SnipeAPIService()
+    @StateObject private var service = SnipeAPIService()
     
     @SceneStorage("ComponentsTableConfig")
     private var columnCustomization: TableColumnCustomization<Component>
@@ -17,11 +17,11 @@ struct ComponentsTableView: View {
     
     var body: some View {
         VStack {
-            if let error = viewModel.errorMessage {
+            if let error = service.errorMessage {
                 Text("Error: \(error.message)")
                     .foregroundColor(.red)
             } else {
-                Table(viewModel.components, selection: $selection, columnCustomization: $columnCustomization) {
+                Table(service.components, selection: $selection, columnCustomization: $columnCustomization) {
                     TableColumn("Image") { component in
                         AsyncImage(url: URL(string: component.image ?? "")) { image in
                             image
@@ -40,7 +40,7 @@ struct ComponentsTableView: View {
                     }
                     .customizationID("name")
                     TableColumn("Serial") { component in
-                        Text("\(component.serial)")
+                        Text("\(component.serial ?? "Unknown")")
                     }
                     .customizationID("serial")
                     TableColumn("Quantity") { component in
@@ -48,7 +48,7 @@ struct ComponentsTableView: View {
                     }
                     .customizationID("qty")
                     TableColumn("Order Number") { component in
-                        Text("\(component.orderNumber)")
+                        Text("\(component.orderNumber ?? "Unknown")")
                     }
                     .customizationID("orderNumber")
                     TableColumn("Remaining") { component in
@@ -56,43 +56,49 @@ struct ComponentsTableView: View {
                     }
                     .customizationID("remaining")
                     TableColumn("Supplier") { component in
-                        Text("\(component.supplier)")
+                        Text("\(component.supplier ?? "Unknown")")
                     }
                     .customizationID("supplier")
                     TableColumn("Purchase Date") { component in
-                        Text("\(component.purchaseDate)")
+                        Text("\(component.purchaseDate ?? "Unknown")")
                     }
                     .customizationID("purchaseDate")
                     TableColumn("Purchase Cost") { component in
-                        Text("\(component.purchaseCost)")
+                        Text("\(component.purchaseCost ?? "Unknown")")
                     }
                     .customizationID("purchaseCost")
                 }
             }
         }
         .onAppear {
-            viewModel.fetchAllComponents()
+            service.fetchAllComponents()
         }
         .refreshable {
-            viewModel.fetchAllComponents()
+            service.fetchAllComponents()
         }
-        .alert(item: $viewModel.errorMessage) { error in
+        .alert(item: $service.errorMessage) { error in
             Alert(
                 title: Text("Unable to retrieve Components"),
                 message: Text(error.message),
                 primaryButton: .default(Text("Retry"), action: {
-                    viewModel.fetchAllComponents()
+                    service.fetchAllComponents()
                 }),
                 secondaryButton: .cancel()
             )
         }
         .toolbar {
             ToolbarItem(placement: .automatic) {
-                Button(action: {
-                    viewModel.fetchAllComponents()
-                }, label: {
-                    Label("Refresh", systemImage: "arrow.clockwise")
-                })
+                if service.isLoading {
+                    ProgressView()
+                        .scaleEffect(0.6)
+                        .progressViewStyle(.circular)
+                } else {
+                    Button(action: {
+                        service.fetchAllComponents()
+                    }, label: {
+                        Label("Refresh", systemImage: "arrow.clockwise")
+                    })
+                }
             }
         }
     }

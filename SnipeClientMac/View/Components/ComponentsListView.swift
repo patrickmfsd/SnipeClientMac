@@ -8,19 +8,28 @@
 import SwiftUI
 
 struct ComponentsListView: View {
-    @StateObject private var viewModel = SnipeAPIService()
+    @StateObject private var service = SnipeAPIService()
     
     @State private var selection: Component.ID?
     
     var body: some View {
-        List(viewModel.components, selection: $selection) { component in
-            Text(component.name)
+        List(service.components, selection: $selection) { component in
+            VStack(alignment: .leading, spacing: 5) {
+                Text(component.name)
+                    .fontWeight(.medium)
+                HStack(spacing: 10) {
+                    Text(component.category.name)
+                    Spacer()
+                    Text("\(component.qty)")
+                }
+                .font(.callout)
+            }
         }
         .onAppear {
-            viewModel.fetchAllComponents()
+            service.fetchAllComponents()
         }
         .refreshable {
-            viewModel.fetchAllComponents()
+            service.fetchAllComponents()
         }
         .navigationTitle("Components")
     }
