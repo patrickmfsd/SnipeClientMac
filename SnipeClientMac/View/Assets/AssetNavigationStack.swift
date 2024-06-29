@@ -26,17 +26,20 @@ struct AssetCategoryListView: View {
     @StateObject private var service = SnipeAPIService()
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 5) {
-            Text("Categories \(service.categoryTotal)")
-                .font(.headline)
-            ForEach(service.categoryItem) { category in
-                HStack {
-                    Text(category.categoryType)
-                    Spacer()
-                    Text("\(category.assetsCount)")
+        VStack(alignment: .leading, spacing: 10) {
+            Text("Categories")
+                .font(.title3)
+                .fontWeight(.medium)
+            VStack(alignment: .leading, spacing: 5) {
+                ForEach(service.categoryItem) { category in
+                    RowView(
+                        name: category.name,
+                        count: "\(category.assetsCount)"
+                    )
                 }
             }
         }
+        .padding(.top, 15)
         .onAppear {
             service.fetchCategories()
         }
@@ -47,33 +50,41 @@ struct AssetsView: View {
     @StateObject private var service = SnipeAPIService()
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            HStack {
-                NavigationLink(destination: AssetListView().navigationTitle("Hardware")) {
-                    FeaturedNavigation(symbol: "laptopcomputer.and.iphone", color: .blue, label: "Hardware", count: "\(service.hardwareTotal)")
+        ScrollView(.vertical) {
+            VStack(alignment: .leading, spacing: 10) {
+                HStack {
+                    NavigationLink(destination: AssetListView().navigationTitle("Hardware")) {
+                        FeaturedNavigation(symbol: "laptopcomputer.and.iphone", color: .blue, label: "Hardware", count: "\(service.hardwareTotal)")
+                    }
+                    NavigationLink(destination: EmptyView().navigationTitle("Accessories")) {
+                        FeaturedNavigation(symbol: "cube.box", color: .blue, label: "Accessories")
+                    }
                 }
-                NavigationLink(destination: EmptyView().navigationTitle("Accessories")) {
-                    FeaturedNavigation(symbol: "cube.box", color: .blue, label: "Accessories")
+                HStack {
+                    NavigationLink(destination: ComponentsListView().navigationTitle("Components")) {
+                        FeaturedNavigation(symbol: "cpu", color: .green, label: "Components", count: "\(service.componentsTotal)")
+                    }
+                    NavigationLink(destination: EmptyView().navigationTitle("Consumables")) {
+                        FeaturedNavigation(symbol: "drop.halffull", color: .orange, label: "Consumables", count: "\(service.consumablesTotal)")
+                    }
                 }
+                AssetCategoryListView()
+                Spacer()
             }
-            HStack {
-                NavigationLink(destination: ComponentsListView().navigationTitle("Components")) {
-                    FeaturedNavigation(symbol: "cpu", color: .green, label: "Components")
-                }
-                NavigationLink(destination: EmptyView().navigationTitle("Consumables")) {
-                    FeaturedNavigation(symbol: "drop.halffull", color: .orange, label: "Consumables")
-                }
-            }
-            AssetCategoryListView()
-            Spacer()
+            .padding()
         }
-        .padding()
         .navigationTitle("Assets")
         .onAppear {
             service.fetchHardware()
+            service.fetchAllComponents()
+            service.fetchAllConsumables()
+            service.fetchCategories()
         }
         .refreshable {
             service.fetchHardware()
+            service.fetchAllComponents()
+            service.fetchAllConsumables()
+            service.fetchCategories()
         }
     }
 }
@@ -109,6 +120,30 @@ struct FeaturedNavigation: View {
                 }
             }
             .frame(height: 70)
+        }
+    }
+}
+
+struct RowView: View {
+    var name: String
+    var count: String
+    
+    var body: some View {
+        VStack {
+            Divider()
+            HStack(spacing: 10) {
+                Text(name)
+                    .foregroundStyle(.primary)
+                Spacer()
+                Text(count)
+                    .font(.footnote)
+                    .padding(.vertical, 5)
+                    .frame(width: 50)
+                    .background(.tint, in: Capsule())
+                Image(systemName: "chevron.right")
+            }
+            .padding(.vertical, 10)
+            .padding(.leading, 8)
         }
     }
 }
