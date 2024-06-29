@@ -13,15 +13,14 @@ struct CategoryResponse: Codable {
     let rows: [Category]
 }
 
-// MARK: - Category
 struct Category: Codable, Identifiable {
     let id: Int
     let name: String
     let image: String?
     let categoryType: String
-    let hasEULA: Bool
-    let useDefaultEULA: Bool
-    let eula: String
+    let hasEula: Bool
+    let useDefaultEula: Bool
+    let eula: String?
     let checkinEmail: Bool
     let requireAcceptance: Bool
     let itemCount: Int
@@ -30,38 +29,21 @@ struct Category: Codable, Identifiable {
     let consumablesCount: Int
     let componentsCount: Int
     let licensesCount: Int
-    let createdAt: DateTimeInfo
-    let updatedAt: DateTimeInfo
-    let availableActions: AvailableActions
+    let createdAt: CategoryDateTime
+    let updatedAt: CategoryDateTime
+    let availableActions: CategoryAvailableActions
     
     enum CodingKeys: String, CodingKey {
-        case id, name, image
-        case categoryType = "category_type"
-        case hasEULA = "has_eula"
-        case useDefaultEULA = "use_default_eula"
-        case eula
-        case checkinEmail = "checkin_email"
-        case requireAcceptance = "require_acceptance"
-        case itemCount = "item_count"
-        case assetsCount = "assets_count"
-        case accessoriesCount = "accessories_count"
-        case consumablesCount = "consumables_count"
-        case componentsCount = "components_count"
-        case licensesCount = "licenses_count"
-        case createdAt = "created_at"
-        case updatedAt = "updated_at"
-        case availableActions = "available_actions"
+        case id, name, image, categoryType = "category_type", hasEula = "has_eula", useDefaultEula = "use_default_eula", eula, checkinEmail = "checkin_email", requireAcceptance = "require_acceptance", itemCount = "item_count", assetsCount = "assets_count", accessoriesCount = "accessories_count", consumablesCount = "consumables_count", componentsCount = "components_count", licensesCount = "licenses_count", createdAt = "created_at", updatedAt = "updated_at", availableActions = "available_actions"
     }
 }
 
-struct DateTimeInfo: Codable {
+struct CategoryDateTime: Codable {
     let datetime: String
     let formatted: String
 }
 
-struct AvailableActions: Codable {
+struct CategoryAvailableActions: Codable {
     let update: Bool
     let delete: Bool
-    let clone: Bool
-    let restore: Bool
 }
