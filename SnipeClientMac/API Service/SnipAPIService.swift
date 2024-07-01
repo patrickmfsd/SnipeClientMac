@@ -18,7 +18,7 @@ class SnipeAPIService: ObservableObject {
     
     @Published var userItem: [User] = []
     @Published var categoryItem: [Category] = []
-    @Published var maintenancesItem: [MaintenanceItem] = []
+    @Published var maintenancesItem: [Maintenance] = []
     @Published var components: [Component] = []
     @Published var consumablesItems: [ConsumableItem] = []
     
@@ -27,6 +27,7 @@ class SnipeAPIService: ObservableObject {
     @Published var maintenancesTotal: Int = 0
     @Published var categoryTotal: Int = 0
     @Published var consumablesTotal: Int = 0
+    @Published var componentsTotal: Int = 0
     
     @Published var errorMessage: IdentifiableError?
     
@@ -38,7 +39,7 @@ class SnipeAPIService: ObservableObject {
     private let networkService = NetworkService()
     private var cache: [String: AnyCacheable] = [:]
     private var lastRequestTime: [String: Date] = [:]
-    private let requestInterval: TimeInterval = 30 //Seconds interval between requests
+    private let requestInterval: TimeInterval = 30 // Seconds interval between requests
     
     private func isRequestAllowed(for key: String) -> Bool {
         guard let lastTime = lastRequestTime[key] else {
@@ -47,8 +48,7 @@ class SnipeAPIService: ObservableObject {
         return Date().timeIntervalSince(lastTime) >= requestInterval
     }
     
-    
-    // MARK: - Fetch Hardware Assets
+        // MARK: - Fetch Hardware Assets
     func fetchHardware(limit: Int = 20, offset: Int = 0, sort: String = "created_at", order: String = "desc") {
         let cacheKey = "hardwareItems\(limit)_\(offset)_\(sort)_\(order)"
         let queryItems = [
@@ -69,11 +69,11 @@ class SnipeAPIService: ObservableObject {
         
         guard isRequestAllowed(for: cacheKey) else { return }
         self.isLoading = true
-
+        
         networkService.fetchData(urlString: "\(apiURL)hardware", queryItems: queryItems, headers: headers) { (result: Result<HardwareResponse, NetworkError>) in
             DispatchQueue.main.async {
                 self.isLoading = false
-
+                
                 switch result {
                     case .success(let response):
                         if offset == 0 {
@@ -82,7 +82,7 @@ class SnipeAPIService: ObservableObject {
                             self.hardwareItems.append(contentsOf: response.rows)
                         }
                         self.hardwareTotal = response.total
-                        self.cache[cacheKey] = AnyCacheable(value: response) // Store the item directly in the cache
+                        self.cache[cacheKey] = AnyCacheable(value: response)
                         self.lastRequestTime[cacheKey] = Date()
                     case .failure(let error):
                         self.errorMessage = IdentifiableError(message: error.localizedDescription)
@@ -104,21 +104,20 @@ class SnipeAPIService: ObservableObject {
             "Authorization": "Bearer \(apiKey)"
         ]
         
-        // Check the cache first
         if let cachedResponse = cache[cacheKey]?.value as? HardwareItem {
             self.hardwareDetailItem = cachedResponse
             return
         }
         
-        // Check if the request is allowed
         guard isRequestAllowed(for: cacheKey) else { return }
+        self.isLoading = true
         
         networkService.fetchData(urlString: "\(apiURL)hardware/\(id)", queryItems: queryItems, headers: headers) { (result: Result<HardwareItem, NetworkError>) in
             DispatchQueue.main.async {
                 switch result {
                     case .success(let response):
                         self.hardwareDetailItem = response
-                        self.cache[cacheKey] = AnyCacheable(value: response) // Store the item directly in the cache
+                        self.cache[cacheKey] = AnyCacheable(value: response)
                         self.lastRequestTime[cacheKey] = Date()
                     case .failure(let error):
                         self.errorMessage = IdentifiableError(message: error.localizedDescription)
@@ -127,8 +126,10 @@ class SnipeAPIService: ObservableObject {
         }
     }
     
-    // MARK: - Fetch Users
+        // MARK: - Fetch Users
     func fetchUsers(offset: Int = 0, sort: String = "created_at", order: String = "desc", deletedUsersOnly: Bool = false, includeDeleted: Bool = false) {
+        let cacheKey = "users_\(offset)_\(sort)_\(order)_\(deletedUsersOnly)_\(includeDeleted)"
+        
         let queryItems = [
             URLQueryItem(name: "offset", value: String(offset)),
             URLQueryItem(name: "sort", value: sort),
@@ -141,12 +142,27 @@ class SnipeAPIService: ObservableObject {
             "Authorization": "Bearer \(apiKey)"
         ]
         
+        if let cachedResponse = cache[cacheKey]?.value as? UserResponse {
+            self.userItem = cachedResponse.rows
+            self.userTotal = cachedResponse.total
+            return
+        }
+        
+        guard isRequestAllowed(for: cacheKey) else { return }
+        self.isLoading = true
+        
         networkService.fetchData(urlString: "\(apiURL)users", queryItems: queryItems, headers: headers) { (result: Result<UserResponse, NetworkError>) in
             DispatchQueue.main.async {
                 switch result {
                     case .success(let response):
-                        self.userItem = response.rows
+                        if offset == 0 {
+                            self.userItem = response.rows
+                        } else {
+                            self.userItem.append(contentsOf: response.rows)
+                        }
                         self.userTotal = response.total
+                        self.cache[cacheKey] = AnyCacheable(value: response)
+                        self.lastRequestTime[cacheKey] = Date()
                     case .failure(let error):
                         self.errorMessage = IdentifiableError(message: error.localizedDescription)
                 }
@@ -154,9 +170,10 @@ class SnipeAPIService: ObservableObject {
         }
     }
     
-    // MARK: - Fetch all categories
-//    func fetchCategories(offset: Int = 0, sort: String = "created_at", order: String = "desc", category: String) {
+        // MARK: - Fetch all categories
     func fetchCategories(offset: Int = 0, sort: String = "created_at", order: String = "desc") {
+        let cacheKey = "categories_\(offset)_\(sort)_\(order)"
+        
         let queryItems = [
             URLQueryItem(name: "offset", value: String(offset)),
             URLQueryItem(name: "sort", value: sort),
@@ -166,43 +183,71 @@ class SnipeAPIService: ObservableObject {
             "accept": "application/json",
             "Authorization": "Bearer \(apiKey)"
         ]
+        
+        if let cachedResponse = cache[cacheKey]?.value as? CategoryResponse {
+            self.categoryItem = cachedResponse.rows
+            self.categoryTotal = cachedResponse.total
+            return
+        }
+        
+        guard isRequestAllowed(for: cacheKey) else { return }
+        self.isLoading = true
         
         networkService.fetchData(urlString: "\(apiURL)categories", queryItems: queryItems, headers: headers) { (result: Result<CategoryResponse, NetworkError>) in
             DispatchQueue.main.async {
                 switch result {
                     case .success(let response):
-                            // Assuming self.categoryItem and self.categoryTotal are properties in your class
-                        self.categoryItem = response.rows
+                        if offset == 0 {
+                            self.categoryItem = response.rows
+                        } else {
+                            self.categoryItem.append(contentsOf: response.rows)
+                        }
                         self.categoryTotal = response.total
+                        self.cache[cacheKey] = AnyCacheable(value: response)
+                        self.lastRequestTime[cacheKey] = Date()
                     case .failure(let error):
                         self.errorMessage = IdentifiableError(message: error.localizedDescription)
-                            // Handle error as needed (e.g., show alert, log, etc.)
                 }
             }
         }
     }
     
-    // MARK: - Fetch asset maintenances
-    func fetchAssetMaintenances(offset: Int = 0, sort: String = "created_at", order: String = "desc", assetID: Int32?) {
-        let queryItems = [
+        // MARK: - Fetch asset maintenances
+    func fetchAssetMaintenances(offset: Int = 0, sort: String = "created_at", order: String = "desc", assetID: Int32? = nil) {
+        let cacheKey = "asset_maintenances_\(offset)_\(sort)_\(order)_\(String(describing: assetID))"
+        
+        var queryItems = [
             URLQueryItem(name: "offset", value: String(offset)),
             URLQueryItem(name: "sort", value: sort),
-            URLQueryItem(name: "order", value: order),
-            URLQueryItem(name: "asset_id", value: String(assetID ?? 0))
+            URLQueryItem(name: "order", value: order)
         ]
+        
+        if let assetID = assetID {
+            queryItems.append(URLQueryItem(name: "asset_id", value: String(assetID)))
+        }
+        
         let headers = [
             "accept": "application/json",
             "Authorization": "Bearer \(apiKey)"
         ]
         
-        networkService.fetchData(urlString: "\(apiURL)maintenances", queryItems: queryItems, headers: headers) { (result: Result<MaintenancesResponse, NetworkError>) in
+        if let cachedResponse = cache[cacheKey]?.value as? MaintenanceResponse {
+            self.maintenancesItem = cachedResponse.rows
+            self.maintenancesTotal = cachedResponse.total
+            return
+        }
+        
+        guard isRequestAllowed(for: cacheKey) else { return }
+        self.isLoading = true
+        
+        networkService.fetchData(urlString: "\(apiURL)maintenances", queryItems: queryItems, headers: headers) { (result: Result<MaintenanceResponse, NetworkError>) in
             DispatchQueue.main.async {
                 switch result {
                     case .success(let response):
                         self.maintenancesItem = response.rows
                         self.maintenancesTotal = response.total
-                        
-                        print(self.maintenancesTotal)
+                        self.cache[cacheKey] = AnyCacheable(value: response)
+                        self.lastRequestTime[cacheKey] = Date()
                     case .failure(let error):
                         self.errorMessage = IdentifiableError(message: error.localizedDescription)
                 }
@@ -210,8 +255,9 @@ class SnipeAPIService: ObservableObject {
         }
     }
     
-    // MARK: - Fetch asset maintenances
+        // MARK: - Fetch all Maintenances
     func fetchAllMaintenances(offset: Int = 0, sort: String = "created_at", order: String = "desc") {
+        let cacheKey = "all_maintenances_\(offset)_\(sort)_\(order)"
         let queryItems = [
             URLQueryItem(name: "offset", value: String(offset)),
             URLQueryItem(name: "sort", value: sort),
@@ -222,12 +268,23 @@ class SnipeAPIService: ObservableObject {
             "Authorization": "Bearer \(apiKey)"
         ]
         
-        networkService.fetchData(urlString: "\(apiURL)maintenances", queryItems: queryItems, headers: headers) { (result: Result<MaintenancesResponse, NetworkError>) in
+        if let cachedResponse = cache[cacheKey]?.value as? MaintenanceResponse {
+            self.maintenancesItem = cachedResponse.rows
+            self.maintenancesTotal = cachedResponse.total
+            return
+        }
+        
+        guard isRequestAllowed(for: cacheKey) else { return }
+        self.isLoading = true
+        
+        networkService.fetchData(urlString: "\(apiURL)maintenances", queryItems: queryItems, headers: headers) { (result: Result<MaintenanceResponse, NetworkError>) in
             DispatchQueue.main.async {
                 switch result {
                     case .success(let response):
                         self.maintenancesItem = response.rows
                         self.maintenancesTotal = response.total
+                        self.cache[cacheKey] = AnyCacheable(value: response)
+                        self.lastRequestTime[cacheKey] = Date()
                     case .failure(let error):
                         self.errorMessage = IdentifiableError(message: error.localizedDescription)
                 }
@@ -235,8 +292,9 @@ class SnipeAPIService: ObservableObject {
         }
     }
     
-    // MARK: - Fetch all Components
+        // MARK: - Fetch all Components
     func fetchAllComponents(offset: Int = 0, sort: String = "created_at", order: String = "desc") {
+        let cacheKey = "all_components_\(offset)_\(sort)_\(order)"
         let queryItems = [
             URLQueryItem(name: "offset", value: "0"),
             URLQueryItem(name: "order_number", value: "null"),
@@ -248,13 +306,24 @@ class SnipeAPIService: ObservableObject {
             "accept": "application/json",
             "Authorization": "Bearer \(apiKey)"
         ]
+        
+        if let cachedResponse = cache[cacheKey]?.value as? ComponentsResponse {
+            self.components = cachedResponse.rows
+            self.componentsTotal = cachedResponse.total
+            return
+        }
+        
+        guard isRequestAllowed(for: cacheKey) else { return }
+        self.isLoading = true
         
         networkService.fetchData(urlString: "\(apiURL)components", queryItems: queryItems, headers: headers) { (result: Result<ComponentsResponse, NetworkError>) in
             DispatchQueue.main.async {
                 switch result {
                     case .success(let response):
                         self.components = response.rows
-                        self.maintenancesTotal = response.total
+                        self.componentsTotal = response.total
+                        self.cache[cacheKey] = AnyCacheable(value: response)
+                        self.lastRequestTime[cacheKey] = Date()
                     case .failure(let error):
                         self.errorMessage = IdentifiableError(message: error.localizedDescription)
                 }
@@ -262,8 +331,9 @@ class SnipeAPIService: ObservableObject {
         }
     }
     
-    // MARK: - Fetch all Consumables
+        // MARK: - Fetch all Consumables
     func fetchAllConsumables(offset: Int = 0, sort: String = "created_at", order: String = "desc") {
+        let cacheKey = "all_consumables_\(offset)_\(sort)_\(order)"
         let queryItems = [
             URLQueryItem(name: "offset", value: "0"),
             URLQueryItem(name: "order_number", value: "null"),
@@ -275,6 +345,15 @@ class SnipeAPIService: ObservableObject {
             "accept": "application/json",
             "Authorization": "Bearer \(apiKey)"
         ]
+        
+        if let cachedResponse = cache[cacheKey]?.value as? ConsumablesResponse {
+            self.consumablesItems = cachedResponse.rows
+            self.consumablesTotal = cachedResponse.total
+            return
+        }
+        
+        guard isRequestAllowed(for: cacheKey) else { return }
+        self.isLoading = true
         
         networkService.fetchData(urlString: "\(apiURL)consumables", queryItems: queryItems, headers: headers) { (result: Result<ConsumablesResponse, NetworkError>) in
             DispatchQueue.main.async {
@@ -282,6 +361,8 @@ class SnipeAPIService: ObservableObject {
                     case .success(let response):
                         self.consumablesItems = response.rows
                         self.consumablesTotal = response.total
+                        self.cache[cacheKey] = AnyCacheable(value: response)
+                        self.lastRequestTime[cacheKey] = Date()
                     case .failure(let error):
                         self.errorMessage = IdentifiableError(message: error.localizedDescription)
                 }
