@@ -11,14 +11,8 @@ struct SettingsNavigationStack: View {
     @Environment(\.prefersTabNavigation) private var prefersTabNavigation
     
     var body: some View {
-        Group {
-            if prefersTabNavigation {
-                SettingsView()
-            } else {
-                NavigationStack {
-                    SettingsView()
-                }
-            }
+        NavigationStack {
+            SettingsView()
         }
     }
 }
