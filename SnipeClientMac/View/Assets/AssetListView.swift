@@ -14,13 +14,15 @@ struct AssetListView: View {
     @State private var selection: HardwareItem.ID?
     
     @State var id: Int32 = 0
+    
+    @State var searchTerm: String = ""
 
     var body: some View {
         List(service.hardwareItems, selection: $selection) { hardware in
             NavigationLink(destination:  AssetDetailView(hardwareID: Int32(hardware.id))) {
                 AssetRowView(
                     image: hardware.image ?? "",
-                    name: hardware.name ?? "",
+                    name: hardware.name?.replacingOccurrences(of: "&#039;", with: "'") ?? "",
                     manufacturer: hardware.manufacturer?.name ?? "",
                     model: hardware.model?.name ?? "",
                     assetNumber: hardware.assetTag,
@@ -34,12 +36,16 @@ struct AssetListView: View {
                 }
             }
         }
+        .onSubmit(of: .search) {
+            service.fetchHardware(searchTerm: searchTerm)
+        }
         .onAppear {
             service.fetchHardware()
         }
         .refreshable {
             service.fetchHardware()
         }
+        .searchable(text: $searchTerm, prompt: "Search")
     }
 }
 

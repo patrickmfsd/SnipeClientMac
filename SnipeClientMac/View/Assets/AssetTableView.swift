@@ -17,6 +17,8 @@ struct AssetTableView: View {
     @State private var isShowingInspector = false
     @State private var selection: HardwareItem.ID?
     
+    @State private var searchTerm: String = ""
+    
     var body: some View {
         VStack {
             Table(service.hardwareItems, selection: $selection, columnCustomization: $columnCustomization) {
@@ -38,7 +40,7 @@ struct AssetTableView: View {
                 TableColumn("Device Name") { hardware in
                     NavigationLink(destination: AssetDetailView(hardwareID: Int32(hardware.id))) {
                         if hardware.name != "" {
-                            Text(hardware.name ?? "")
+                            Text("\(hardware.replacingOccurrences(of: "&#039;", with: "'"))")
                                 .multilineTextAlignment(.leading)
                         } else {
                             Text(hardware.assetTag)
@@ -81,9 +83,16 @@ struct AssetTableView: View {
             }
             .onAppear {
                 if service.hardwareItems.isEmpty {
-                    service.fetchHardware()
+                    service.fetchHardware(searchTerm: searchTerm)
                 }
             }
+            .onSubmit(of: .search) {
+                service.fetchHardware(searchTerm: searchTerm)
+            }
+            .onChange(of: searchTerm) { newTerm in
+                service.fetchHardware(searchTerm: newTerm)
+            }
+            
             .onChange(of: service.hardwareItems) { oldItems, newItems in
                 if newItems.last != nil {
                     DispatchQueue.main.async {
@@ -99,7 +108,7 @@ struct AssetTableView: View {
                 title: Text("Unable to retrieve Assets"),
                 message: Text(error.message),
                 primaryButton: .default(Text("Retry"), action: {
-                    service.fetchHardware()
+                    service.fetchHardware(searchTerm: searchTerm)
                 }),
                 secondaryButton: .cancel()
             )
@@ -112,13 +121,14 @@ struct AssetTableView: View {
                         .progressViewStyle(.circular)
                 } else {
                     Button(action: {
-                        service.fetchHardware()
+                        service.fetchHardware(searchTerm: searchTerm)
                     }, label: {
                         Label("Refresh", systemImage: "arrow.clockwise")
                     })
                 }
             }
         }
+        .searchable(text: $searchTerm, prompt: "Search")
     }
 }
 

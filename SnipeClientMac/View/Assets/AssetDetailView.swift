@@ -9,9 +9,11 @@ import SwiftUI
 
 enum views: String, CaseIterable {
     case details = "About"
+    case assets = "Assets"
     case components = "Components"
     case consumables = "Consumables"
     case maintenance = "Maintenance"
+    case history = "History"
 }
 
 struct AssetDetailView: View {
@@ -29,12 +31,16 @@ struct AssetDetailView: View {
                 switch selectedSegment {
                     case .details:
                         AboutAssetView(hardwareID: hardwareID)
+                    case .assets:
+                        EmptyView()
                     case .components:
                         EmptyView()
                     case .consumables:
                         EmptyView()
                     case .maintenance:
                         MaintenanceList(hardwareID: hardwareID)
+                    case .history:
+                        EmptyView()
                 }
                 Spacer()
             }
@@ -71,6 +77,11 @@ struct AssetDetailView: View {
                     Button(action: {
                             // Action
                     }, label: {
+                        Label("Show History", systemImage: "clock.arrow.trianglehead.counterclockwise.rotate.90")
+                    })
+                    Button(action: {
+                            // Action
+                    }, label: {
                         Label("Edit", systemImage: "pencil")
                     })
                     Button(action: {
@@ -87,7 +98,7 @@ struct AssetDetailView: View {
                 Button(action: {
                         // Action
                 }, label: {
-                    Label("Create Maintenance Job", systemImage: "screwdriver")
+                    Label("Add", systemImage: "plus")
                 })
             }
             ToolbarItem(placement: .primaryAction) {
@@ -137,7 +148,9 @@ struct DetailHeader: View {
                         }
                         
                         if deviceName != "" {
-                            Text("\(deviceName)")
+                            Text(
+                                "\(deviceName.replacingOccurrences(of: "&#039;", with: "'"))"
+                            )
                                 .font(.title)
                         }
                     }
