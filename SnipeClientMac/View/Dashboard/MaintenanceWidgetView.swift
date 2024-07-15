@@ -11,30 +11,20 @@ struct MaintenanceWidgetView: View {
     @StateObject private var service = SnipeAPIService()
     
     var body: some View {
-        GroupBox {
-            VStack(alignment: .leading, spacing: 10) {
-                VStack(alignment: .leading) {
+        GroupBox(label:
                     Text("Recent Maintenances")
-                        .font(.title2)
-                        .fontWeight(.medium)
-                    Text("\(service.maintenancesTotal) Jobs")
-                        .foregroundStyle(.secondary)
-                }.padding(10)
-                if service.maintenancesItem.isEmpty {
-                    HStack {
-                        Spacer()
-                        VStack(alignment: .center, spacing: 10) {
-                            Image(systemName: "screwdriver")
-                                .font(.largeTitle)
-                            Text("Maintenances Jobs Unavailable")
-                                .font(.title2)
-                        }
-                        Spacer()
-                    }
-                    .padding()
-                } else {
-                    ForEach(service.maintenancesItem.prefix(5)) { maintenance in
-                        Divider()
+            .font(.title2)
+            .fontWeight(.medium)
+        ) {
+            if service.hardwareItems.isEmpty {
+                ContentUnavailableView(
+                    "Maintenances Jobs Unavailable",
+                    systemImage: "screwdriver"
+                )
+                .frame(maxHeight: .infinity)
+            } else {
+                List {
+                    ForEach(service.maintenancesItem.prefix(10)) { maintenance in
                         HStack {
                             VStack(alignment: .leading) {
                                 Text("\(maintenance.id) \(maintenance.title)")
@@ -42,15 +32,15 @@ struct MaintenanceWidgetView: View {
                             }
                             Spacer()
                         }
-                        .padding()
                     }
                 }
-            }
-            .onAppear {
-                service.fetchUsers()
+                .scrollContentBackground(.hidden)
             }
         }
-        .groupBoxStyle(MaterialGroupBox(spacing: 10, radius: 25, material: .thin))
+        .frame(height: 600)
+        .onAppear {
+            service.fetchAllMaintenances()
+        }
     }
 }
 

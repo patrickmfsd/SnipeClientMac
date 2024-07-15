@@ -11,30 +11,20 @@ struct UsersWidgetView: View {
     @StateObject private var service = SnipeAPIService()
     
     var body: some View {
-        GroupBox {
-            VStack(alignment: .leading, spacing: 10) {
-                VStack(alignment: .leading) {
+        GroupBox(label:
                     Text("Recent Users")
-                        .font(.title2)
-                        .fontWeight(.medium)
-                    Text("\(service.hardwareTotal) Users")
-                        .foregroundStyle(.secondary)
-                }.padding(10)
-                if service.userItem.isEmpty {
-                    HStack {
-                        Spacer()
-                        VStack(alignment: .center, spacing: 10) {
-                            Image(systemName: "person.slash")
-                                .font(.largeTitle)
-                            Text("Users Unavailable")
-                                .font(.title2)
-                        }
-                        Spacer()
-                    }
-                    .padding()
-                } else {
+            .font(.title2)
+            .fontWeight(.medium)
+        ) {
+            if service.userItem.isEmpty {
+                ContentUnavailableView(
+                    "Users Unavailable",
+                    systemImage: "person.fill.questionmark"
+                )
+                .frame(maxHeight: .infinity)
+            } else {
+                List {
                     ForEach(service.userItem.prefix(5)) { users in
-                        Divider()
                         HStack {
                             VStack(alignment: .leading) {
                                 Text("\(users.firstName) \(users.lastName)")
@@ -42,15 +32,15 @@ struct UsersWidgetView: View {
                             }
                             Spacer()
                         }
-                        .padding()
                     }
                 }
-            }
-            .onAppear {
-                service.fetchUsers()
+                .scrollContentBackground(.hidden)
             }
         }
-        .groupBoxStyle(MaterialGroupBox(spacing: 10, radius: 25, material: .thin))
+        .frame(height: 600)
+        .onAppear {
+            service.fetchUsers()
+        }
     }
 }
 

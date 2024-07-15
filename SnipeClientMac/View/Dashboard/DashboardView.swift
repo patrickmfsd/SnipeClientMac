@@ -50,8 +50,9 @@ struct DashboardView: View {
     
     var gridView: some View {
         VStack(spacing: 10) {
-            AssetWidget()
+            StatsWidgetView()
             LazyVGrid(columns: columns) {
+                AssetListWidget()
                 UsersWidgetView()
                 MaintenanceWidgetView()
             }
