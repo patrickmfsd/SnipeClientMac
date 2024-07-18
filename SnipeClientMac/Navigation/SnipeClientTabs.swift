@@ -10,10 +10,10 @@ import SwiftUI
 struct SnipeClientTabs: View {
     @Environment(\.prefersTabNavigation) private var prefersTabNavigation
     
-        /// Keep track of tab view customizations in app storage.
-#if !os(macOS) && !os(tvOS)
+    /// Keep track of tab view customizations in app storage.
+    #if !os(macOS) && !os(tvOS)
     @AppStorage("sidebarCustomizations") var tabViewCustomization: TabViewCustomization
-#endif
+    #endif
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     
     
@@ -75,33 +75,37 @@ struct SnipeClientTabs: View {
             .defaultVisibility(.hidden, for: .tabBar)
             #endif
             
-            Tab(
-                Tabs.consumables.name,
-                systemImage: Tabs.consumables.symbol,
-                value: .consumables
-            ) {
-                ConsumablesNavigationStack()
+            if !prefersTabNavigation {
+                Tab(
+                    Tabs.consumables.name,
+                    systemImage: Tabs.consumables.symbol,
+                    value: .consumables
+                ) {
+                    ConsumablesNavigationStack()
+                }
+                .customizationID(Tabs.consumables.customizationID)
+                #if !os(macOS) && !os(tvOS)
+                .customizationBehavior(.automatic, for: .sidebar, .tabBar)
+                .defaultVisibility(.visible, for: .sidebar)
+                .defaultVisibility(.hidden, for: .tabBar)
+                #endif
             }
-            .customizationID(Tabs.consumables.customizationID)
-            #if !os(macOS) && !os(tvOS)
-            .customizationBehavior(.automatic, for: .sidebar, .tabBar)
-            .defaultVisibility(.visible, for: .sidebar)
-            .defaultVisibility(.hidden, for: .tabBar)
-            #endif
             
-            Tab(
-                Tabs.maintenance.name,
-                systemImage: Tabs.maintenance.symbol,
-                value: .maintenance
-            ) {
-                MaintenancesNavigationStack()
+            if !prefersTabNavigation {
+                Tab(
+                    Tabs.maintenance.name,
+                    systemImage: Tabs.maintenance.symbol,
+                    value: .maintenance
+                ) {
+                    MaintenancesNavigationStack()
+                }
+                .customizationID(Tabs.maintenance.customizationID)
+                #if !os(macOS) && !os(tvOS)
+                .customizationBehavior(.automatic, for: .sidebar, .tabBar)
+                .defaultVisibility(.visible, for: .sidebar)
+                .defaultVisibility(.hidden, for: .tabBar)
+                #endif
             }
-            .customizationID(Tabs.maintenance.customizationID)
-            #if !os(macOS) && !os(tvOS)
-            .customizationBehavior(.automatic, for: .sidebar, .tabBar)
-            .defaultVisibility(.visible, for: .sidebar)
-            .defaultVisibility(.hidden, for: .tabBar)
-            #endif
             
             #if !os(macOS)
                 Tab(
