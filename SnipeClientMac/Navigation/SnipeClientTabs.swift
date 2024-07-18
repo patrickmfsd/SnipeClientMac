@@ -89,6 +89,20 @@ struct SnipeClientTabs: View {
             .defaultVisibility(.hidden, for: .tabBar)
             #endif
             
+            Tab(
+                Tabs.maintenance.name,
+                systemImage: Tabs.maintenance.symbol,
+                value: .maintenance
+            ) {
+                MaintenancesNavigationStack()
+            }
+            .customizationID(Tabs.maintenance.customizationID)
+            #if !os(macOS) && !os(tvOS)
+            .customizationBehavior(.automatic, for: .sidebar, .tabBar)
+            .defaultVisibility(.visible, for: .sidebar)
+            .defaultVisibility(.hidden, for: .tabBar)
+            #endif
+            
             #if !os(macOS)
                 Tab(
                     Tabs.settings.name,
