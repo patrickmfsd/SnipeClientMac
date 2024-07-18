@@ -24,11 +24,30 @@ struct UsersWidgetView: View {
                 .frame(maxHeight: .infinity)
             } else {
                 List {
-                    ForEach(service.userItem.prefix(5)) { users in
+                    ForEach(service.userItem.prefix(10)) { users in
                         HStack {
+                            AsyncImage(url: URL(string: users.avatar ?? "")) { image in
+                                image
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .padding(5)
+                            } placeholder: {
+                                Image(systemName: "person.crop.circle")
+                                    .font(.system(size: 50))
+                            }
+                            .frame(width: 60, height: 60)
+                            .padding(5)
+                            .background(.white, in: RoundedRectangle(cornerRadius: 15, style: .continuous))
                             VStack(alignment: .leading) {
-                                Text("\(users.firstName) \(users.lastName)")
-                                Text("Total Assets: \(service.userTotal)")
+                                Text("\(users.name)")
+                                    .font(.headline)
+                                if let usersCode = users.employeeNum {
+                                    Text("\(usersCode)")
+                                        .font(.subheadline)
+                                        .fontWeight(.medium)
+                                        .foregroundColor(.secondary)
+                                }
+                                Text("Assets: \(users.assetsCount)")
                             }
                             Spacer()
                         }
