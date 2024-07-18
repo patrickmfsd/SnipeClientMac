@@ -48,12 +48,26 @@ class SnipeAPIService: ObservableObject {
         return Date().timeIntervalSince(lastTime) >= requestInterval
     }
     
-        // MARK: - Fetch Hardware Assets
-    func fetchHardware(limit: Int = 20, offset: Int = 0, sort: String = "created_at", order: String = "desc") {
-        let cacheKey = "hardwareItems\(limit)_\(offset)_\(sort)_\(order)"
+    // MARK: - Fetch Hardware Assets
+    func fetchHardware(limit: Int = 20, offset: Int = 0, searchTerm: String = "", sort: String = "created_at", order: String = "desc") {
+        // Construct cache key
+        let cacheKey = "hardwareItems\(limit)_\(offset)_\(searchTerm)_\(sort)_\(order)"
+        
+        // Clear cache if searchTerm is not empty
+        if !searchTerm.isEmpty {
+            // Iterate over existing cache keys and remove those that contain the search term
+            for key in cache.keys {
+                if key.contains(searchTerm) {
+                    cache.removeValue(forKey: key)
+                }
+            }
+        }
+        
+        // Prepare query items and headers
         let queryItems = [
             URLQueryItem(name: "limit", value: String(limit)),
             URLQueryItem(name: "offset", value: String(offset)),
+            URLQueryItem(name: "search", value: searchTerm),
             URLQueryItem(name: "sort", value: sort),
             URLQueryItem(name: "order", value: order)
         ]
@@ -61,12 +75,15 @@ class SnipeAPIService: ObservableObject {
             "accept": "application/json",
             "Authorization": "Bearer \(apiKey)"
         ]
+        
+        // Check for cached response
         if let cachedResponse = cache[cacheKey]?.value as? HardwareResponse {
             self.hardwareItems = cachedResponse.rows
             self.hardwareTotal = cachedResponse.total
             return
         }
         
+        // Proceed with network request if not cached
         guard isRequestAllowed(for: cacheKey) else { return }
         self.isLoading = true
         
@@ -126,12 +143,25 @@ class SnipeAPIService: ObservableObject {
         }
     }
     
-        // MARK: - Fetch Users
-    func fetchUsers(offset: Int = 0, sort: String = "created_at", order: String = "desc", deletedUsersOnly: Bool = false, includeDeleted: Bool = false) {
-        let cacheKey = "users_\(offset)_\(sort)_\(order)_\(deletedUsersOnly)_\(includeDeleted)"
+    // MARK: - Fetch Users
+    func fetchUsers(limit: Int = 20, offset: Int = 0, searchTerm: String = "", sort: String = "created_at", order: String = "desc", deletedUsersOnly: Bool = false, includeDeleted: Bool = false) {
+        let cacheKey = "users_\(offset)_\(sort)_\(order)_\(searchTerm)_\(deletedUsersOnly)_\(includeDeleted)"
+        
+        
+        // Clear cache if searchTerm is not empty
+        if !searchTerm.isEmpty {
+            // Iterate over existing cache keys and remove those that contain the search term
+            for key in cache.keys {
+                if key.contains(searchTerm) {
+                    cache.removeValue(forKey: key)
+                }
+            }
+        }
         
         let queryItems = [
+            URLQueryItem(name: "limit", value: String(limit)),
             URLQueryItem(name: "offset", value: String(offset)),
+            URLQueryItem(name: "search", value: searchTerm),
             URLQueryItem(name: "sort", value: sort),
             URLQueryItem(name: "order", value: order),
             URLQueryItem(name: "deleted", value: "\(deletedUsersOnly.description)"),
@@ -153,6 +183,7 @@ class SnipeAPIService: ObservableObject {
         
         networkService.fetchData(urlString: "\(apiURL)users", queryItems: queryItems, headers: headers) { (result: Result<UserResponse, NetworkError>) in
             DispatchQueue.main.async {
+                self.isLoading = false
                 switch result {
                     case .success(let response):
                         if offset == 0 {
