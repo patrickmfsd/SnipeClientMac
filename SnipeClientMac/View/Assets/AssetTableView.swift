@@ -40,7 +40,7 @@ struct AssetTableView: View {
                 TableColumn("Device Name") { hardware in
                     NavigationLink(destination: AssetDetailView(hardwareID: Int32(hardware.id))) {
                         if hardware.name != "" {
-                            Text("\(hardware.replacingOccurrences(of: "&#039;", with: "'"))")
+                            Text(hardware.name?.replacingOccurrences(of: "&#039;", with: "'") ?? "")
                                 .multilineTextAlignment(.leading)
                         } else {
                             Text(hardware.assetTag)
@@ -89,7 +89,7 @@ struct AssetTableView: View {
             .onSubmit(of: .search) {
                 service.fetchHardware(searchTerm: searchTerm)
             }
-            .onChange(of: searchTerm) { newTerm in
+            .onChange(of: searchTerm) { oldTerm, newTerm in
                 service.fetchHardware(searchTerm: newTerm)
             }
             
