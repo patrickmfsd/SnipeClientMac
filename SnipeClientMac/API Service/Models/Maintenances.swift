@@ -7,91 +7,88 @@
 
 import Foundation
 
-    // ResponseBody Model
-struct  MaintenancesResponse: Codable {
-    let total: Int
-    let rows: [MaintenanceItem]
+struct MaintenanceResponse: Codable {
+    var total: Int
+    var rows: [Maintenance]
 }
 
-struct MaintenanceItem: Codable, Identifiable {
-    let id: Int
-    let asset: Asset
-    let title: String
-    let location: MaintenanceLocation
-    let notes: String?
-    let supplier: MaintenanceSupplier?
-    let cost: Double?
-    let assetMaintenanceType: String
-    let startDate: MaintenanceStartDate
-    let assetMaintenanceTime: Int
-    let completionDate: MaintenanceCompletionDate
-    let userId: MaintenanceUser
-    let createdAt: MaintenanceCreatedDate
-    let updatedAt: MaintenanceUpdateDate
-    let availableActions: MaintenanceAvailableActions
+struct Maintenance: Codable, Identifiable {
+    var id: Int
+    var asset: MaintenanceAsset?
+    var model: MaintenanceModel?
+    var statusLabel: MaintenanceStatusLabel?
+    var company: String?
+    var title: String?
+    var location: MaintenanceLocation?
+    var rtdLocation: MaintenanceLocation?
+    var notes: String?
+    var supplier: MaintenanceSupplier?
+    var cost: Double?
+    var assetMaintenanceType: String?
+    var startDate: DateInfo?
+    var assetMaintenanceTime: Int?
+    var completionDate: DateInfo?
+    var userId: MaintenanceUser?
+    var createdAt: DateTimeInfo?
+    var updatedAt: DateTimeInfo?
+    var isWarranty: Int?
+    var availableActions: [String: Bool]
     
     enum CodingKeys: String, CodingKey {
-        case id, asset, title, location, notes, supplier, cost
-        case assetMaintenanceType = "asset_maintenance_type"
-        case startDate = "start_date"
-        case assetMaintenanceTime = "asset_maintenance_time"
-        case completionDate = "completion_date"
-        case userId = "user_id"
-        case createdAt = "created_at"
-        case updatedAt = "updated_at"
-        case availableActions = "available_actions"
+        case id, asset, model, statusLabel = "status_label", company, title, location, rtdLocation = "rtd_location", notes, supplier, cost, assetMaintenanceType = "asset_maintenance_type", startDate = "start_date", assetMaintenanceTime = "asset_maintenance_time", completionDate = "completion_date", userId = "user_id", createdAt = "created_at", updatedAt = "updated_at", isWarranty = "is_warranty", availableActions = "available_actions"
     }
 }
 
-struct Asset: Codable {
-    let id: Int
-    let name: String
-    let assetTag: String
+struct MaintenanceAsset: Codable {
+    var id: Int
+    var name: String?
+    var assetTag: String?
+    var serial: String?
+    var deletedAt: String?
+    var createdAt: String?
     
     enum CodingKeys: String, CodingKey {
-        case id
-        case name
-        case assetTag = "asset_tag"
+        case id, name, assetTag = "asset_tag", serial, deletedAt = "deleted_at", createdAt = "created_at"
+    }
+}
+
+struct MaintenanceModel: Codable {
+    var id: Int
+    var name: String
+}
+
+struct MaintenanceStatusLabel: Codable {
+    var id: Int
+    var name: String
+    var statusType: String
+    var statusMeta: String
+    
+    enum CodingKeys: String, CodingKey {
+        case id, name, statusType = "status_type", statusMeta = "status_meta"
     }
 }
 
 struct MaintenanceLocation: Codable {
-    let id: Int
-    let name: String
+    var id: Int
+    var name: String
 }
 
 struct MaintenanceSupplier: Codable {
-    let id: Int
-    let name: String
+    var id: Int
+    var name: String
 }
 
 struct MaintenanceUser: Codable {
-    let id: Int
-    let name: String
+    var id: Int
+    var name: String
 }
 
-struct MaintenanceStartDate: Codable {
-    let datetime: Int
-    let formated: String
+struct DateInfo: Codable {
+    var date: String
+    var formatted: String
 }
 
-struct MaintenanceCompletionDate: Codable {
-    let datetime: Int
-    let formated: String
-}
-
-struct MaintenanceCreatedDate: Codable {
-    let datetime: Int
-    let formated: String
-}
-
-struct MaintenanceUpdateDate: Codable {
-    let datetime: Int
-    let formated: String
-}
-
-struct MaintenanceAvailableActions: Codable {
-    let delete: Bool
-    let update: Bool
-        // Add other relevant properties
+struct DateTimeInfo: Codable {
+    var datetime: String
+    var formatted: String
 }
