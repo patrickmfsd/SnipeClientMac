@@ -23,8 +23,8 @@ struct UsersWidgetView: View {
                 )
                 .frame(maxHeight: .infinity)
             } else {
-                List {
-                    ForEach(service.userItem.prefix(10)) { users in
+                ForEach(service.userItem.prefix(5)) { users in
+                    NavigationLink(destination: EmptyView()) {
                         HStack {
                             AsyncImage(url: URL(string: users.avatar ?? "")) { image in
                                 image
@@ -33,9 +33,10 @@ struct UsersWidgetView: View {
                                     .padding(5)
                             } placeholder: {
                                 Image(systemName: "person.crop.circle")
-                                    .font(.system(size: 50))
+                                    .font(.system(size: 45))
+                                    .foregroundStyle(.black)
                             }
-                            .frame(width: 60, height: 60)
+                            .frame(width: 55, height: 55)
                             .padding(5)
                             .background(.white, in: RoundedRectangle(cornerRadius: 15, style: .continuous))
                             VStack(alignment: .leading) {
@@ -51,12 +52,11 @@ struct UsersWidgetView: View {
                             }
                             Spacer()
                         }
+                        .frame(height: 80)
                     }
                 }
-                .scrollContentBackground(.hidden)
             }
         }
-        .frame(height: 600)
         .onAppear {
             service.fetchUsers()
         }

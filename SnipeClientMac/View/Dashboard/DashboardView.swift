@@ -56,6 +56,7 @@ struct DashboardView: View {
                 UsersWidgetView()
                 MaintenanceWidgetView()
             }
+            Spacer()
         }
         .padding(10)
     }
