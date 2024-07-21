@@ -61,20 +61,21 @@ struct SnipeClientTabs: View {
             .defaultVisibility(.hidden, for: .tabBar)
             #endif
             
-            Tab(
-                Tabs.components.name,
-                systemImage: Tabs.components.symbol,
-                value: .components
-            ) {
-                ComponentsNavigationStack()
+            if !prefersTabNavigation {
+                Tab(
+                    Tabs.components.name,
+                    systemImage: Tabs.components.symbol,
+                    value: .components
+                ) {
+                    ComponentsNavigationStack()
+                }
+                .customizationID(Tabs.components.customizationID)
+                #if !os(macOS) && !os(tvOS)
+                .customizationBehavior(.automatic, for: .sidebar, .tabBar)
+                .defaultVisibility(.visible, for: .sidebar)
+                .defaultVisibility(.hidden, for: .tabBar)
+                #endif
             }
-            .customizationID(Tabs.components.customizationID)
-            #if !os(macOS) && !os(tvOS)
-            .customizationBehavior(.automatic, for: .sidebar, .tabBar)
-            .defaultVisibility(.visible, for: .sidebar)
-            .defaultVisibility(.hidden, for: .tabBar)
-            #endif
-            
             if !prefersTabNavigation {
                 Tab(
                     Tabs.consumables.name,
@@ -91,21 +92,19 @@ struct SnipeClientTabs: View {
                 #endif
             }
             
-            if !prefersTabNavigation {
-                Tab(
-                    Tabs.maintenance.name,
-                    systemImage: Tabs.maintenance.symbol,
-                    value: .maintenance
-                ) {
-                    MaintenancesNavigationStack()
-                }
-                .customizationID(Tabs.maintenance.customizationID)
-                #if !os(macOS) && !os(tvOS)
-                .customizationBehavior(.automatic, for: .sidebar, .tabBar)
-                .defaultVisibility(.visible, for: .sidebar)
-                .defaultVisibility(.hidden, for: .tabBar)
-                #endif
+            Tab(
+                Tabs.maintenance.name,
+                systemImage: Tabs.maintenance.symbol,
+                value: .maintenance
+            ) {
+                MaintenancesNavigationStack()
             }
+            .customizationID(Tabs.maintenance.customizationID)
+            #if !os(macOS) && !os(tvOS)
+            .customizationBehavior(.automatic, for: .sidebar, .tabBar)
+            .defaultVisibility(.visible, for: .sidebar)
+            .defaultVisibility(.hidden, for: .tabBar)
+            #endif
             
             #if !os(macOS)
                 Tab(
