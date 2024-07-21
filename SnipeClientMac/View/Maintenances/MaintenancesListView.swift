@@ -8,20 +8,45 @@
 import SwiftUI
 
 struct MaintenancesListView: View {
-    @StateObject private var viewModel = SnipeAPIService()
+    @StateObject private var service = SnipeAPIService()
     
-    @State private var selection: MaintenanceItem.ID?
+    @State private var selection: Maintenance.ID?
 
     var body: some View {
-        List(viewModel.maintenancesItem, selection: $selection) { maintenance in
-            Text(maintenance.title)
+        List(service.maintenancesItem, selection: $selection) { maintenance in
+            HStack {
+                VStack(alignment: .leading){
+                    HStack(spacing: 2) {
+                        if maintenance.isWarranty == 1 {
+                            Text("Warranty")
+                        }
+                        if let type = maintenance.assetMaintenanceType {
+                            Text(type)
+                        }
+                    }
+                    .font(.headline)
+                    .fontWeight(.medium)
+                    .foregroundColor(.secondary)
+                    if let assetName = maintenance.asset?.name {
+                        Text(assetName)
+                            .multilineTextAlignment(.leading)
+                    }
+                    Text(maintenance.title ?? "")
+                        .lineLimit(3, reservesSpace: true)
+                        .multilineTextAlignment(.leading)
+                        .font(.headline)
+                }
+                Spacer()
+            }
+            .frame(height: 80)
+
         }
         .onAppear {
-            viewModel.fetchAllMaintenances()
-            print(viewModel.maintenancesItem)
+            service.fetchAllMaintenances()
+            print(service.maintenancesItem)
         }
         .refreshable {
-            viewModel.fetchAllMaintenances()
+            service.fetchAllMaintenances()
         }
         .navigationTitle("Maintenances")
     }

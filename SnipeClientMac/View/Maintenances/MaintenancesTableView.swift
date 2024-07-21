@@ -8,38 +8,42 @@
 import SwiftUI
 
 struct MaintenancesTableView: View {
-    @StateObject private var viewModel = SnipeAPIService()
+    @StateObject private var service = SnipeAPIService()
     
     @SceneStorage("MaintenancesTableConfig")
-    private var columnCustomization: TableColumnCustomization<MaintenanceItem>
+    private var columnCustomization: TableColumnCustomization<Maintenance>
     
-    @State private var selection: MaintenanceItem.ID?
+    @State private var selection: Maintenance.ID?
     
     var body: some View {
         VStack {
-            if let error = viewModel.errorMessage {
+            if let error = service.errorMessage {
                 Text("Error: \(error.message)")
                     .foregroundColor(.red)
             } else {
-                Table(viewModel.maintenancesItem, selection: $selection, columnCustomization: $columnCustomization) {
+                Table(service.maintenancesItem, selection: $selection, columnCustomization: $columnCustomization) {
                     TableColumn("Title") { maintenance in
-                        Text("\(maintenance.title)")
+                        Text("\(maintenance.title ?? "No Title")")
                     }
                     .customizationID("title")
                     TableColumn("Type") { maintenance in
-                        Text("\(maintenance.assetMaintenanceType)")
+                        Text("\(maintenance.assetMaintenanceType ?? "Unknown Type")")
                     }
                     .customizationID("assetMaintenanceType")
                     TableColumn("Created") { maintenance in
-                        Text("\(maintenance.createdAt)")
+                        Text("\(maintenance.createdAt?.formatted ?? "Unknown")")
                     }
                     .customizationID("createdAt")
+                    TableColumn("Technician") { maintenance in
+                        Text("\(maintenance.userId?.name ?? "Unknown")")
+                    }
+                    .customizationID("createdBy")
                     TableColumn("Started") { maintenance in
-                        Text("\(maintenance.startDate)")
+                        Text("\(maintenance.startDate?.formatted ?? "Unknown")")
                     }
                     .customizationID("startDate")
                     TableColumn("Completed") { maintenance in
-                        Text("\(maintenance.completionDate)")
+                        Text("\(maintenance.completionDate?.formatted ?? "")")
                     }
                     .customizationID("completionDate")
                     TableColumn("Supplier") { maintenance in
@@ -54,28 +58,34 @@ struct MaintenancesTableView: View {
             }
         }
         .onAppear {
-            viewModel.fetchAllMaintenances()
+            service.fetchAllMaintenances()
         }
         .refreshable {
-            viewModel.fetchAllMaintenances()
+            service.fetchAllMaintenances()
         }
-        .alert(item: $viewModel.errorMessage) { error in
+        .alert(item: $service.errorMessage) { error in
             Alert(
                 title: Text("Unable to retrieve Maintenances"),
                 message: Text(error.message),
                 primaryButton: .default(Text("Retry"), action: {
-                    viewModel.fetchAllMaintenances()
+                    service.fetchAllMaintenances()
                 }),
                 secondaryButton: .cancel()
             )
         }
         .toolbar {
             ToolbarItem(placement: .automatic) {
-                Button(action: {
-                    viewModel.fetchAllMaintenances()
-                }, label: {
-                    Label("Refresh", systemImage: "arrow.clockwise")
-                })
+                if service.isLoading {
+                    ProgressView()
+                        .scaleEffect(0.6)
+                        .progressViewStyle(.circular)
+                } else {
+                    Button(action: {
+                        service.fetchAllMaintenances()
+                    }, label: {
+                        Label("Refresh", systemImage: "arrow.clockwise")
+                    })
+                }
             }
         }
     }
