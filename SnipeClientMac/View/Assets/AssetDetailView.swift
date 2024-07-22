@@ -446,10 +446,12 @@ struct MaintenanceList: View {
     var hardwareID: Int32
 
     var body: some View {
-        List(service.maintenancesItem) { maintenance in
-            HStack {
-                VStack {
-                    Text(maintenance.title)
+        List {
+            ForEach(service.maintenancesItem) { maintenance in
+                HStack {
+                    VStack {
+                        Text(maintenance.title ?? "")
+                    }
                 }
             }
         }
@@ -460,9 +462,6 @@ struct MaintenanceList: View {
         }
         .onAppear {
             service.fetchAssetMaintenances(assetID: hardwareID)
-            print(service.maintenancesItem)
-            print(service.maintenancesTotal)
-
         }
         .refreshable {
             service.fetchAssetMaintenances(assetID: hardwareID)

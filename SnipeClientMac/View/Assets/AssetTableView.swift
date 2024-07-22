@@ -14,9 +14,7 @@ struct AssetTableView: View {
     
     @SceneStorage("AssetTableConfig") private var columnCustomization: TableColumnCustomization<HardwareItem>
     
-    @State private var isShowingInspector = false
     @State private var selection: HardwareItem.ID?
-    
     @State private var searchTerm: String = ""
     
     var body: some View {
