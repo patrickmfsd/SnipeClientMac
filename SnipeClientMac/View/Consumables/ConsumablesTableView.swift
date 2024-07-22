@@ -25,7 +25,7 @@ struct ConsumablesTableView: View {
                             .aspectRatio(contentMode: .fit)
                             .frame(width: 80)
                     } placeholder: {
-                        Image(systemName: "cpu")
+                        Image(systemName: "drop.halffull")
                             .font(.system(size: 50))
                     }
                 }
