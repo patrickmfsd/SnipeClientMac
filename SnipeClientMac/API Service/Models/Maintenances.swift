@@ -12,7 +12,7 @@ struct MaintenanceResponse: Codable {
     var rows: [Maintenance]
 }
 
-struct Maintenance: Codable, Identifiable {
+struct Maintenance: Codable, Identifiable, Equatable {
     var id: Int
     var asset: MaintenanceAsset?
     var model: MaintenanceModel?
@@ -39,7 +39,7 @@ struct Maintenance: Codable, Identifiable {
     }
 }
 
-struct MaintenanceAsset: Codable {
+struct MaintenanceAsset: Codable, Equatable {
     var id: Int
     var name: String?
     var assetTag: String?
@@ -52,12 +52,12 @@ struct MaintenanceAsset: Codable {
     }
 }
 
-struct MaintenanceModel: Codable {
+struct MaintenanceModel: Codable, Equatable {
     var id: Int
     var name: String
 }
 
-struct MaintenanceStatusLabel: Codable {
+struct MaintenanceStatusLabel: Codable, Equatable {
     var id: Int
     var name: String
     var statusType: String
@@ -68,27 +68,27 @@ struct MaintenanceStatusLabel: Codable {
     }
 }
 
-struct MaintenanceLocation: Codable {
+struct MaintenanceLocation: Codable, Equatable {
     var id: Int
     var name: String
 }
 
-struct MaintenanceSupplier: Codable {
+struct MaintenanceSupplier: Codable, Equatable {
     var id: Int
     var name: String
 }
 
-struct MaintenanceUser: Codable {
+struct MaintenanceUser: Codable, Equatable {
     var id: Int
     var name: String
 }
 
-struct DateInfo: Codable {
+struct DateInfo: Codable, Equatable {
     var date: String
     var formatted: String
 }
 
-struct DateTimeInfo: Codable {
+struct DateTimeInfo: Codable, Equatable {
     var datetime: String
     var formatted: String
 }

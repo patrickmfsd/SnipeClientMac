@@ -14,28 +14,28 @@ struct ConsumablesResponse: Codable {
 }
 
     // Inventory item model
-struct ConsumableItem: Codable, Identifiable {
+struct ConsumableItem: Codable, Identifiable, Equatable {
     let id: Int
     let name: String
     let image: String?
-    let category: Category
-    let company: ConsumableCompany
-    let itemNo: String
+    let category: ConsumableCategory?
+    let company: ConsumableCompany?
+    let itemNo: String?
     let location: String?
-    let manufacturer: ConsumableManufacturer
-    let supplier: ConsumableSupplier
-    let minAmt: Int
+    let manufacturer: ConsumableManufacturer?
+    let supplier: ConsumableSupplier?
+    let minAmt: Int?
     let modelNumber: String?
-    let remaining: Int
-    let orderNumber: String
-    let purchaseCost: String
-    let purchaseDate: ConsumablePurchaseDate
-    let qty: Int
+    let remaining: Int?
+    let orderNumber: String?
+    let purchaseCost: String?
+    let purchaseDate: ConsumablePurchaseDate?
+    let qty: Int?
     let notes: String?
-    let createdAt: ConsumableDateTimeInfo
-    let updatedAt: ConsumableDateTimeInfo
+    let createdAt: ConsumableDateTimeInfo?
+    let updatedAt: ConsumableDateTimeInfo?
     let userCanCheckout: Bool
-    let availableActions: ConsumableAvailableActions
+    let availableActions: ConsumableAvailableActions?
     
     enum CodingKeys: String, CodingKey {
         case id, name, image, category, company, location, manufacturer, supplier, notes, qty
@@ -54,37 +54,37 @@ struct ConsumableItem: Codable, Identifiable {
 }
 
 // Nested models
-struct ConsumableCategory: Codable {
+struct ConsumableCategory: Codable, Equatable {
     let id: Int
     let name: String
 }
 
-struct ConsumableCompany: Codable {
+struct ConsumableCompany: Codable, Equatable {
     let id: Int
     let name: String
 }
 
-struct ConsumableManufacturer: Codable {
+struct ConsumableManufacturer: Codable, Equatable {
     let id: Int
     let name: String
 }
 
-struct ConsumableSupplier: Codable {
+struct ConsumableSupplier: Codable, Equatable {
     let id: Int
     let name: String
 }
 
-struct ConsumablePurchaseDate: Codable {
+struct ConsumablePurchaseDate: Codable, Equatable {
     let date: String
     let formatted: String
 }
 
-struct ConsumableDateTimeInfo: Codable {
+struct ConsumableDateTimeInfo: Codable, Equatable {
     let datetime: String
     let formatted: String
 }
 
-struct ConsumableAvailableActions: Codable {
+struct ConsumableAvailableActions: Codable, Equatable {
     let checkout: Bool
     let checkin: Bool
     let update: Bool

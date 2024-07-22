@@ -49,7 +49,7 @@ class SnipeAPIService: ObservableObject {
     }
     
     // MARK: - Fetch Hardware Assets
-    func fetchHardware(limit: Int = 20, offset: Int = 0, searchTerm: String = "", sort: String = "created_at", order: String = "desc") {
+    func fetchHardware(limit: Int = 25, offset: Int = 0, searchTerm: String = "", sort: String = "created_at", order: String = "desc") {
         // Construct cache key
         let cacheKey = "hardwareItems\(limit)_\(offset)_\(searchTerm)_\(sort)_\(order)"
         
@@ -131,6 +131,8 @@ class SnipeAPIService: ObservableObject {
         
         networkService.fetchData(urlString: "\(apiURL)hardware/\(id)", queryItems: queryItems, headers: headers) { (result: Result<HardwareItem, NetworkError>) in
             DispatchQueue.main.async {
+                self.isLoading = false
+
                 switch result {
                     case .success(let response):
                         self.hardwareDetailItem = response
@@ -144,9 +146,8 @@ class SnipeAPIService: ObservableObject {
     }
     
     // MARK: - Fetch Users
-    func fetchUsers(limit: Int = 20, offset: Int = 0, searchTerm: String = "", sort: String = "created_at", order: String = "desc", deletedUsersOnly: Bool = false, includeDeleted: Bool = false) {
+    func fetchUsers(limit: Int = 25, offset: Int = 0, searchTerm: String = "", sort: String = "created_at", order: String = "desc", deletedUsersOnly: Bool = false, includeDeleted: Bool = false) {
         let cacheKey = "users_\(offset)_\(sort)_\(order)_\(searchTerm)_\(deletedUsersOnly)_\(includeDeleted)"
-        
         
         // Clear cache if searchTerm is not empty
         if !searchTerm.isEmpty {
@@ -201,7 +202,7 @@ class SnipeAPIService: ObservableObject {
         }
     }
     
-        // MARK: - Fetch all categories
+    // MARK: - Fetch all categories
     func fetchCategories(offset: Int = 0, sort: String = "created_at", order: String = "desc") {
         let cacheKey = "categories_\(offset)_\(sort)_\(order)"
         
@@ -226,6 +227,8 @@ class SnipeAPIService: ObservableObject {
         
         networkService.fetchData(urlString: "\(apiURL)categories", queryItems: queryItems, headers: headers) { (result: Result<CategoryResponse, NetworkError>) in
             DispatchQueue.main.async {
+                self.isLoading = false
+
                 switch result {
                     case .success(let response):
                         if offset == 0 {
@@ -244,10 +247,11 @@ class SnipeAPIService: ObservableObject {
     }
     
         // MARK: - Fetch asset maintenances
-    func fetchAssetMaintenances(offset: Int = 0, sort: String = "created_at", order: String = "desc", assetID: Int32? = nil) {
+    func fetchAssetMaintenances(limit: Int = 25, offset: Int = 0, sort: String = "created_at", order: String = "desc", assetID: Int32? = nil) {
         let cacheKey = "asset_maintenances_\(offset)_\(sort)_\(order)_\(String(describing: assetID))"
         
         var queryItems = [
+            URLQueryItem(name: "limit", value: String(limit)),
             URLQueryItem(name: "offset", value: String(offset)),
             URLQueryItem(name: "sort", value: sort),
             URLQueryItem(name: "order", value: order)
@@ -273,9 +277,15 @@ class SnipeAPIService: ObservableObject {
         
         networkService.fetchData(urlString: "\(apiURL)maintenances", queryItems: queryItems, headers: headers) { (result: Result<MaintenanceResponse, NetworkError>) in
             DispatchQueue.main.async {
+                self.isLoading = false
+
                 switch result {
                     case .success(let response):
-                        self.maintenancesItem = response.rows
+                        if offset == 0 {
+                            self.maintenancesItem = response.rows
+                        } else {
+                            self.maintenancesItem.append(contentsOf: response.rows)
+                        }
                         self.maintenancesTotal = response.total
                         self.cache[cacheKey] = AnyCacheable(value: response)
                         self.lastRequestTime[cacheKey] = Date()
@@ -287,10 +297,13 @@ class SnipeAPIService: ObservableObject {
     }
     
         // MARK: - Fetch all Maintenances
-    func fetchAllMaintenances(offset: Int = 0, sort: String = "created_at", order: String = "desc") {
+    func fetchAllMaintenances(limit: Int = 25, offset: Int = 0, searchTerm: String = "", sort: String = "created_at", order: String = "desc") {
         let cacheKey = "all_maintenances_\(offset)_\(sort)_\(order)"
+        
         let queryItems = [
+            URLQueryItem(name: "limit", value: String(limit)),
             URLQueryItem(name: "offset", value: String(offset)),
+            URLQueryItem(name: "search", value: searchTerm),
             URLQueryItem(name: "sort", value: sort),
             URLQueryItem(name: "order", value: order)
         ]
@@ -310,9 +323,15 @@ class SnipeAPIService: ObservableObject {
         
         networkService.fetchData(urlString: "\(apiURL)maintenances", queryItems: queryItems, headers: headers) { (result: Result<MaintenanceResponse, NetworkError>) in
             DispatchQueue.main.async {
+                self.isLoading = false
+
                 switch result {
                     case .success(let response):
-                        self.maintenancesItem = response.rows
+                        if offset == 0 {
+                            self.maintenancesItem = response.rows
+                        } else {
+                            self.maintenancesItem.append(contentsOf: response.rows)
+                        }
                         self.maintenancesTotal = response.total
                         self.cache[cacheKey] = AnyCacheable(value: response)
                         self.lastRequestTime[cacheKey] = Date()
@@ -324,14 +343,25 @@ class SnipeAPIService: ObservableObject {
     }
     
         // MARK: - Fetch all Components
-    func fetchAllComponents(offset: Int = 0, sort: String = "created_at", order: String = "desc") {
-        let cacheKey = "all_components_\(offset)_\(sort)_\(order)"
+    func fetchAllComponents(limit: Int = 25, offset: Int = 0, searchTerm: String = "", sort: String = "created_at", order: String = "desc") {
+        let cacheKey = "all_components_\(offset)_\(sort)_\(order)_\(searchTerm)"
+        
+        // Clear cache if searchTerm is not empty
+        if !searchTerm.isEmpty {
+            // Iterate over existing cache keys and remove those that contain the search term
+            for key in cache.keys {
+                if key.contains(searchTerm) {
+                    cache.removeValue(forKey: key)
+                }
+            }
+        }
+        
         let queryItems = [
-            URLQueryItem(name: "offset", value: "0"),
-            URLQueryItem(name: "order_number", value: "null"),
+            URLQueryItem(name: "limit", value: String(limit)),
+            URLQueryItem(name: "offset", value: String(offset)),
+            URLQueryItem(name: "search", value: searchTerm),
             URLQueryItem(name: "sort", value: sort),
-            URLQueryItem(name: "order", value: order),
-            URLQueryItem(name: "expand", value: "true"),
+            URLQueryItem(name: "order", value: order)
         ]
         let headers = [
             "accept": "application/json",
@@ -349,9 +379,14 @@ class SnipeAPIService: ObservableObject {
         
         networkService.fetchData(urlString: "\(apiURL)components", queryItems: queryItems, headers: headers) { (result: Result<ComponentsResponse, NetworkError>) in
             DispatchQueue.main.async {
+                self.isLoading = false
                 switch result {
                     case .success(let response):
-                        self.components = response.rows
+                        if offset == 0 {
+                            self.components = response.rows
+                        } else {
+                            self.components.append(contentsOf: response.rows)
+                        }
                         self.componentsTotal = response.total
                         self.cache[cacheKey] = AnyCacheable(value: response)
                         self.lastRequestTime[cacheKey] = Date()
@@ -363,14 +398,25 @@ class SnipeAPIService: ObservableObject {
     }
     
         // MARK: - Fetch all Consumables
-    func fetchAllConsumables(offset: Int = 0, sort: String = "created_at", order: String = "desc") {
-        let cacheKey = "all_consumables_\(offset)_\(sort)_\(order)"
+    func fetchAllConsumables(limit: Int = 25, offset: Int = 0, searchTerm: String = "", sort: String = "created_at", order: String = "desc") {
+        let cacheKey = "all_consumables_\(offset)_\(sort)_\(order)_\(searchTerm)"
+        
+        // Clear cache if searchTerm is not empty
+        if !searchTerm.isEmpty {
+            // Iterate over existing cache keys and remove those that contain the search term
+            for key in cache.keys {
+                if key.contains(searchTerm) {
+                    cache.removeValue(forKey: key)
+                }
+            }
+        }
+        
         let queryItems = [
-            URLQueryItem(name: "offset", value: "0"),
-            URLQueryItem(name: "order_number", value: "null"),
+            URLQueryItem(name: "limit", value: String(limit)),
+            URLQueryItem(name: "offset", value: String(offset)),
+            URLQueryItem(name: "search", value: searchTerm),
             URLQueryItem(name: "sort", value: sort),
-            URLQueryItem(name: "order", value: order),
-            URLQueryItem(name: "expand", value: "true"),
+            URLQueryItem(name: "order", value: order)
         ]
         let headers = [
             "accept": "application/json",
@@ -388,9 +434,15 @@ class SnipeAPIService: ObservableObject {
         
         networkService.fetchData(urlString: "\(apiURL)consumables", queryItems: queryItems, headers: headers) { (result: Result<ConsumablesResponse, NetworkError>) in
             DispatchQueue.main.async {
+                self.isLoading = false
+
                 switch result {
                     case .success(let response):
-                        self.consumablesItems = response.rows
+                        if offset == 0 {
+                            self.consumablesItems = response.rows
+                        } else {
+                            self.consumablesItems.append(contentsOf: response.rows)
+                        }
                         self.consumablesTotal = response.total
                         self.cache[cacheKey] = AnyCacheable(value: response)
                         self.lastRequestTime[cacheKey] = Date()

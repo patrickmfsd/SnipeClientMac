@@ -12,26 +12,26 @@ struct ComponentsResponse: Codable {
     let rows: [Component]
 }
 
-struct Component: Codable, Identifiable {
+struct Component: Codable, Identifiable, Equatable {
     let id: Int
     let name: String
     let image: String?
     let serial: String?
     let location: String?
-    let qty: Int
-    let minAmt: Int
-    let category: ComponentCategory
-    let supplier: String?
+    let qty: Int?
+    let minAmt: Int?
+    let category: ComponentCategory?
+    let supplier: ComponentSupplier?
     let orderNumber: String?
     let purchaseDate: String?
     let purchaseCost: String?
-    let remaining: Int
+    let remaining: Int?
     let company: String?
     let notes: String?
-    let createdAt: ComponentDateInfo
-    let updatedAt: ComponentDateInfo
-    let userCanCheckout: Int
-    let availableActions: ComponentAvailableActions
+    let createdAt: ComponentDateInfo?
+    let updatedAt: ComponentDateInfo?
+    let userCanCheckout: Int?
+    let availableActions: ComponentAvailableActions?
     
     enum CodingKeys: String, CodingKey {
         case id, name, image, serial, location, qty
@@ -48,17 +48,22 @@ struct Component: Codable, Identifiable {
     }
 }
 
-struct ComponentCategory: Codable {
+struct ComponentCategory: Codable, Equatable {
     let id: Int
     let name: String
 }
 
-struct ComponentDateInfo: Codable {
+struct ComponentSupplier: Codable, Equatable {
+    let id: Int
+    let name: String
+}
+
+struct ComponentDateInfo: Codable, Equatable {
     let datetime: String
     let formatted: String
 }
 
-struct ComponentAvailableActions: Codable {
+struct ComponentAvailableActions: Codable, Equatable {
     let checkout: Bool
     let checkin: Bool
     let update: Bool

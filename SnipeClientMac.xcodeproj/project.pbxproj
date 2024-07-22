@@ -12,6 +12,8 @@
 		7704A7EC2C1BFB1E00E49CC4 /* MaintenancesListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7704A7EB2C1BFB1E00E49CC4 /* MaintenancesListView.swift */; };
 		773C03B52C44C84400695A45 /* Tabs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 773C03B42C44C84400695A45 /* Tabs.swift */; };
 		773C03B72C44CA7B00695A45 /* SnipeClientTabs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 773C03B62C44CA7B00695A45 /* SnipeClientTabs.swift */; };
+		773C03BD2C4520FF00695A45 /* StatsWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 773C03BC2C4520FF00695A45 /* StatsWidgetView.swift */; };
+		7767D8DE2C4A302B00EA5580 /* AssetRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7767D8DD2C4A302A00EA5580 /* AssetRow.swift */; };
 		776A06972C228DC600F91B5F /* ComponentsNavigationStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 776A06962C228DC600F91B5F /* ComponentsNavigationStack.swift */; };
 		776A06992C228E0E00F91B5F /* ComponentsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 776A06982C228E0D00F91B5F /* ComponentsListView.swift */; };
 		776A069B2C22909600F91B5F /* Components.swift in Sources */ = {isa = PBXBuildFile; fileRef = 776A069A2C22909600F91B5F /* Components.swift */; };
@@ -74,6 +76,8 @@
 		7704A7EB2C1BFB1E00E49CC4 /* MaintenancesListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaintenancesListView.swift; sourceTree = "<group>"; };
 		773C03B42C44C84400695A45 /* Tabs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tabs.swift; sourceTree = "<group>"; };
 		773C03B62C44CA7B00695A45 /* SnipeClientTabs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnipeClientTabs.swift; sourceTree = "<group>"; };
+		773C03BC2C4520FF00695A45 /* StatsWidgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsWidgetView.swift; sourceTree = "<group>"; };
+		7767D8DD2C4A302A00EA5580 /* AssetRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetRow.swift; sourceTree = "<group>"; };
 		776A06962C228DC600F91B5F /* ComponentsNavigationStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComponentsNavigationStack.swift; sourceTree = "<group>"; };
 		776A06982C228E0D00F91B5F /* ComponentsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComponentsListView.swift; sourceTree = "<group>"; };
 		776A069A2C22909600F91B5F /* Components.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Components.swift; sourceTree = "<group>"; };
@@ -248,6 +252,7 @@
 			children = (
 				778D731E2C06A9DF0035829C /* DashboardNavigationStack.swift */,
 				778D732B2C0976560035829C /* DashboardView.swift */,
+				773C03BC2C4520FF00695A45 /* StatsWidgetView.swift */,
 				778D73312C09B78A0035829C /* AssetWidgetView.swift */,
 				778D73332C09B8490035829C /* UsersWidgetView.swift */,
 				77DEB3262C2952640061D228 /* MaintenanceWidgetView.swift */,
@@ -308,6 +313,7 @@
 				778D732F2C098A6F0035829C /* AssetTableView.swift */,
 				77712EFA2C09EFB900E64AA8 /* AssetListView.swift */,
 				77A932C72C0D42A900F4B730 /* AssetDetailView.swift */,
+				7767D8DD2C4A302A00EA5580 /* AssetRow.swift */,
 			);
 			path = Assets;
 			sourceTree = "<group>";
@@ -462,10 +468,12 @@
 				778D73242C06E6D80035829C /* Users.swift in Sources */,
 				778D73262C0974CD0035829C /* NetworkService.swift in Sources */,
 				777DFEE32C2AC92A00A2B754 /* Consumables.swift in Sources */,
+				7767D8DE2C4A302B00EA5580 /* AssetRow.swift in Sources */,
 				776A06972C228DC600F91B5F /* ComponentsNavigationStack.swift in Sources */,
 				776A069F2C23AB8100F91B5F /* MaintenancesTableView.swift in Sources */,
 				77A932C02C0AE26B00F4B730 /* UsersNavigationStack.swift in Sources */,
 				77712EFB2C09EFB900E64AA8 /* AssetListView.swift in Sources */,
+				773C03BD2C4520FF00695A45 /* StatsWidgetView.swift in Sources */,
 				77DEB3272C2952640061D228 /* MaintenanceWidgetView.swift in Sources */,
 				77A932C82C0D42A900F4B730 /* AssetDetailView.swift in Sources */,
 				777DFEE12C2AC90D00A2B754 /* ConsumablesTableView.swift in Sources */,
