@@ -46,11 +46,10 @@ struct AccessoriesListView: View {
             
         }
         .onAppear {
-            service.fetchAllMaintenances()
-            print(service.maintenancesItem)
+            service.fetchAllAccessories()
         }
         .refreshable {
-            service.fetchAllMaintenances()
+            service.fetchAllAccessories()
         }
         .navigationTitle("Accessories")
     }
