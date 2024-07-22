@@ -22,7 +22,7 @@ struct AssetListView: View {
             NavigationLink(destination:  AssetDetailView(hardwareID: Int32(hardware.id))) {
                 AssetRowView(
                     image: hardware.image ?? "",
-                    name: hardware.name?.replacingOccurrences(of: "&#039;", with: "'") ?? "",
+                    name: hardware.name ?? "",
                     manufacturer: hardware.manufacturer?.name ?? "",
                     model: hardware.model?.name ?? "",
                     assetNumber: hardware.assetTag,

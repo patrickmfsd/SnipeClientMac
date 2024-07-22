@@ -45,7 +45,7 @@ struct AssetTableView: View {
                 TableColumn("Device Name") { hardware in
                     NavigationLink(destination: AssetDetailView(hardwareID: Int32(hardware.id))) {
                         if hardware.name != "" {
-                            Text(hardware.name?.replacingOccurrences(of: "&#039;", with: "'") ?? "")
+                            Text(hardware.name ?? "")
                                 .multilineTextAlignment(.leading)
                         } else {
                             Text(hardware.assetTag)

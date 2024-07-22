@@ -148,9 +148,7 @@ struct DetailHeader: View {
                         }
                         
                         if deviceName != "" {
-                            Text(
-                                "\(deviceName.replacingOccurrences(of: "&#039;", with: "'"))"
-                            )
+                            Text("\(deviceName)")
                                 .font(.title)
                         }
                     }

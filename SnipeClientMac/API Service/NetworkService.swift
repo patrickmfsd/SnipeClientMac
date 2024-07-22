@@ -32,7 +32,26 @@ enum NetworkError: Error, LocalizedError {
     }
 }
 
+
 class NetworkService {
+    func decodeHTMLCharacters(from text: String) -> String {
+        let replacements: [String: String] = [
+            "&#039;": "'",
+            "&quot;": "\"",
+            "&amp;": "&",
+            "&lt;": "<",
+            "&gt;": ">"
+            // Add other replacements as needed
+        ]
+        
+        var result = text
+        for (entity, replacement) in replacements {
+            result = result.replacingOccurrences(of: entity, with: replacement)
+        }
+        
+        return result
+    }
+    
     func fetchData<T: Decodable>(urlString: String, queryItems: [URLQueryItem] = [], headers: [String: String] = [:], completion: @escaping (Result<T, NetworkError>) -> Void) {
         guard var components = URLComponents(string: urlString) else {
             completion(.failure(.invalidURL))
@@ -71,18 +90,31 @@ class NetworkService {
             // Print raw JSON data for debugging
             if let jsonString = String(data: data, encoding: .utf8) {
                 print("Raw JSON response: \(jsonString)")
-            }
-            
-            do {
-                let decodedData = try JSONDecoder().decode(T.self, from: data)
-                completion(.success(decodedData))
-                print("Decoded data: \(decodedData)")
-            } catch {
-                completion(.failure(.decodingFailed(error)))
-                print("Decoding failed: \(error.localizedDescription)")
+                
+                    // Replace HTML entities
+                let cleanedJsonString = self.decodeHTMLCharacters(
+                    from: jsonString
+                )
+                
+                guard let cleanedData = cleanedJsonString.data(using: .utf8) else {
+                    completion(.failure(.decodingFailed(NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Failed to encode cleaned JSON string to Data"]))))
+                    return
+                }
+                
+                do {
+                    let decodedData = try JSONDecoder().decode(T.self, from: cleanedData)
+                    completion(.success(decodedData))
+                    print("Decoded data: \(decodedData)")
+                } catch {
+                    completion(.failure(.decodingFailed(error)))
+                    print("Decoding failed: \(error.localizedDescription)")
+                }
             }
         }.resume()
     }
+    
+    
+    
 }
 
 
