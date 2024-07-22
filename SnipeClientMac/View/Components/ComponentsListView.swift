@@ -18,11 +18,16 @@ struct ComponentsListView: View {
                 Text(component.name)
                     .fontWeight(.medium)
                 HStack(spacing: 10) {
-                    Text(component.category.name)
+                    Text(component.category?.name ?? "")
                     Spacer()
-                    Text("\(component.qty)")
+                    Text("\(component.qty ?? 0)")
                 }
                 .font(.callout)
+            }
+            .onAppear {
+                if component == service.components.last {
+                    service.fetchAllComponents(offset: service.components.count)
+                }
             }
         }
         .onAppear {
