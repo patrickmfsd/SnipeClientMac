@@ -35,6 +35,7 @@ struct StatsWidgetView: View {
             service.fetchAssetMaintenances()
             service.fetchAllComponents()
             service.fetchAllConsumables()
+            service.fetchAllAccessories()
         }
     }
 }
