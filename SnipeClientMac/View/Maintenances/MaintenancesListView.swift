@@ -48,7 +48,6 @@ struct MaintenancesListView: View {
         }
         .onAppear {
             service.fetchAllMaintenances()
-            print(service.maintenancesItem)
         }
         .refreshable {
             service.fetchAllMaintenances()
