@@ -21,6 +21,7 @@ class SnipeAPIService: ObservableObject {
     @Published var maintenancesItem: [Maintenance] = []
     @Published var components: [Component] = []
     @Published var consumablesItems: [ConsumableItem] = []
+    @Published var accessoriesItems: [Accessory] = []
     
     @Published var hardwareTotal: Int = 0
     @Published var userTotal: Int = 0
@@ -28,6 +29,7 @@ class SnipeAPIService: ObservableObject {
     @Published var categoryTotal: Int = 0
     @Published var consumablesTotal: Int = 0
     @Published var componentsTotal: Int = 0
+    @Published var accessoriesTotal: Int = 0
     
     @Published var errorMessage: IdentifiableError?
     
@@ -397,7 +399,7 @@ class SnipeAPIService: ObservableObject {
         }
     }
     
-        // MARK: - Fetch all Consumables
+    // MARK: - Fetch all Consumables
     func fetchAllConsumables(limit: Int = 25, offset: Int = 0, searchTerm: String = "", sort: String = "created_at", order: String = "desc") {
         let cacheKey = "all_consumables_\(offset)_\(sort)_\(order)_\(searchTerm)"
         
@@ -444,6 +446,62 @@ class SnipeAPIService: ObservableObject {
                             self.consumablesItems.append(contentsOf: response.rows)
                         }
                         self.consumablesTotal = response.total
+                        self.cache[cacheKey] = AnyCacheable(value: response)
+                        self.lastRequestTime[cacheKey] = Date()
+                    case .failure(let error):
+                        self.errorMessage = IdentifiableError(message: error.localizedDescription)
+                }
+            }
+        }
+    }
+    
+    // MARK: - Fetch all Consumables
+    func fetchAllAccessories(limit: Int = 25, offset: Int = 0, searchTerm: String = "", sort: String = "created_at", order: String = "desc") {
+        let cacheKey = "all_accessories_\(offset)_\(sort)_\(order)_\(searchTerm)"
+        
+            // Clear cache if searchTerm is not empty
+        if !searchTerm.isEmpty {
+                // Iterate over existing cache keys and remove those that contain the search term
+            for key in cache.keys {
+                if key.contains(searchTerm) {
+                    cache.removeValue(forKey: key)
+                }
+            }
+        }
+        
+        let queryItems = [
+            URLQueryItem(name: "limit", value: String(limit)),
+            URLQueryItem(name: "offset", value: String(offset)),
+            URLQueryItem(name: "search", value: searchTerm),
+            URLQueryItem(name: "sort", value: sort),
+            URLQueryItem(name: "order", value: order)
+        ]
+        let headers = [
+            "accept": "application/json",
+            "Authorization": "Bearer \(apiKey)"
+        ]
+        
+        if let cachedResponse = cache[cacheKey]?.value as? AccessoriesResponse {
+            self.accessoriesItems = cachedResponse.rows
+            self.accessoriesTotal = cachedResponse.total
+            return
+        }
+        
+        guard isRequestAllowed(for: cacheKey) else { return }
+        self.isLoading = true
+        
+        networkService.fetchData(urlString: "\(apiURL)accessories", queryItems: queryItems, headers: headers) { (result: Result<AccessoriesResponse, NetworkError>) in
+            DispatchQueue.main.async {
+                self.isLoading = false
+                
+                switch result {
+                    case .success(let response):
+                        if offset == 0 {
+                            self.accessoriesItems = response.rows
+                        } else {
+                            self.accessoriesItems.append(contentsOf: response.rows)
+                        }
+                        self.accessoriesTotal = response.total
                         self.cache[cacheKey] = AnyCacheable(value: response)
                         self.lastRequestTime[cacheKey] = Date()
                     case .failure(let error):

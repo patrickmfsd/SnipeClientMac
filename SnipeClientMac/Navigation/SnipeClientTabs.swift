@@ -63,6 +63,21 @@ struct SnipeClientTabs: View {
             
             if !prefersTabNavigation {
                 Tab(
+                    Tabs.accessories.name,
+                    systemImage: Tabs.accessories.symbol,
+                    value: .accessories
+                ) {
+                    AccessoriesNavigationStack()
+                }
+                .customizationID(Tabs.accessories.customizationID)
+                #if !os(macOS) && !os(tvOS)
+                .customizationBehavior(.automatic, for: .sidebar, .tabBar)
+                .defaultVisibility(.visible, for: .sidebar)
+                .defaultVisibility(.hidden, for: .tabBar)
+                #endif
+            }
+            if !prefersTabNavigation {
+                Tab(
                     Tabs.components.name,
                     systemImage: Tabs.components.symbol,
                     value: .components
