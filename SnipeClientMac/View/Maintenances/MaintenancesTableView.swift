@@ -17,44 +17,39 @@ struct MaintenancesTableView: View {
     
     var body: some View {
         VStack {
-            if let error = service.errorMessage {
-                Text("Error: \(error.message)")
-                    .foregroundColor(.red)
-            } else {
-                Table(service.maintenancesItem, selection: $selection, columnCustomization: $columnCustomization) {
-                    TableColumn("Title") { maintenance in
-                        Text("\(maintenance.title ?? "No Title")")
-                    }
-                    .customizationID("title")
-                    TableColumn("Type") { maintenance in
-                        Text("\(maintenance.assetMaintenanceType ?? "Unknown Type")")
-                    }
-                    .customizationID("assetMaintenanceType")
-                    TableColumn("Created") { maintenance in
-                        Text("\(maintenance.createdAt?.formatted ?? "Unknown")")
-                    }
-                    .customizationID("createdAt")
-                    TableColumn("Technician") { maintenance in
-                        Text("\(maintenance.userId?.name ?? "Unknown")")
-                    }
-                    .customizationID("createdBy")
-                    TableColumn("Started") { maintenance in
-                        Text("\(maintenance.startDate?.formatted ?? "Unknown")")
-                    }
-                    .customizationID("startDate")
-                    TableColumn("Completed") { maintenance in
-                        Text("\(maintenance.completionDate?.formatted ?? "")")
-                    }
-                    .customizationID("completionDate")
-                    TableColumn("Supplier") { maintenance in
-                        Text("\(maintenance.supplier?.name ?? "")")
-                    }
-                    .customizationID("supplier")
-                    TableColumn("Cost") { maintenance in
-                        Text("\(maintenance.cost ?? 0.00)")
-                    }
-                    .customizationID("cost")
+            Table(service.maintenancesItem, selection: $selection, columnCustomization: $columnCustomization) {
+                TableColumn("Title") { maintenance in
+                    Text("\(maintenance.title ?? "No Title")")
                 }
+                .customizationID("title")
+                TableColumn("Type") { maintenance in
+                    Text("\(maintenance.assetMaintenanceType ?? "Unknown Type")")
+                }
+                .customizationID("assetMaintenanceType")
+                TableColumn("Created") { maintenance in
+                    Text("\(maintenance.createdAt?.formatted ?? "Unknown")")
+                }
+                .customizationID("createdAt")
+                TableColumn("Technician") { maintenance in
+                    Text("\(maintenance.userId?.name ?? "Unknown")")
+                }
+                .customizationID("createdBy")
+                TableColumn("Started") { maintenance in
+                    Text("\(maintenance.startDate?.formatted ?? "Unknown")")
+                }
+                .customizationID("startDate")
+                TableColumn("Completed") { maintenance in
+                    Text("\(maintenance.completionDate?.formatted ?? "")")
+                }
+                .customizationID("completionDate")
+                TableColumn("Supplier") { maintenance in
+                    Text("\(maintenance.supplier?.name ?? "")")
+                }
+                .customizationID("supplier")
+                TableColumn("Cost") { maintenance in
+                    Text("\(maintenance.cost ?? 0.00)")
+                }
+                .customizationID("cost")
             }
         }
         .onAppear {
@@ -62,6 +57,15 @@ struct MaintenancesTableView: View {
         }
         .refreshable {
             service.fetchAllMaintenances()
+        }
+        .onChange(of: service.maintenancesItem) { oldItems, newItems in
+            if newItems.last != nil {
+                DispatchQueue.main.async {
+                    if newItems.count < service.maintenancesTotal {
+                        service.fetchAllMaintenances(offset: newItems.count)
+                    }
+                }
+            }
         }
         .alert(item: $service.errorMessage) { error in
             Alert(

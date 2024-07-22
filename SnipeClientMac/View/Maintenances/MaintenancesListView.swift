@@ -39,6 +39,11 @@ struct MaintenancesListView: View {
                 Spacer()
             }
             .frame(height: 80)
+            .onAppear {
+                if maintenance == service.maintenancesItem.last {
+                    service.fetchAllMaintenances(offset: service.maintenancesItem.count)
+                }
+            }
 
         }
         .onAppear {
