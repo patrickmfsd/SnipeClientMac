@@ -18,12 +18,18 @@ struct ConsumablesListView: View {
                 Text(consumable.name)
                     .fontWeight(.medium)
                 HStack(spacing: 10) {
-                    Text(consumable.category.name)
+                    Text(consumable.category?.name ?? "")
                     Spacer()
-                    Text("\(consumable.qty)")
+                    Text("\(consumable.qty ?? 0)")
                 }
                 .font(.callout)
             }
+            .onAppear {
+                if consumable == service.consumablesItems.last {
+                    service.fetchAllConsumables(offset: service.consumablesItems.count)
+                }
+            }
+
         }
         .overlay {
             if service.consumablesItems.isEmpty {
