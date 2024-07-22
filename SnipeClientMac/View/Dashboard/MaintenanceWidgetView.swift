@@ -24,6 +24,7 @@ struct MaintenanceWidgetView: View {
                 .frame(maxHeight: .infinity)
             } else {
                 ForEach(service.maintenancesItem.prefix(5)) { maintenance in
+                    Divider()
                     NavigationLink(destination: EmptyView()) {
                         HStack {
                             VStack(alignment: .leading){
@@ -47,6 +48,7 @@ struct MaintenanceWidgetView: View {
                                     .multilineTextAlignment(.leading)
                                     .font(.headline)
                             }
+                            .padding(.top)
                             Spacer()
                         }
                         .frame(height: 80)

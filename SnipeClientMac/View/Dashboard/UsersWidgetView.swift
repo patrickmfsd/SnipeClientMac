@@ -24,6 +24,7 @@ struct UsersWidgetView: View {
                 .frame(maxHeight: .infinity)
             } else {
                 ForEach(service.userItem.prefix(5)) { users in
+                    Divider()
                     NavigationLink(destination: EmptyView()) {
                         HStack {
                             AsyncImage(url: URL(string: users.avatar ?? "")) { image in

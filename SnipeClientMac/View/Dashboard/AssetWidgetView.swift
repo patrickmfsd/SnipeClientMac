@@ -24,6 +24,7 @@ struct AssetListWidget: View {
                 .frame(maxHeight: .infinity)
             } else {
                 ForEach(service.hardwareItems.prefix(5)) { hardware in
+                    Divider()
                     NavigationLink(destination:  AssetDetailView(hardwareID: Int32(hardware.id))) {
                         HStack(alignment: .center, spacing: 15) {
                             AsyncImage(url: URL(string: hardware.image ?? "")) { image in
