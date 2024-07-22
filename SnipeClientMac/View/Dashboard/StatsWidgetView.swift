@@ -23,6 +23,8 @@ struct StatsWidgetView: View {
                 StatsWidgetCard(label: "Components", value: service.componentsTotal)
                 Divider()
                 StatsWidgetCard(label: "Consumables", value: service.consumablesTotal)
+                Divider()
+                StatsWidgetCard(label: "Accessories", value: service.accessoriesTotal)
                 Spacer()
             }
         }
