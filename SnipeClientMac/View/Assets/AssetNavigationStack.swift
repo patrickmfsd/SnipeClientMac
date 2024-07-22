@@ -53,18 +53,30 @@ struct AssetsView: View {
         ScrollView(.vertical) {
             VStack(alignment: .leading, spacing: 10) {
                 HStack {
-                    NavigationLink(destination: AssetListView().navigationTitle("Hardware")) {
+                    NavigationLink(
+                        destination: AssetListView()
+                            .navigationTitle("Hardware")
+                    ) {
                         FeaturedNavigation(symbol: "laptopcomputer.and.iphone", color: .blue, label: "Hardware", count: "\(service.hardwareTotal)")
                     }
-                    NavigationLink(destination: EmptyView().navigationTitle("Accessories")) {
-                        FeaturedNavigation(symbol: "cube.box", color: .blue, label: "Accessories")
+                    NavigationLink(
+                        destination: AccessoriesListView()
+                            .navigationTitle("Accessories")
+                    ) {
+                        FeaturedNavigation(symbol: "cube.box", color: .blue, label: "Accessories", count: "\(service.accessoriesTotal)")
                     }
                 }
                 HStack {
-                    NavigationLink(destination: ComponentsListView().navigationTitle("Components")) {
+                    NavigationLink(
+                        destination: ComponentsListView()
+                            .navigationTitle("Components")
+                    ) {
                         FeaturedNavigation(symbol: "cpu", color: .green, label: "Components", count: "\(service.componentsTotal)")
                     }
-                    NavigationLink(destination: EmptyView().navigationTitle("Consumables")) {
+                    NavigationLink(
+                        destination: ConsumablesListView()
+                            .navigationTitle("Consumables")
+                    ) {
                         FeaturedNavigation(symbol: "drop.halffull", color: .orange, label: "Consumables", count: "\(service.consumablesTotal)")
                     }
                 }
@@ -79,12 +91,14 @@ struct AssetsView: View {
             service.fetchAllComponents()
             service.fetchAllConsumables()
             service.fetchCategories()
+            service.fetchAllAccessories()
         }
         .refreshable {
             service.fetchHardware()
             service.fetchAllComponents()
             service.fetchAllConsumables()
             service.fetchCategories()
+            service.fetchAllAccessories()
         }
     }
 }
