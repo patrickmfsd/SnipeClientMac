@@ -29,9 +29,16 @@ struct AssetTableView: View {
                             .padding(5)
                             .background(Color.white, in: RoundedRectangle(cornerRadius: 15, style: .continuous))
                     } placeholder: {
-                        Image(systemName: "laptopcomputer")
-                            .font(.system(size: 50))
-                            .frame(width: 80, height: 80)
+                        if hardware.manufacturer?.name != "Apple" {
+                            Image(systemName: "pc")
+                                .symbolRenderingMode(.multicolor)
+                                .font(.system(size: 50))
+                                .frame(width: 80, height: 80)
+                        } else {
+                            Image(systemName: "laptopcomputer")
+                                .font(.system(size: 50))
+                                .frame(width: 80, height: 80)
+                        }
                     }
                 }
                 .width(85)
