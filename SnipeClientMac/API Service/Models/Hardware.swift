@@ -7,13 +7,15 @@
 
 import Foundation
 
-// MARK: - HardwareResponse
+import Foundation
+
+    // MARK: - HardwareResponse
 struct HardwareResponse: Codable {
     let total: Int
     let rows: [HardwareItem]
 }
 
-// MARK: - HardwareItem
+    // MARK: - HardwareItem
 struct HardwareItem: Codable, Identifiable, Equatable {
     let id: Int
     let name: String?
@@ -39,17 +41,17 @@ struct HardwareItem: Codable, Identifiable, Equatable {
     let altBarcode: String?
     let assignedTo: HardwareAssignedTo?
     let warrantyMonths: String?
-    let warrantyExpires: String?
+    let warrantyExpires: HardwareDateInfo?
     let createdAt: HardwareDateTimeInfo?
     let updatedAt: HardwareDateTimeInfo?
-    let lastAuditDate: String?
-    let nextAuditDate: String?
-    let deletedAt: String?
+    let lastAuditDate: HardwareDateTimeInfo?
+    let nextAuditDate: HardwareDateTimeInfo?
+    let deletedAt: HardwareDateTimeInfo?
     let purchaseDate: HardwareDateInfo?
     let age: String?
-    let lastCheckout: String?
-    let lastCheckin: String?
-    let expectedCheckin: String?
+    let lastCheckout: HardwareDateTimeInfo?
+    let lastCheckin: HardwareDateTimeInfo?
+    let expectedCheckin: HardwareDateTimeInfo?
     let purchaseCost: String?
     let checkinCounter: Int?
     let checkoutCounter: Int?
@@ -74,8 +76,8 @@ struct HardwareItem: Codable, Identifiable, Equatable {
         case createdAt = "created_at"
         case updatedAt = "updated_at"
         case purchaseDate = "purchase_date"
-        case warrantyMonths
-        case warrantyExpires
+        case warrantyMonths = "warranty_months"
+        case warrantyExpires = "warranty_expires"
         case lastAuditDate = "last_audit_date"
         case nextAuditDate = "next_audit_date"
         case purchaseCost = "purchase_cost"
@@ -85,7 +87,7 @@ struct HardwareItem: Codable, Identifiable, Equatable {
         case userCanCheckout = "user_can_checkout"
     }
     
-    // Conformance to Equatable
+        // Conformance to Equatable
     static func ==(lhs: HardwareItem, rhs: HardwareItem) -> Bool {
         return lhs.id == rhs.id &&
         lhs.name == rhs.name &&
@@ -96,24 +98,23 @@ struct HardwareItem: Codable, Identifiable, Equatable {
         lhs.category?.name == rhs.category?.name &&
         lhs.location?.name == rhs.location?.name &&
         lhs.assignedTo?.name == rhs.assignedTo?.name &&
-        lhs.expectedCheckin == rhs.expectedCheckin &&
         lhs.image == rhs.image
     }
 }
 
-// MARK: - HardwareModel
+    // MARK: - HardwareModel
 struct HardwareModel: Codable {
     let id: Int
     let name: String
 }
 
-// MARK: - HardwareDateInfo
+    // MARK: - HardwareDateInfo
 struct HardwareDateInfo: Codable {
     let date: String
     let formatted: String
 }
 
-// MARK: - HardwareStatusLabel
+    // MARK: - HardwareStatusLabel
 struct HardwareStatusLabel: Codable {
     let id: Int
     let name: String
@@ -127,50 +128,55 @@ struct HardwareStatusLabel: Codable {
     }
 }
 
-// MARK: - HardwareCategory
+    // MARK: - HardwareCategory
 struct HardwareCategory: Codable {
     let id: Int
     let name: String
 }
 
-// MARK: - HardwareManufacturer
+    // MARK: - HardwareManufacturer
 struct HardwareManufacturer: Codable {
     let id: Int
     let name: String
 }
 
-// MARK: - HardwareSupplier
+    // MARK: - HardwareSupplier
 struct HardwareSupplier: Codable {
-    let id: Int
-    let name: String
+    let id: Int?
+    let name: String?
 }
 
-// MARK: - HardwareCompany
+    // MARK: - HardwareCompany
 struct HardwareCompany: Codable {
     let id: Int?
     let name: String?
 }
 
-// MARK: - HardwareLocation
+    // MARK: - HardwareLocation
 struct HardwareLocation: Codable {
-    let id: Int
-    let name: String
+    let id: Int?
+    let name: String?
 }
 
-// MARK: - HardwareAssignedTo
+    // MARK: - HardwareAssignedTo
 struct HardwareAssignedTo: Codable {
-    let id: Int
-    let name: String
-    let type: String
+    let id: Int?
+    let username: String?
+    let name: String?
+    let firstName: String?
+    let lastName: String?
+    let email: String?
+    let employeeNumber: String?
+    let type: String?
 }
 
-// MARK: - HardwareDateTimeInfo
+    // MARK: - HardwareDateTimeInfo
 struct HardwareDateTimeInfo: Codable {
-    let datetime: String
-    let formatted: String
+    let datetime: String?
+    let formatted: String?
 }
 
-// MARK: - HardwareAvailableActions
+    // MARK: - HardwareAvailableActions
 struct HardwareAvailableActions: Codable {
     let checkout: Bool?
     let checkin: Bool?
