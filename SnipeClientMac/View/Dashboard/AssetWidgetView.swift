@@ -24,7 +24,6 @@ struct AssetListWidget: View {
                 .frame(maxHeight: .infinity)
             } else {
                 ForEach(service.hardwareItems.prefix(5)) { hardware in
-                    Divider()
                     NavigationLink(destination:  AssetDetailView(hardwareID: Int32(hardware.id))) {
                         HStack(alignment: .center, spacing: 15) {
                             AsyncImage(url: URL(string: hardware.image ?? "")) { image in
@@ -72,9 +71,13 @@ struct AssetListWidget: View {
                                     .foregroundColor(.primary)
                             }
                             Spacer()
+                            Image(systemName: "chevron.right")
+                                .foregroundColor(.accentColor)
+                                .font(.system(size: 16))
                         }
                         .frame(height: 80)
                     }
+                    .buttonBorderShape(.roundedRectangle)
                 }
             }
         }

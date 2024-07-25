@@ -24,7 +24,6 @@ struct UsersWidgetView: View {
                 .frame(maxHeight: .infinity)
             } else {
                 ForEach(service.userItem.prefix(5)) { users in
-                    Divider()
                     NavigationLink(destination: EmptyView()) {
                         HStack {
                             AsyncImage(url: URL(string: users.avatar ?? "")) { image in
@@ -52,9 +51,13 @@ struct UsersWidgetView: View {
                                 Text("Assets: \(users.assetsCount)")
                             }
                             Spacer()
+                            Image(systemName: "chevron.right")
+                                .foregroundColor(.accentColor)
+                                .font(.system(size: 16))
                         }
                         .frame(height: 80)
                     }
+                    .buttonBorderShape(.roundedRectangle)
                 }
             }
         }

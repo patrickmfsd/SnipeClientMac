@@ -24,7 +24,6 @@ struct MaintenanceWidgetView: View {
                 .frame(maxHeight: .infinity)
             } else {
                 ForEach(service.maintenancesItem.prefix(5)) { maintenance in
-                    Divider()
                     NavigationLink(destination: EmptyView()) {
                         HStack {
                             VStack(alignment: .leading){
@@ -50,9 +49,13 @@ struct MaintenanceWidgetView: View {
                             }
                             .padding(.top)
                             Spacer()
+                            Image(systemName: "chevron.right")
+                                .foregroundColor(.accentColor)
+                                .font(.system(size: 16))
                         }
                         .frame(height: 80)
                     }
+                    .buttonBorderShape(.roundedRectangle)
                 }
             }
         }
