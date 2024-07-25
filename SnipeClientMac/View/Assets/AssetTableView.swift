@@ -82,7 +82,7 @@ struct AssetTableView: View {
                 }
                 .customizationID("assignedTo")
                 TableColumn("Expected Checkin") { hardware in
-                    Text(hardware.expectedCheckin ?? "N/A")
+                    Text(hardware.expectedCheckin?.formatted ?? "N/A")
                 }
                 .customizationID("expectedCheckin")
             }

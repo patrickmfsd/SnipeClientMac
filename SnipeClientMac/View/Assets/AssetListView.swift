@@ -39,6 +39,9 @@ struct AssetListView: View {
         .onSubmit(of: .search) {
             service.fetchHardware(searchTerm: searchTerm)
         }
+        .onChange(of: searchTerm) { oldTerm, newTerm in
+            service.fetchHardware(searchTerm: newTerm)
+        }
         .onAppear {
             service.fetchHardware()
         }
