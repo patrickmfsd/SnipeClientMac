@@ -32,15 +32,15 @@ struct AssetDetailView: View {
                     case .details:
                         AboutAssetView(hardwareID: hardwareID)
                     case .assets:
-                        EmptyView()
+                        ChildAssetsView()
                     case .components:
-                        EmptyView()
+                        AssetComponentsView()
                     case .consumables:
-                        EmptyView()
+                        AssetConsumablesView()
                     case .maintenance:
-                        MaintenanceList(hardwareID: hardwareID)
+                        AssetMaintenanceView(hardwareID: hardwareID)
                     case .history:
-                        EmptyView()
+                        AssetHistoryView()
                 }
                 Spacer()
             }
@@ -51,16 +51,16 @@ struct AssetDetailView: View {
         .background(.background)
         .toolbarTitleDisplayMode(.inline)
         .toolbar {
-            ToolbarItem(placement: .principal) {
+            ToolbarItem {
                 Picker("Select View", selection: $selectedSegment) {
                     ForEach(views.allCases, id: \.self) { segment in
                         Text(segment.rawValue).tag(segment)
                     }
                 }
-                #if os(macOS)
+                #if !os(iOS)
                 .pickerStyle(.segmented)
                 #else
-                .pickerStyle(.menu)
+                .pickerStyle(.automatic)
                 .menuIndicator(.visible)
                 #endif
 //                .labelsHidden()
@@ -237,8 +237,8 @@ struct DeviceTags: View {
                     .background(.green, in: RoundedRectangle(cornerRadius: 5, style: .continuous))
             }
             if let warrantyTime = service.hardwareDetailItem?.warrantyMonths,
-               let warrantyExpires = service.hardwareDetailItem?.warrantyExpires {
-                Text("\(warrantyTime) Months (\(warrantyExpires))")
+               let warrantyExpires = service.hardwareDetailItem?.warrantyExpires?.formatted {
+                Text("\(warrantyTime) (\(warrantyExpires))")
                     .font(.callout)
                     .fontWeight(.medium)
                     .foregroundStyle(.white)
@@ -318,10 +318,10 @@ struct AboutAssetView: View {
             if let defaultLocation = service.hardwareDetailItem?.rtdLocation?.name {
                 DetailRow(title: "Default Location", value: defaultLocation)
             }
-            if let lastCheckout = service.hardwareDetailItem?.lastCheckout {
+            if let lastCheckout = service.hardwareDetailItem?.lastCheckout?.formatted {
                 DetailRow(title: "Last Checkout", value: lastCheckout)
             }
-            if let expectedCheckin = service.hardwareDetailItem?.expectedCheckin {
+            if let expectedCheckin = service.hardwareDetailItem?.expectedCheckin?.formatted {
                 DetailRow(title: "Expected Check-In", value: expectedCheckin)
             }
             if let checkinCounter = service.hardwareDetailItem?.checkinCounter {
@@ -374,7 +374,7 @@ struct AboutAssetView: View {
     }
     
     private func eolDetailRow() -> some View {
-        if let eol = service.hardwareDetailItem?.eol, let assetEolDate = service.hardwareDetailItem?.assetEolDate?.date {
+        if let eol = service.hardwareDetailItem?.eol, let assetEolDate = service.hardwareDetailItem?.assetEolDate?.formatted {
             return DetailRow(title: "EOL", value: "\(eol) (\(assetEolDate))").eraseToAnyView()
         }
         return EmptyView().eraseToAnyView()
@@ -382,10 +382,10 @@ struct AboutAssetView: View {
     
     private func auditDetailRows() -> some View {
         Group {
-            if let lastAuditDate = service.hardwareDetailItem?.lastAuditDate {
+            if let lastAuditDate = service.hardwareDetailItem?.lastAuditDate?.formatted {
                 DetailRow(title: "Last Audit", value: lastAuditDate)
             }
-            if let nextAuditDate = service.hardwareDetailItem?.nextAuditDate {
+            if let nextAuditDate = service.hardwareDetailItem?.nextAuditDate?.formatted {
                 DetailRow(title: "Last Audit", value: nextAuditDate)
             }
         }
@@ -438,35 +438,6 @@ struct DetailRow: View {
         }
     }
 }
-
-struct MaintenanceList: View {
-    @StateObject private var service = SnipeAPIService()
-    var hardwareID: Int32
-
-    var body: some View {
-        List {
-            ForEach(service.maintenancesItem) { maintenance in
-                HStack {
-                    VStack {
-                        Text(maintenance.title ?? "")
-                    }
-                }
-            }
-        }
-        .overlay {
-            if service.maintenancesItem.isEmpty {
-                ContentUnavailableView("No Maintenances", systemImage: "screwdriver", description: Text("No maintenance jobs logged for this asset."))
-            }
-        }
-        .onAppear {
-            service.fetchAssetMaintenances(assetID: hardwareID)
-        }
-        .refreshable {
-            service.fetchAssetMaintenances(assetID: hardwareID)
-        }
-    }
-}
-
 
 //#Preview {
 //    AssetDetailView(hardwareID: 0)
