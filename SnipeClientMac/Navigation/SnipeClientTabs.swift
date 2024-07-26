@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct SnipeClientTabs: View {
+    @AppStorage("showBadge") var showBadge = DefaultSettings.showBadge
+
     @Environment(\.prefersTabNavigation) private var prefersTabNavigation
     
     /// Keep track of tab view customizations in app storage.
@@ -44,7 +46,6 @@ struct SnipeClientTabs: View {
                 AssetNavigationStack()
             }
             .customizationID(Tabs.assets.customizationID)
-            .badge(service.hardwareTotal)
             #if !os(macOS) && !os(tvOS)
             .customizationBehavior(.disabled, for: .sidebar, .tabBar)
             .defaultVisibility(.visible, for: .sidebar, .tabBar)
@@ -58,7 +59,6 @@ struct SnipeClientTabs: View {
                 UsersNavigationStack()
             }
             .customizationID(Tabs.users.customizationID)
-            .badge(service.userTotal)
             #if !os(macOS) && !os(tvOS)
             .customizationBehavior(.automatic, for: .sidebar, .tabBar)
             .defaultVisibility(.hidden, for: .tabBar)
@@ -73,7 +73,6 @@ struct SnipeClientTabs: View {
                     AccessoriesNavigationStack()
                 }
                 .customizationID(Tabs.accessories.customizationID)
-                .badge(service.accessoriesTotal)
                 #if !os(macOS) && !os(tvOS)
                 .customizationBehavior(.automatic, for: .sidebar, .tabBar)
                 .defaultVisibility(.visible, for: .sidebar)
@@ -89,7 +88,6 @@ struct SnipeClientTabs: View {
                     ComponentsNavigationStack()
                 }
                 .customizationID(Tabs.components.customizationID)
-                .badge(service.componentsTotal)
                 #if !os(macOS) && !os(tvOS)
                 .customizationBehavior(.automatic, for: .sidebar, .tabBar)
                 .defaultVisibility(.visible, for: .sidebar)
@@ -105,7 +103,6 @@ struct SnipeClientTabs: View {
                     ConsumablesNavigationStack()
                 }
                 .customizationID(Tabs.consumables.customizationID)
-                .badge(service.consumablesTotal)
                 #if !os(macOS) && !os(tvOS)
                 .customizationBehavior(.automatic, for: .sidebar, .tabBar)
                 .defaultVisibility(.visible, for: .sidebar)
@@ -121,7 +118,6 @@ struct SnipeClientTabs: View {
                 MaintenancesNavigationStack()
             }
             .customizationID(Tabs.maintenance.customizationID)
-            .badge(service.maintenancesTotal)
             #if !os(macOS) && !os(tvOS)
             .customizationBehavior(.automatic, for: .sidebar, .tabBar)
             .defaultVisibility(.visible, for: .sidebar)
@@ -144,6 +140,7 @@ struct SnipeClientTabs: View {
                 #endif
             #endif
         }
+        .frame(minWidth: 100)
         .tabViewStyle(.sidebarAdaptable)
         #if !os(macOS) && !os(tvOS)
         .tabViewCustomization($tabViewCustomization)
