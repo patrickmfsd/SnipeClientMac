@@ -21,7 +21,7 @@ struct MaintenanceWidgetView: View {
                     "Maintenances Jobs Unavailable",
                     systemImage: "screwdriver"
                 )
-                .frame(maxHeight: .infinity)
+                .frame(minHeight: 450)
             } else {
                 ForEach(service.maintenancesItem.prefix(5)) { maintenance in
                     NavigationLink(destination: EmptyView()) {

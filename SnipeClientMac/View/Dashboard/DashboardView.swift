@@ -53,11 +53,8 @@ struct DashboardView: View {
             StatsWidgetView()
             LazyVGrid(columns: columns) {
                 AssetListWidget()
-                    .frame(minHeight: 300)
                 UsersWidgetView()
-                    .frame(minHeight: 300)
                 MaintenanceWidgetView()
-                    .frame(minHeight: 300)
             }
             Spacer()
         }

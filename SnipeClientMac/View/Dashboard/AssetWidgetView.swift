@@ -21,7 +21,7 @@ struct AssetListWidget: View {
                     "Assets Unavailable",
                     systemImage: "tv.slash"
                 )
-                .frame(maxHeight: .infinity)
+                .frame(minHeight: 450)
             } else {
                 ForEach(service.hardwareItems.prefix(5)) { hardware in
                     NavigationLink(destination:  AssetDetailView(hardwareID: Int32(hardware.id))) {

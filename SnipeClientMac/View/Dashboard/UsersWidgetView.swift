@@ -21,7 +21,7 @@ struct UsersWidgetView: View {
                     "Users Unavailable",
                     systemImage: "person.fill.questionmark"
                 )
-                .frame(maxHeight: .infinity)
+                .frame(minHeight: 450)
             } else {
                 ForEach(service.userItem.prefix(5)) { users in
                     NavigationLink(destination: EmptyView()) {
