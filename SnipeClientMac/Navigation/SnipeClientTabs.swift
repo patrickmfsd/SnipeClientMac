@@ -8,15 +8,12 @@
 import SwiftUI
 
 struct SnipeClientTabs: View {
-    @AppStorage("showBadge") var showBadge = DefaultSettings.showBadge
-
     @Environment(\.prefersTabNavigation) private var prefersTabNavigation
     
     /// Keep track of tab view customizations in app storage.
     #if !os(macOS) && !os(tvOS)
     @AppStorage("sidebarCustomizations") var tabViewCustomization: TabViewCustomization
     #endif
-    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     
     @StateObject private var service = SnipeAPIService()
     
