@@ -7,8 +7,6 @@
 
 import Foundation
 
-import Foundation
-
     // MARK: - HardwareResponse
 struct HardwareResponse: Codable {
     let total: Int
