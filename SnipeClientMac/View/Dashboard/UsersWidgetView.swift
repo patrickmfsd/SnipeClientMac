@@ -23,7 +23,7 @@ struct UsersWidgetView: View {
                 )
                 .frame(minHeight: 450)
             } else {
-                ForEach(service.userItem.prefix(5)) { users in
+                ForEach(service.userItem.prefix(8)) { users in
                     NavigationLink(destination: EmptyView()) {
                         HStack {
                             AsyncImage(url: URL(string: users.avatar ?? "")) { image in
@@ -46,13 +46,13 @@ struct UsersWidgetView: View {
                                     Text("\(usersCode)")
                                         .font(.subheadline)
                                         .fontWeight(.medium)
-                                        .foregroundColor(.secondary)
+                                        .foregroundStyle(.secondary)
                                 }
                                 Text("Assets: \(users.assetsCount)")
                             }
                             Spacer()
                             Image(systemName: "chevron.right")
-                                .foregroundColor(.accentColor)
+                                .foregroundStyle(.tint)
                                 .font(.system(size: 16))
                         }
                         .frame(height: 80)

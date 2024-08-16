@@ -23,7 +23,7 @@ struct MaintenanceWidgetView: View {
                 )
                 .frame(minHeight: 450)
             } else {
-                ForEach(service.maintenancesItem.prefix(5)) { maintenance in
+                ForEach(service.maintenancesItem.prefix(8)) { maintenance in
                     NavigationLink(destination: EmptyView()) {
                         HStack {
                             VStack(alignment: .leading){
@@ -37,7 +37,7 @@ struct MaintenanceWidgetView: View {
                                 }
                                 .font(.headline)
                                 .fontWeight(.medium)
-                                .foregroundColor(.secondary)
+                                .tint(.secondary)
                                 if let assetName = maintenance.asset?.name {
                                     Text(assetName)
                                         .multilineTextAlignment(.leading)
@@ -50,7 +50,7 @@ struct MaintenanceWidgetView: View {
                             .padding(.top)
                             Spacer()
                             Image(systemName: "chevron.right")
-                                .foregroundColor(.accentColor)
+                                .tint(.accentColor)
                                 .font(.system(size: 16))
                         }
                         .frame(height: 80)

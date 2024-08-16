@@ -13,8 +13,9 @@ struct DashboardView: View {
     @StateObject private var service = SnipeAPIService()
     
     let columns = [
-        GridItem(.adaptive(minimum: 300, maximum: 800)),
-        GridItem(.adaptive(minimum: 300, maximum: 800)),
+        GridItem(.adaptive(minimum: 400, maximum: 800)),
+        GridItem(.adaptive(minimum: 400, maximum: 800)),
+        GridItem(.adaptive(minimum: 400, maximum: 800))
     ]
     
     var body: some View {
