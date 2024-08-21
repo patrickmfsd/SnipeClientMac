@@ -63,7 +63,7 @@ struct AssetsView: View {
                         destination: AccessoriesListView()
                             .navigationTitle("Accessories")
                     ) {
-                        FeaturedNavigation(symbol: "cube.box", color: .blue, label: "Accessories", count: "\(service.accessoriesTotal)")
+                        FeaturedNavigation(symbol: "cube.box", color: .brown, label: "Accessories", count: "\(service.accessoriesTotal)")
                     }
                 }
                 HStack {
@@ -83,6 +83,7 @@ struct AssetsView: View {
                 AssetCategoryListView()
                 Spacer()
             }
+            .foregroundStyle(.primary)
             .padding()
         }
         .navigationTitle("Assets")
@@ -121,16 +122,13 @@ struct FeaturedNavigation: View {
                         .symbolRenderingMode(type ?? .monochrome)
                     Text(label)
                         .font(.body)
-                        .foregroundStyle(.primary)
                         .fontWeight(.medium)
-                        .foregroundStyle(.primary)
                 }
                 Spacer()
                 if count != "" {
                     Text(count ?? "")
                         .font(.system(.title, design: .rounded))
                         .fontWeight(.semibold)
-                        .foregroundStyle(.secondary)
                 }
             }
             .frame(height: 70)
