@@ -117,20 +117,20 @@ struct FeaturedNavigation: View {
                     Image(systemName: symbol)
                         .font(.title)
                         .symbolVariant(.fill)
-                        .foregroundColor(color)
+                        .foregroundStyle(color)
                         .symbolRenderingMode(type ?? .monochrome)
                     Text(label)
                         .font(.body)
-                        .foregroundColor(.primary)
+                        .foregroundStyle(.primary)
                         .fontWeight(.medium)
-                        .foregroundColor(.primary)
+                        .foregroundStyle(.primary)
                 }
                 Spacer()
                 if count != "" {
                     Text(count ?? "")
                         .font(.system(.title, design: .rounded))
                         .fontWeight(.semibold)
-                        .foregroundColor(.secondary)
+                        .foregroundStyle(.secondary)
                 }
             }
             .frame(height: 70)
