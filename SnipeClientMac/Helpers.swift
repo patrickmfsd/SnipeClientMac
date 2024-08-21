@@ -33,10 +33,15 @@ extension PrefersTabNavigationEnvironmentKey: UITraitBridgedEnvironmentKey {
 #endif
 
 //MARK: - Material Group box
-struct MaterialGroupBox: GroupBoxStyle {
+struct CustomGroupBox: GroupBoxStyle {
     var spacing: CGFloat
     var radius: CGFloat
-    var material: Material
+    var background: BackgroundType
+    
+    enum BackgroundType {
+        case material(Material)
+        case color(Color)
+    }
     
     func makeBody(configuration: Configuration) -> some View {
         VStack(alignment: .leading) {
@@ -45,8 +50,23 @@ struct MaterialGroupBox: GroupBoxStyle {
                 .fontWeight(.semibold)
                 .padding(.bottom, 2)
             configuration.content
+                .padding(spacing)
+                .background(backgroundFill())
+                .cornerRadius(radius)
+                .overlay(
+                    RoundedRectangle(cornerRadius: radius)
+                        .stroke(.tertiary, lineWidth: 1)
+                )
+                
         }
-        .padding(spacing)
-        .background(material, in: RoundedRectangle(cornerRadius: radius, style: .continuous))
+    }
+    
+    private func backgroundFill() -> AnyShapeStyle {
+        switch background {
+            case .material(let material):
+                return AnyShapeStyle(material)
+            case .color(let color):
+                return AnyShapeStyle(color)
+        }
     }
 }
