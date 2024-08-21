@@ -30,6 +30,7 @@ struct DashboardView: View {
             gridView
             #endif
         }
+        .foregroundStyle(.primary)
         .toolbar {
             ToolbarItem(placement: .automatic) {
                 if service.isLoading {
