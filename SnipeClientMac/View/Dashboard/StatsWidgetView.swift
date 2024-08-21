@@ -48,8 +48,8 @@ struct StatsWidgetCard: View {
         VStack(alignment: .center, spacing: 10) {
             Text("\(value)")
                 .font(.system(size: 30, weight: .semibold))
-                .foregroundColor(.blue)
             Text(label)
+                .foregroundStyle(.secondary)
         }
         .padding()
         .frame(width: 150, height: 100)
