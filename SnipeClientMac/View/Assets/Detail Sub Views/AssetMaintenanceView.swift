@@ -72,7 +72,7 @@ struct AssetMaintenanceView: View {
                         }
                     }
                     .groupBoxStyle(
-                        MaterialGroupBox(
+                        CustomGroupBox(
                             spacing: 10,
                             radius: 8,
                             background: .color(.secondary.opacity(0.3))

@@ -148,7 +148,7 @@ struct AboutAssetView: View {
             Spacer()
         }
         .groupBoxStyle(
-            MaterialGroupBox(
+            CustomGroupBox(
                 spacing: 10,
                 radius: 8,
                 background: .color(.secondary.opacity(0.3))

@@ -103,7 +103,7 @@ struct AssetDetailView: View {
                 Spacer()
             }
             .groupBoxStyle(
-                MaterialGroupBox(
+                CustomGroupBox(
                     spacing: 10,
                     radius: 8,
                     background: .color(.secondary.opacity(0.3))
@@ -405,7 +405,7 @@ struct MaintenancesCard: View {
                         }
                     }
                     .groupBoxStyle(
-                        MaterialGroupBox(
+                        CustomGroupBox(
                             spacing: 10,
                             radius: 8,
                             background: .color(.secondary.opacity(0.3))
