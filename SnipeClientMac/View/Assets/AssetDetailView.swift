@@ -22,8 +22,6 @@ struct AssetDetailView: View {
                 standard
             }
         }
-        .padding(.horizontal)
-        .groupBoxStyle(MaterialGroupBox(spacing: 10, radius: 15, material: .thin))
         .toolbar {
             #if os(iOS)
             ToolbarItem(placement: .automatic) {
@@ -69,51 +67,71 @@ struct AssetDetailView: View {
                 })
             }
             #endif
-            
         }
     }
     
     var compact: some View {
-        VStack(spacing: 10) {
-            Header(hardwareID: hardwareID)
-            NavigationLink(
-                destination: AboutAssetView(hardwareID: hardwareID)
-            ) {
-                GroupBox {
-                    HStack {
-                        Label("About", systemImage: "info.circle.fill")
-                            .imageScale(.large)
-                            .symbolRenderingMode(.hierarchical)
-                            .foregroundColor(.primary)
-                        Spacer()
-                        Image(systemName: "chevron.right")
+        ScrollView(.vertical){
+            VStack(spacing: 10) {
+                CompactHeader(hardwareID: hardwareID)
+                NavigationLink(
+                    destination: AboutAssetNavigationStack(hardwareID: hardwareID)
+                ) {
+                    GroupBox {
+                        HStack {
+                            Image(systemName: "info.circle.fill")
+                                .imageScale(.large)
+                                .symbolRenderingMode(.hierarchical)
+                                .foregroundStyle(.teal)
+                            Text("About")
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .foregroundStyle(.tint)
+                        }
                     }
-                    .padding(.vertical, 5)
                 }
+                .foregroundStyle(.primary)
+                GroupBox(label: Text("Notes")) {
+                    HStack {
+                        Text(service.hardwareDetailItem?.notes ?? "No Asset Notes.")
+                            .multilineTextAlignment(.leading)
+                        Spacer()
+                    }
+                }
+                AssignedTo(hardwareID: hardwareID)
+                MaintenancesCard(hardwareID: hardwareID)
+                Spacer()
             }
-            Cards()
-            AssignedTo(hardwareID: hardwareID)
-            Spacer()
+            .groupBoxStyle(
+                MaterialGroupBox(
+                    spacing: 10,
+                    radius: 8,
+                    background: .color(.secondary.opacity(0.3))
+                )
+            )
+            .padding(.horizontal)
         }
-        .padding(.horizontal)
-        .groupBoxStyle(MaterialGroupBox(spacing: 10, radius: 15, material: .thin))
     }
     
     var standard: some View {
-        HStack {
-            VStack(spacing: 10) {
-                Header(hardwareID: hardwareID)
-                Cards()
+        HStack(spacing: 10) {
+            VStack(alignment: .leading, spacing: 20) {
+                LargeHeader(hardwareID: hardwareID)
+                AboutAssetView(hardwareID: hardwareID)
+            }
+            VStack(alignment: .leading, spacing: 20) {
+                Text("Maintenance Jobs")
+                    .font(.title2)
+                    .fontWeight(.medium)
+                AssetMaintenanceView(hardwareID: hardwareID)
                 Spacer()
             }
-            AboutAssetView(hardwareID: hardwareID)
         }
-        .padding()
-        .groupBoxStyle(MaterialGroupBox(spacing: 10, radius: 15, material: .thin))
+        .padding(10)
     }
 }
 
-struct Header: View {
+struct CompactHeader: View {
     @Environment(\.prefersTabNavigation) private var prefersTabNavigation
     
     @StateObject private var service = SnipeAPIService()
@@ -122,10 +140,30 @@ struct Header: View {
     
     var body: some View {
         Group {
-                VStack(alignment: .center) {
-                    image
-                    text
+            VStack(alignment: .center, spacing: 15) {
+                image
+                text
+                HStack(spacing: 10) {
+                    Button(action: {
+                            // Action
+                    }) {
+                        Label("Check In", systemImage: "square.and.arrow.down.fill")
+                            .frame(maxWidth: .infinity)
+                    }
+                    .tint(.mint)
+                    
+                    Button(action: {
+                            // Action
+                    }) {
+                        Label("Log Repair", systemImage: "wrench.and.screwdriver.fill")
+                            .frame(maxWidth: .infinity)
+                    }
+                    .tint(.blue)
                 }
+                .buttonStyle(.bordered)
+                .buttonBorderShape(.roundedRectangle(radius: 15))
+                .controlSize(.large)
+            }
         }
         .onAppear {
             service.fetchSpecificHardware(id: hardwareID)
@@ -154,7 +192,8 @@ struct Header: View {
         VStack(spacing: 10) {
             if let manufacturerName = service.hardwareDetailItem?.manufacturer?.name,
                let modelName = service.hardwareDetailItem?.model?.name,
-               let deviceName = service.hardwareDetailItem?.name {
+               let deviceName = service.hardwareDetailItem?.name,
+               let assetTag = service.hardwareDetailItem?.assetTag {
                 VStack(alignment: .center, spacing: 5) {
                     HStack(alignment: .center, spacing: 5) {
                         if manufacturerName != "" {
@@ -167,11 +206,105 @@ struct Header: View {
                                 .font(.title3)
                         }
                     }
-                    .foregroundColor(.secondary)
+                    .foregroundStyle(.secondary)
                     if deviceName != "" {
                         Text("\(deviceName)")
                             .font(.title)
                             .multilineTextAlignment(.center)
+                            .fontWeight(.semibold)
+                    } else if assetTag != "" {
+                        Text("\(assetTag)")
+                            .font(.title)
+                            .multilineTextAlignment(.center)
+                            .fontWeight(.semibold)
+                    }
+                }
+            }
+            DeviceTags(hardwareID: hardwareID)
+        }
+    }
+}
+
+struct LargeHeader: View {
+    @Environment(\.prefersTabNavigation) private var prefersTabNavigation
+    
+    @StateObject private var service = SnipeAPIService()
+    
+    var hardwareID: Int32
+    
+    var body: some View {
+        HStack(alignment: .center, spacing: 15) {
+            image
+            VStack(alignment: .leading) {
+                text
+                Spacer()
+                HStack(spacing: 10) {
+                    Button(action: {
+                            // Action
+                    }) {
+                        Label("Check In", systemImage: "square.and.arrow.down.fill")
+                    }
+                    .tint(.mint)
+                    
+                    Button(action: {
+                            // Action
+                    }) {
+                        Label("Log Repair", systemImage: "wrench.and.screwdriver.fill")
+                    }
+                    .tint(.blue)
+                }
+                .buttonStyle(.borderedProminent)
+                .controlSize(.large)
+            }
+            .frame(height: 145)
+        }
+        .onAppear {
+            service.fetchSpecificHardware(id: hardwareID)
+        }
+    }
+    
+    var image: some View {
+        AsyncImage(url: URL(string: service.hardwareDetailItem?.image ?? "")) { image in
+            image
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(height: 155)
+                .padding(15)
+                .background(.white, in: RoundedRectangle(cornerRadius: 15, style: .continuous))
+        } placeholder: {
+            Image(systemName: "laptopcomputer")
+                .frame(minWidth: 80, maxWidth: 200)
+        }
+    }
+    
+    var text: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            if let manufacturerName = service.hardwareDetailItem?.manufacturer?.name,
+               let modelName = service.hardwareDetailItem?.model?.name,
+               let deviceName = service.hardwareDetailItem?.name,
+               let assetTag = service.hardwareDetailItem?.assetTag {
+                VStack(alignment: .leading, spacing: 10) {
+                    HStack(alignment: .center, spacing: 5) {
+                        if manufacturerName != "" {
+                            Text("\(manufacturerName)")
+                                .font(.title3)
+                        }
+                        
+                        if modelName != "" && modelName != deviceName {
+                            Text("\(modelName)")
+                                .font(.title3)
+                        }
+                    }
+                    .foregroundStyle(.secondary)
+                    if deviceName != "" {
+                        Text("\(deviceName)")
+                            .font(.title)
+                            .multilineTextAlignment(.leading)
+                            .fontWeight(.semibold)
+                    } else if assetTag != "" {
+                        Text("\(assetTag)")
+                            .font(.title)
+                            .multilineTextAlignment(.leading)
                             .fontWeight(.semibold)
                     }
                 }
@@ -201,7 +334,7 @@ struct DeviceTags: View {
                     .fontWeight(.medium)
                     .foregroundStyle(.white)
                     .padding(8)
-                    .background(.green, in: Capsule())
+                    .background(.teal, in: Capsule())
             }
             if service.hardwareDetailItem?.byod == true {
                 Text("BYOD")
@@ -209,16 +342,7 @@ struct DeviceTags: View {
                     .fontWeight(.medium)
                     .foregroundStyle(.white)
                     .padding(8)
-                    .background(.green, in: Capsule())
-            }
-            if let warrantyTime = service.hardwareDetailItem?.warrantyMonths,
-               let warrantyExpires = service.hardwareDetailItem?.warrantyExpires?.formatted {
-                Text("\(warrantyTime) (\(warrantyExpires))")
-                    .font(.callout)
-                    .fontWeight(.medium)
-                    .foregroundStyle(.white)
-                    .padding(8)
-                    .background(.green, in: Capsule())
+                    .background(.purple, in: Capsule())
             }
         }
         .onAppear {
@@ -227,17 +351,71 @@ struct DeviceTags: View {
     }
 }
 
-struct Cards: View {
+struct MaintenancesCard: View {
+    @StateObject private var service = SnipeAPIService()
+    
+    var hardwareID: Int32
+    
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
+        VStack {
             HStack {
-                FeaturedNavigation(symbol: "laptopcomputer.and.iphone", color: .blue, label: "Maintenances")
-                FeaturedNavigation(symbol: "cube.box", color: .blue, label: "Accessories")
+                Text("Maintenances")
+                    .font(.title2)
+                    .fontWeight(.medium)
+                Spacer()
+                NavigationLink(destination: AssetMaintenanceNaviagtionStack(hardwareID: hardwareID)) {
+                    Text("View All")
+                }
             }
-            HStack {
-                FeaturedNavigation(symbol: "cpu", color: .green, label: "Components")
-                FeaturedNavigation(symbol: "drop.halffull", color: .orange, label: "Consumables")
+            if service.maintenancesItem.isEmpty {
+                GroupBox {
+                    ContentUnavailableView("No Maintenance Jobs", systemImage: "wrench.and.screwdriver")
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .init(horizontal: .center, vertical: .center))
+                }
+            } else {
+                ForEach(service.maintenancesItem.prefix(3)) { maintenance in
+                    GroupBox {
+                        HStack {
+                            VStack(alignment: .leading) {
+                                Text(maintenance.assetMaintenanceType ?? "")
+                                    .font(.subheadline)
+                                Text(maintenance.title ?? "")
+                                    .font(.headline)
+                                Text("Logged By: \(maintenance.userId?.name ?? "")")
+                                Divider()
+                                if maintenance.completionDate?.formatted.isEmpty == false {
+                                    Text("Completion: \(maintenance.completionDate?.formatted ?? "")")
+                                } else {
+                                    Text("Created: \(maintenance.createdAt?.formatted ?? "")")
+                                }
+                            }
+                            Spacer()
+                            Group {
+                                if maintenance.completionDate?.formatted.isEmpty == false {
+                                    Image(systemName: "checkmark.circle.fill")
+                                        .foregroundStyle(.green)
+                                        .font(.title)
+                                } else {
+                                    Image(systemName: "wrench.and.screwdriver.fill")
+                                        .symbolRenderingMode(.hierarchical)
+                                        .foregroundStyle(.orange)
+                                        .font(.title2)
+                                }
+                            }
+                        }
+                    }
+                    .groupBoxStyle(
+                        MaterialGroupBox(
+                            spacing: 10,
+                            radius: 8,
+                            background: .color(.secondary.opacity(0.3))
+                        )
+                    )
+                }
             }
+        }
+        .onAppear {
+            service.fetchAssetMaintenances(assetID: hardwareID)
         }
     }
 }
@@ -248,20 +426,33 @@ struct AssignedTo: View {
     var hardwareID: Int32
     
     var body: some View {
-        VStack {
+        GroupBox(label: Text("Loan")) {
             if let assignedTo = service.hardwareDetailItem?.assignedTo?.name {
-                GroupBox("Assigned To") {
-                    HStack {
-                        Image(systemName: "person.circle.fill")
-                            .symbolRenderingMode(.hierarchical)
-                            .font(.largeTitle)
-                        VStack(alignment: .leading) {
-                            Text(assignedTo)
-                                .font(.title2)
-                                .fontWeight(.medium)
-                        }
-                        Spacer()
+                HStack {
+                    Image(systemName: "person.circle.fill")
+                        .symbolRenderingMode(.hierarchical)
+                        .font(.largeTitle)
+                    VStack(alignment: .leading) {
+                        Text("Assigned To")
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
+                        Text(assignedTo)
+                            .font(.title2)
+                            .fontWeight(.medium)
                     }
+                    Spacer()
+                }
+            } else {
+                HStack {
+                    Image(systemName: "questionmark.circle")
+                        .symbolRenderingMode(.hierarchical)
+                        .font(.largeTitle)
+                    VStack(alignment: .leading) {
+                        Text("Unassigned")
+                            .font(.title2)
+                            .fontWeight(.medium)
+                    }
+                    Spacer()
                 }
             }
         }

@@ -7,21 +7,41 @@
 
 import SwiftUI
 
+struct AssetMaintenanceNaviagtionStack: View {
+    var hardwareID: Int32
+    
+    var body: some View {
+        NavigationStack {
+            AssetMaintenanceView(hardwareID: hardwareID)
+                .navigationTitle("Maintenance Jobs")
+                #if os(iOS)
+                .navigationBarTitleDisplayMode(.large)
+                #endif
+        }
+    }
+}
+
+
 struct AssetMaintenanceView: View {
     @StateObject private var service = SnipeAPIService()
     var hardwareID: Int32
     
-    let columns = [
-        GridItem(.flexible(minimum: 300, maximum: 500))
-    ]
-    
     var body: some View {
+        #if os(iOS)
+        list
+        #else
+        standard
+        #endif
+    }
+    
+    var standard: some View {
         VStack(alignment: .leading) {
             if service.maintenancesItem.isEmpty {
                 ContentUnavailableView("No Maintenance Jobs", systemImage: "wrench.and.screwdriver")
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .init(horizontal: .center, vertical: .center))
             } else {
-                LazyVGrid(columns: columns) {
-                    ForEach(service.maintenancesItem) { maintenance in
+                ForEach(service.maintenancesItem) { maintenance in
+                    GroupBox {
                         HStack {
                             VStack(alignment: .leading) {
                                 Text(maintenance.assetMaintenanceType ?? "")
@@ -45,23 +65,76 @@ struct AssetMaintenanceView: View {
                                 } else {
                                     Image(systemName: "wrench.and.screwdriver.fill")
                                         .symbolRenderingMode(.hierarchical)
-                                        .foregroundColor(.orange)
+                                        .foregroundStyle(.orange)
                                         .font(.title2)
                                 }
                             }
                         }
-                        .padding()
-                        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 10))
                     }
+                    .groupBoxStyle(
+                        MaterialGroupBox(
+                            spacing: 10,
+                            radius: 8,
+                            background: .color(.secondary.opacity(0.3))
+                        )
+                    )
                 }
-                Spacer()
             }
         }
-        .padding()
         .onAppear {
             service.fetchAssetMaintenances(assetID: hardwareID)
-            print(hardwareID)
-            
+        }
+        .refreshable {
+            service.fetchAssetMaintenances(assetID: hardwareID)
+        }
+    }
+    
+    var list: some View {
+        VStack(alignment: .leading) {
+            if service.maintenancesItem.isEmpty {
+                ContentUnavailableView("No Maintenance Jobs", systemImage: "wrench.and.screwdriver")
+            } else {
+                List {
+                    ForEach(service.maintenancesItem) { maintenance in
+                        Section {
+                            HStack {
+                                VStack(alignment: .leading) {
+                                    Text(maintenance.assetMaintenanceType ?? "")
+                                        .font(.subheadline)
+                                    Text(maintenance.title ?? "")
+                                        .font(.headline)
+                                    Text("Logged By: \(maintenance.userId?.name ?? "")")
+                                    Divider()
+                                    if maintenance.completionDate?.formatted.isEmpty == false {
+                                        Text("Completion: \(maintenance.completionDate?.formatted ?? "")")
+                                    } else {
+                                        Text("Created: \(maintenance.createdAt?.formatted ?? "")")
+                                    }
+                                }
+                                Spacer()
+                                Group {
+                                    if maintenance.completionDate?.formatted.isEmpty == false {
+                                        Image(systemName: "checkmark.circle.fill")
+                                            .foregroundStyle(.green)
+                                            .font(.title)
+                                    } else {
+                                        Image(systemName: "wrench.and.screwdriver.fill")
+                                            .symbolRenderingMode(.hierarchical)
+                                            .foregroundStyle(.orange)
+                                            .font(.title2)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                #if os(iOS)
+                .listStyle(.insetGrouped)
+                #endif
+            }
+        }
+        .onAppear {
+            service.fetchAssetMaintenances(assetID: hardwareID)
         }
         .refreshable {
             service.fetchAssetMaintenances(assetID: hardwareID)
