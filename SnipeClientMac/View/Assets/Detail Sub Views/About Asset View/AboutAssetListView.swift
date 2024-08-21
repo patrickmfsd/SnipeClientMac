@@ -7,7 +7,21 @@
 
 import SwiftUI
 
-struct AboutAssetView: View {
+struct AboutAssetNavigationStack: View {
+    var hardwareID: Int32
+
+    var body: some View {
+        NavigationStack {
+            AboutAssetListView(hardwareID: hardwareID)
+                .navigationTitle("About")
+                #if os(iOS)
+                .navigationBarTitleDisplayMode(.large)
+                #endif
+        }
+    }
+}
+
+struct AboutAssetListView: View {
     @StateObject private var service = SnipeAPIService()
     @Environment(\.prefersTabNavigation) private var prefersTabNavigation
     @State private var showCreatedDate: Bool = false
@@ -15,31 +29,39 @@ struct AboutAssetView: View {
     var hardwareID: Int32
     
     var body: some View {
-        VStack {
-            ScrollView {
-                VStack {
-                    GroupBox {
-                        if let serial = service.hardwareDetailItem?.serial {
-                            DetailRow(title: "Serial", value: "\(serial)")
-                        }
-                        if let assetTag = service.hardwareDetailItem?.assetTag {
-                            DetailRow(title: "Asset Tag", value: "\(assetTag)")
-                        }
+        Group {
+            List {
+                Section {
+                    if let serial = service.hardwareDetailItem?.serial {
+                        DetailRow(title: "Serial", value: "\(serial)")
                     }
-                    GroupBox("Notes") {
-                        HStack {
-                            Text(service.hardwareDetailItem?.notes ?? "No Asset Notes.")
-                                .multilineTextAlignment(.leading)
-                            Spacer()
-                        }
+                    if let assetTag = service.hardwareDetailItem?.assetTag {
+                        DetailRow(title: "Asset Tag", value: "\(assetTag)")
                     }
-                    loanStatusGroupBox()
-                    detailsGroupBox()
-                    supplierGroupBox()
                 }
-                .groupBoxStyle(MaterialGroupBox(spacing: 10, radius: 15, material: .thin))
+                Section(header: Text("Notes")) {
+                    HStack {
+                        Text(service.hardwareDetailItem?.notes ?? "No Asset Notes.")
+                            .multilineTextAlignment(.leading)
+                        Spacer()
+                    }
+                }
+                Section(header: Text("Loan Status")) {
+                    loanedOutToView()
+                    loanDetailsView()
+                }
+                Section(header: Text("Hardware Details")) {
+                    hardwareDetailsView()
+                }
+                Section(header: Text("Supplier Details")) {
+                    supplierDetailsView()
+                }
             }
-            .padding(.horizontal)
+            #if os(iOS)
+            .listStyle(.insetGrouped)
+            #else
+            .listStyle(.inset)
+            #endif
             .onAppear {
                 service.fetchSpecificHardware(id: hardwareID)
             }
@@ -47,37 +69,30 @@ struct AboutAssetView: View {
                 service.fetchSpecificHardware(id: hardwareID)
             }
         }
-        .navigationTitle("About")
     }
     
-    private func loanStatusGroupBox() -> some View {
-        GroupBox("Loan Status") {
-            VStack {
-                if let assignedTo = service.hardwareDetailItem?.assignedTo?.name {
-                    GroupBox {
-                        HStack {
-                            Image(systemName: "person.circle.fill")
-                                .symbolRenderingMode(.hierarchical)
-                                .font(.largeTitle)
-                            VStack(alignment: .leading) {
-                                Text("Assigned To")
-                                    .font(.footnote)
-                                    .foregroundStyle(.secondary)
-                                Text(assignedTo)
-                                    .font(.title2)
-                                    .fontWeight(.medium)
-                            }
-                            Spacer()
-                        }
+    private func loanedOutToView() -> some View {
+        Group {
+            if let assignedTo = service.hardwareDetailItem?.assignedTo?.name {
+                HStack {
+                    Image(systemName: "person.circle.fill")
+                        .symbolRenderingMode(.hierarchical)
+                        .font(.largeTitle)
+                    VStack(alignment: .leading) {
+                        Text("Assigned To")
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
+                        Text(assignedTo)
+                            .font(.title2)
+                            .fontWeight(.medium)
                     }
+                    Spacer()
                 }
-                detailRows()
-            }            
+            }
         }
-        .groupBoxStyle(MaterialGroupBox(spacing: 10, radius: 15, material: .thin))
     }
     
-    private func detailRows() -> some View {
+    private func loanDetailsView() -> some View {
         Group {
             if let location = service.hardwareDetailItem?.location?.name {
                 DetailRow(title: "Location", value: location)
@@ -103,41 +118,30 @@ struct AboutAssetView: View {
         }
     }
     
-    private func detailsGroupBox() -> some View {
-        GroupBox("Details") {
-            VStack(alignment: .leading) {
-                eolDetailRow()
-                auditDetailRows()
-                bookValueDetailRow()
-                updatedDetailRow()
-                createdDetailRow()
-            }
+    private func hardwareDetailsView() -> some View {
+        Group {
+            eolDetailRow()
+            auditDetailRows()
+            bookValueDetailRow()
+            updatedDetailRow()
+            createdDetailRow()
         }
-        .groupBoxStyle(MaterialGroupBox(spacing: 10, radius: 15, material: .thin))
     }
     
-    private func supplierGroupBox() -> some View {
-        GroupBox("Supplier") {
-            VStack {
-                if let name = service.hardwareDetailItem?.supplier?.name {
-                    DetailRow(title: "Supplier", value: name)
-                }
-                if let purchaseCost = service.hardwareDetailItem?.purchaseCost {
-                    DetailRow(title: "Purchase Cost", value: "$\(purchaseCost)")
-                }
-                if let orderNumber = service.hardwareDetailItem?.orderNumber {
-                    DetailRow(title: "Order Number", value: "#\(orderNumber)")
-                }
-                if let purchaseDate = service.hardwareDetailItem?.purchaseDate?.formatted {
-                    DetailRow(title: "Purchase Date", value: purchaseDate)
-                }
-            }
-            if service.hardwareDetailItem?.supplier?.name == nil  {
+    private func supplierDetailsView() -> some View {
+        Group {
+            if let name = service.hardwareDetailItem?.supplier?.name,
+               let purchaseCost = service.hardwareDetailItem?.purchaseCost,
+               let orderNumber = service.hardwareDetailItem?.orderNumber,
+               let purchaseDate = service.hardwareDetailItem?.purchaseDate?.formatted {
+                DetailRow(title: "Supplier Name", value: name)
+                DetailRow(title: "Purchase Cost", value: "$\(purchaseCost)")
+                DetailRow(title: "Order Number", value: "#\(orderNumber)")
+                DetailRow(title: "Purchase Date", value: purchaseDate)
+            } else {
                 ContentUnavailableView("No Supplier Information", systemImage: "truck.box")
-                    .frame(maxWidth: .infinity)
             }
         }
-        .groupBoxStyle(MaterialGroupBox(spacing: 10, radius: 15, material: .thin))
     }
                  
     
@@ -196,15 +200,12 @@ struct DetailRow: View {
     var value: String
     
     var body: some View {
-        GroupBox {
-            HStack {
-                Text(title)
-                    .foregroundStyle(.secondary)
-                Spacer()
-                Text(value)
-            }
+        HStack {
+            Text(title)
+                .foregroundStyle(.secondary)
+            Spacer()
+            Text(value)
         }
-        .groupBoxStyle(MaterialGroupBox(spacing: 10, radius: 15, material: .thin))
     }
 }
 

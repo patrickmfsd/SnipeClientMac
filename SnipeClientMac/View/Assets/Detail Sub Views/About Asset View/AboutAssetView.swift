@@ -1,18 +1,18 @@
 //
-//  AssetComponentsView.swift
+//  AboutAssetView.swift
 //  SnipeClientMac
 //
-//  Created by Patrick Mifsud on 24/7/2024.
+//  Created by Patrick Mifsud on 8/19/24.
 //
 
 import SwiftUI
 
-struct AssetComponentsView: View {
+struct AboutAssetView: View {
     var body: some View {
         Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
     }
 }
 
 #Preview {
-    AssetComponentsView()
+    AboutAssetView()
 }
