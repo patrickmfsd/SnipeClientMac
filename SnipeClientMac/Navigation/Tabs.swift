@@ -1,6 +1,6 @@
 //
 //  Tabs.swift
-//  SnipeClientMac
+//  SnipeManager
 //
 //  Created by Patrick Mifsud on 15/7/2024.
 //
@@ -9,52 +9,38 @@ import SwiftUI
 
 /// A description of the tabs that the app can present.
 enum Tabs: Equatable, Hashable, Identifiable {
+    case search
     case dashBoard
-    case assets
-    case components
-    case consumables
-    case accessories
+    case asset
+    case assets(AssetTabs)
     case maintenance
     case users
     case settings
     
     var id: Int {
         switch self {
+            case .search: 2000
             case .dashBoard: 2001
-            case .assets: 2002
-            case .components: 2004
-            case .accessories: 2005
-            case .maintenance: 2006
-            case .users: 2007
-            case .consumables: 2008
-            case .settings: 2009
+            case .maintenance: 2002
+            case .users: 2003
+            case .settings: 2004
+            case .asset: 2005
+            case .assets(let asset): asset.id
         }
     }
     
     var name: String {
         switch self {
+            case .search: String(
+                localized: "Search",
+                comment: "Tab title"
+            )
             case .dashBoard: String(
                 localized: "Dashboard",
                 comment: "Tab title"
             )
-            case .assets: String(
-                localized: "Assets",
-                comment: "Tab title"
-            )
-            case .components: String(
-                localized: "Components",
-                comment: "Tab title"
-            )
-            case .accessories: String(
-                localized: "Accessories",
-                comment: "Tab title"
-            )
             case .users: String(
                 localized: "Users",
-                comment: "Tab title"
-            )
-            case .consumables: String(
-                localized: "Consumables",
                 comment: "Tab title"
             )
             case .maintenance: String(
@@ -63,6 +49,14 @@ enum Tabs: Equatable, Hashable, Identifiable {
             )
             case .settings: String(
                 localized: "Settings",
+                comment: "Tab title"
+            )
+            case .assets(_): String(
+                localized: "Assets",
+                comment: "Tab title"
+            )
+            case .asset: String(
+                localized: "Assets",
                 comment: "Tab title"
             )
         }
@@ -74,22 +68,22 @@ enum Tabs: Equatable, Hashable, Identifiable {
     
     var symbol: String {
         switch self {
+            case .search: "magnifyingglass"
             case .dashBoard: "chart.bar"
-            case .assets: "laptopcomputer.and.iphone"
-            case .components: "cpu"
-            case .consumables: "drop.halffull"
-            case .accessories: "cube.box"
             case .maintenance: "hammer"
             case .users: "person.2"
             case .settings: "gear"
+            case .assets(_): "laptopcomputer.and.iphone"
+            case .asset: "laptopcomputer.and.iphone"
+
         }
     }
     
     var isSecondary: Bool {
         switch self {
-            case .dashBoard, .assets, .users, .settings:
+            case .dashBoard,.assets(_), .users, .search:
                 false
-            case .accessories, .components, .consumables, .maintenance:
+            case .maintenance, .settings, .asset:
                 true
         }
     }
