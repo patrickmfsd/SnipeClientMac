@@ -1,6 +1,6 @@
 //
 //  Consumables.swift
-//  SnipeClientMac
+//  SnipeManager
 //
 //  Created by Patrick Mifsud on 25/6/2024.
 //

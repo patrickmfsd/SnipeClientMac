@@ -1,6 +1,6 @@
 //
 //  Components.swift
-//  SnipeClientMac
+//  SnipeManager
 //
 //  Created by Patrick Mifsud on 19/6/2024.
 //

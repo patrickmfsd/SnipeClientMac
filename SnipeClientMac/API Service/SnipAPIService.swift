@@ -1,6 +1,6 @@
 //
 //  SnipAPIService.swift
-//  SnipeClientMac
+//  SnipeManager
 //
 //  Created by Patrick Mifsud on 31/5/2024.
 //
@@ -16,7 +16,10 @@ class SnipeAPIService: ObservableObject {
     @Published var hardwareItems: [HardwareItem] = []
     @Published var hardwareDetailItem: HardwareItem?
     
-    @Published var userItem: [User] = []
+    @Published var apiUser: APIUser?
+    @Published var users: [User] = []
+    @Published var user: User?
+
     @Published var categoryItem: [Category] = []
     @Published var maintenancesItem: [Maintenance] = []
     @Published var components: [Component] = []
@@ -50,6 +53,43 @@ class SnipeAPIService: ObservableObject {
         return Date().timeIntervalSince(lastTime) >= requestInterval
     }
     
+    // MARK: - Fetch Hardware Assets
+    func fetchAPIUserDetails() {
+        // Construct cache key
+        let cacheKey = "APIUserDetails"
+        
+        
+        let headers = [
+            "accept": "application/json",
+            "Authorization": "Bearer \(apiKey)"
+        ]
+        
+        // Check for cached response
+        if let cachedResponse = cache[cacheKey]?.value as? APIUser {
+            self.apiUser = cachedResponse
+            return
+        }
+        
+        // Proceed with network request if not cached
+        guard isRequestAllowed(for: cacheKey) else { return }
+        self.isLoading = true
+        
+        networkService.fetchData(urlString: "users/me", headers: headers) { (result: Result<APIUser, NetworkError>) in
+            DispatchQueue.main.async {
+                self.isLoading = false
+                
+                switch result {
+                    case .success(let response):
+                        self.apiUser = response
+                        self.cache[cacheKey] = AnyCacheable(value: response)
+                        self.lastRequestTime[cacheKey] = Date()
+                    case .failure(let error):
+                        self.errorMessage = IdentifiableError(message: error.localizedDescription)
+                }
+            }
+        }
+    }
+        
     // MARK: - Fetch Hardware Assets
     func fetchHardware(limit: Int = 25, offset: Int = 0, searchTerm: String = "", sort: String = "created_at", order: String = "desc") {
         // Construct cache key
@@ -176,7 +216,7 @@ class SnipeAPIService: ObservableObject {
         ]
         
         if let cachedResponse = cache[cacheKey]?.value as? UserResponse {
-            self.userItem = cachedResponse.rows
+            self.users = cachedResponse.rows
             self.userTotal = cachedResponse.total
             return
         }
@@ -190,11 +230,87 @@ class SnipeAPIService: ObservableObject {
                 switch result {
                     case .success(let response):
                         if offset == 0 {
-                            self.userItem = response.rows
+                            self.users = response.rows
                         } else {
-                            self.userItem.append(contentsOf: response.rows)
+                            self.users.append(contentsOf: response.rows)
                         }
                         self.userTotal = response.total
+                        self.cache[cacheKey] = AnyCacheable(value: response)
+                        self.lastRequestTime[cacheKey] = Date()
+                    case .failure(let error):
+                        self.errorMessage = IdentifiableError(message: error.localizedDescription)
+                }
+            }
+        }
+    }
+    
+    // MARK: - Fetch User
+    func fetchUser(id: Int32 = 0, offset: Int = 0, sort: String = "created_at", order: String = "desc") {
+        let cacheKey = "user-\(id)"
+        
+        let queryItems = [
+            URLQueryItem(name: "offset", value: String(offset)),
+            URLQueryItem(name: "sort", value: sort),
+            URLQueryItem(name: "order", value: order)
+        ]
+        let headers = [
+            "accept": "application/json",
+            "Authorization": "Bearer \(apiKey)"
+        ]
+        
+        if let cachedResponse = cache[cacheKey]?.value as? User {
+            self.user = cachedResponse
+            return
+        }
+        
+        guard isRequestAllowed(for: cacheKey) else { return }
+        self.isLoading = true
+        
+        networkService.fetchData(urlString: "\(apiURL)users/\(id)", queryItems: queryItems, headers: headers) { (result: Result<User, NetworkError>) in
+            DispatchQueue.main.async {
+                self.isLoading = false
+                
+                switch result {
+                    case .success(let response):
+                        self.user = response
+                        self.cache[cacheKey] = AnyCacheable(value: response)
+                        self.lastRequestTime[cacheKey] = Date()
+                    case .failure(let error):
+                        self.errorMessage = IdentifiableError(message: error.localizedDescription)
+                }
+            }
+        }
+    }
+    
+    // MARK: - Fetch User Assets
+    func fetchUserAssets(id: Int32 = 0, offset: Int = 0, sort: String = "created_at", order: String = "desc") {
+        let cacheKey = "userAssets-\(id)"
+        
+        let queryItems = [
+            URLQueryItem(name: "offset", value: String(offset)),
+            URLQueryItem(name: "sort", value: sort),
+            URLQueryItem(name: "order", value: order)
+        ]
+        let headers = [
+            "accept": "application/json",
+            "Authorization": "Bearer \(apiKey)"
+        ]
+        
+        if let cachedResponse = cache[cacheKey]?.value as? HardwareResponse {
+            self.hardwareItems = cachedResponse.rows
+            return
+        }
+        
+        guard isRequestAllowed(for: cacheKey) else { return }
+        self.isLoading = true
+        
+        networkService.fetchData(urlString: "\(apiURL)users/\(id)/assets", queryItems: queryItems, headers: headers) { (result: Result<HardwareResponse, NetworkError>) in
+            DispatchQueue.main.async {
+                self.isLoading = false
+                
+                switch result {
+                    case .success(let response):
+                        self.hardwareItems = response.rows
                         self.cache[cacheKey] = AnyCacheable(value: response)
                         self.lastRequestTime[cacheKey] = Date()
                     case .failure(let error):
@@ -248,7 +364,7 @@ class SnipeAPIService: ObservableObject {
         }
     }
     
-        // MARK: - Fetch asset maintenances
+    // MARK: - Fetch asset maintenances
     func fetchAssetMaintenances(limit: Int = 25, offset: Int = 0, sort: String = "created_at", order: String = "desc", assetID: Int32? = nil) {
         let cacheKey = "asset_maintenances_\(offset)_\(sort)_\(order)_\(String(describing: assetID))"
         
@@ -298,7 +414,7 @@ class SnipeAPIService: ObservableObject {
         }
     }
     
-        // MARK: - Fetch all Maintenances
+    // MARK: - Fetch all Maintenances
     func fetchAllMaintenances(limit: Int = 25, offset: Int = 0, searchTerm: String = "", sort: String = "created_at", order: String = "desc") {
         let cacheKey = "all_maintenances_\(offset)_\(sort)_\(order)"
         
@@ -344,7 +460,7 @@ class SnipeAPIService: ObservableObject {
         }
     }
     
-        // MARK: - Fetch all Components
+    // MARK: - Fetch all Components
     func fetchAllComponents(limit: Int = 25, offset: Int = 0, searchTerm: String = "", sort: String = "created_at", order: String = "desc") {
         let cacheKey = "all_components_\(offset)_\(sort)_\(order)_\(searchTerm)"
         

@@ -1,6 +1,6 @@
 //
 //  Categories.swift
-//  SnipeClientMac
+//  SnipeManager
 //
 //  Created by Patrick Mifsud on 1/6/2024.
 //

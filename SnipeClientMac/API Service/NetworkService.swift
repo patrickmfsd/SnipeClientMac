@@ -1,6 +1,6 @@
 //
 //  NetworkService.swift
-//  SnipeClientMac
+//  SnipeManager
 //
 //  Created by Patrick Mifsud on 31/5/2024.
 //

@@ -1,12 +1,3 @@
-//
-//  Accessories.swift
-//  SnipeClientMac
-//
-//  Created by Patrick Mifsud on 22/7/2024.
-//
-
-import Foundation
-
 struct AccessoriesResponse: Codable {
     let total: Int
     let rows: [Accessory]
@@ -24,13 +15,13 @@ struct Accessory: Codable, Identifiable, Equatable {
     let location: AccessoryLocation?
     let notes: String?
     let qty: Int?
-    let purchaseDate: String?
+    let purchaseDate: AccessoryDateInfo? // Optional to handle null
     let purchaseCost: String?
     let orderNumber: String?
     let minQty: Int?
     let remainingQty: Int?
     let usersCount: Int?
-    let createdAt:AccessoryDateInfo?
+    let createdAt: AccessoryDateInfo?
     let updatedAt: AccessoryDateInfo?
     let availableActions: AccessoryAvailableActions?
     let userCanCheckout: Bool?
@@ -53,33 +44,33 @@ struct Accessory: Codable, Identifiable, Equatable {
 }
 
 struct AccessoryCompany: Codable, Equatable {
-    let id: Int
-    let name: String
+    let id: Int?
+    let name: String?
 }
 
 struct AccessoryManufacturer: Codable, Equatable {
-    let id: Int
-    let name: String
+    let id: Int?
+    let name: String?
 }
 
 struct AccessorySupplier: Codable, Equatable {
-    let id: Int
-    let name: String
+    let id: Int?
+    let name: String?
 }
 
 struct AccessoryCategory: Codable, Equatable {
-    let id: Int
-    let name: String
+    let id: Int?
+    let name: String?
 }
 
 struct AccessoryLocation: Codable, Equatable {
-    let id: Int
-    let name: String
+    let id: Int?
+    let name: String?
 }
 
 struct AccessoryDateInfo: Codable, Equatable {
-    let datetime: String
-    let formatted: String
+    let datetime: String?
+    let formatted: String?
 }
 
 struct AccessoryAvailableActions: Codable, Equatable {

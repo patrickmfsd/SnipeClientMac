@@ -1,6 +1,6 @@
 //
 //  Maintenances.swift
-//  SnipeClientMac
+//  SnipeManager
 //
 //  Created by Patrick Mifsud on 13/6/2024.
 //
