@@ -1,92 +1,74 @@
 //
 //  AssetWidgetView.swift
-//  SnipeClientMac
+//  SnipeManager
 //
 //  Created by Patrick Mifsud on 31/5/2024.
 //
 
 import SwiftUI
 
-struct AssetListWidget: View {
+struct AssetCard: View {
     @StateObject private var service = SnipeAPIService()
     
-    #if os(iOS)
-    private var imageSize: CGFloat = 120
-    private var detailTextAlignment: HorizontalAlignment = .center
-    #else
-    private var imageSize: CGFloat = 60
-    private var detailTextAlignment: HorizontalAlignment = .leading
-    #endif
-    
+    let rows = [
+        GridItem(.fixed(85)),
+        GridItem(.fixed(85)),
+        GridItem(.fixed(85))
+    ]
     
     var body: some View {
-        GroupBox(label:
-            Text("Recent Assets")
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Assets")
                 .font(.title2)
                 .fontWeight(.medium)
-        ) {
-            if service.hardwareItems.isEmpty {
-                ContentUnavailableView(
-                    "Assets Unavailable",
-                    systemImage: "tv.slash"
-                )
-                .frame(minHeight: 450)
-            } else {
-                #if os(iOS)
-                scrollView
-                #else
-                listView
-                #endif
+            
+            ScrollView(.horizontal, showsIndicators: false) {
+                LazyHGrid(rows: rows, spacing: 10) {
+                    ForEach(service.hardwareItems.prefix(25)) { hardware in
+                        NavigationLink(destination:  AssetDetailView(hardwareID: Int32(hardware.id))) {
+                            AssetItem(hardware: hardware, size: 60)
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
             }
+            .padding(.horizontal, -16)
         }
+        .padding(.horizontal)
         .onAppear {
             service.fetchHardware()
         }
     }
-    
-    var scrollView: some View {
-        ScrollView(.horizontal) {
-            HStack(spacing: 15) {
-                ForEach(service.hardwareItems.prefix(10)) { hardware in
-                    NavigationLink(destination:  AssetDetailView(hardwareID: Int32(hardware.id))) {
-                        VStack(alignment: .center, spacing: 15) {
-                            AssetWidgetImage(hardware: hardware, size: imageSize)
-                            AssetWidgetDetails(hardware: hardware, alignment: detailTextAlignment)
-                        }
-                        .frame(height: 200)
-                    }
-                    .buttonBorderShape(.roundedRectangle)
-                }
-            }
-        }
-    }
-    
-    var listView: some View {
-        ForEach(service.hardwareItems.prefix(8)) { hardware in
-            NavigationLink(destination:  AssetDetailView(hardwareID: Int32(hardware.id))) {
-                HStack(alignment: .center, spacing: 15) {
-                    AssetWidgetImage(hardware: hardware, size: imageSize)
-                    AssetWidgetDetails(hardware: hardware, alignment: detailTextAlignment)
-                    Spacer()
-                }
-                .frame(height: 80)
-            }
-            .buttonBorderShape(.roundedRectangle)
-        }
-    }
 }
 
-struct AssetWidgetDetails: View {
+struct AssetItem: View {
     @State var hardware: HardwareItem
-
-    var alignment: HorizontalAlignment
+    var size: CGFloat
     
     var body: some View {
+        GroupBox {
+            HStack(alignment: .center, spacing: 12) {
+                image
+                details
+                Spacer()
+            }
+            .frame(width: 300, height: 70)
+        }
+        .groupBoxStyle(
+            CustomGroupBox(
+                spacing: 8,
+                radius: 8,
+                background: .color(.secondary.opacity(0.1))
+            )
+        )
+    }
+
+    var details: some View {
         Group {
             if let manufacturerName = hardware.manufacturer?.name,
                let modelName = hardware.model?.name,
                let deviceName = hardware.name {
-                VStack(alignment: alignment, spacing: 2) {
+                VStack(alignment: .leading, spacing: 2) {
                     HStack(spacing: 5){
                         if manufacturerName != "" {
                             Text("\(manufacturerName)")
@@ -118,14 +100,8 @@ struct AssetWidgetDetails: View {
             }
         }
     }
-}
-
-struct AssetWidgetImage: View {
-    @State var hardware: HardwareItem
-
-    var size: CGFloat
     
-    var body: some View {
+    var image: some View {
         AsyncImage(url: URL(string: hardware.image ?? "")) { image in
             image
                 .resizable()
@@ -141,5 +117,5 @@ struct AssetWidgetImage: View {
 }
 
 #Preview {
-    AssetListWidget()
+    AssetCard()
 }

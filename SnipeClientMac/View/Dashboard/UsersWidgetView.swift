@@ -1,72 +1,101 @@
 //
 //  UsersWidgetView.swift
-//  SnipeClientMac
+//  SnipeManager
 //
 //  Created by Patrick Mifsud on 31/5/2024.
 //
 
 import SwiftUI
 
-struct UsersWidgetView: View {
+struct UsersCard: View {
     @StateObject private var service = SnipeAPIService()
     
+    let rows = [
+        GridItem(.fixed(85)),
+        GridItem(.fixed(85)),
+        GridItem(.fixed(85))
+    ]
+    
     var body: some View {
-        GroupBox(label:
-                    Text("Recent Users")
-            .font(.title2)
-            .fontWeight(.medium)
-        ) {
-            if service.userItem.isEmpty {
-                ContentUnavailableView(
-                    "Users Unavailable",
-                    systemImage: "person.fill.questionmark"
-                )
-                .frame(minHeight: 450)
-            } else {
-                ForEach(service.userItem.prefix(8)) { users in
-                    NavigationLink(destination: EmptyView()) {
-                        HStack {
-                            AsyncImage(url: URL(string: users.avatar ?? "")) { image in
-                                image
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                                    .padding(5)
-                            } placeholder: {
-                                Image(systemName: "person.crop.circle")
-                                    .font(.system(size: 45))
-                                    .foregroundStyle(.black)
-                            }
-                            .frame(width: 55, height: 55)
-                            .padding(5)
-                            .background(.white, in: RoundedRectangle(cornerRadius: 15, style: .continuous))
-                            VStack(alignment: .leading) {
-                                Text("\(users.name)")
-                                    .font(.headline)
-                                if let usersCode = users.employeeNum {
-                                    Text("\(usersCode)")
-                                        .font(.subheadline)
-                                        .fontWeight(.medium)
-                                        .foregroundStyle(.secondary)
-                                }
-                                Text("Assets: \(users.assetsCount)")
-                            }
-                            Spacer()
-                            Image(systemName: "chevron.right")
-                                .foregroundStyle(.tint)
-                                .font(.system(size: 16))
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Users")
+                .font(.title2)
+                .fontWeight(.medium)
+            
+            ScrollView(.horizontal, showsIndicators: false) {
+                LazyHGrid(rows: rows, spacing: 10) {
+                    ForEach(service.users.prefix(25)) { user in
+                        NavigationLink(destination: EmptyView()) {
+                            UserItemView(user: user)
                         }
-                        .frame(height: 80)
+                        .buttonStyle(.plain)
                     }
-                    .buttonBorderShape(.roundedRectangle)
                 }
             }
+            .padding(.horizontal, -16)
         }
+        .padding(.horizontal)
         .onAppear {
             service.fetchUsers()
         }
     }
 }
 
+struct UserItemView: View {
+    @State var user: User
+
+    var body: some View {
+        GroupBox {
+            HStack(spacing: 12) {
+                image
+                details
+            }
+            .frame(width: 300, height: 70)
+        }
+        .groupBoxStyle(
+            CustomGroupBox(
+                spacing: 8,
+                radius: 8,
+                background: .color(.secondary.opacity(0.1))
+            )
+        )
+    }
+    
+    var image: some View {
+        AsyncImage(url: URL(string: user.avatar ?? "")) { image in
+            image
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+                .frame(width: 40, height: 40)
+                .clipShape(Circle())
+        } placeholder: {
+            Image(systemName: "person.circle.fill")
+                .font(.system(size: 40))
+                .foregroundStyle(.secondary)
+        }
+    }
+    
+    var details: some View {
+        HStack {
+            VStack(alignment: .leading) {
+                Text("\(user.name)")
+                    .font(.headline)
+                if let userCode = user.employeeNum {
+                    Text("\(userCode)")
+                        .font(.subheadline)
+                        .fontWeight(.medium)
+                        .foregroundStyle(.secondary)
+                }
+                Text("Assets: \(user.assetsCount)")
+            }
+            Spacer()
+            Image(systemName: "chevron.right")
+                .foregroundStyle(.tint)
+                .font(.system(size: 16))
+        }
+    }
+}
+
 #Preview {
-    UsersWidgetView()
+    UsersCard()
 }

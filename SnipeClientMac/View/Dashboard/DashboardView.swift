@@ -1,6 +1,6 @@
 //
 //  DashboardView.swift
-//  SnipeClientMac
+//  SnipeManager
 //
 //  Created by Patrick Mifsud on 31/5/2024.
 //
@@ -9,67 +9,53 @@ import SwiftUI
 
 struct DashboardView: View {
     @Environment(\.prefersTabNavigation) private var prefersTabNavigation
-
+    @Environment(\.colorScheme) private var colorScheme
     @StateObject private var service = SnipeAPIService()
-    
-    let columns = [
-        GridItem(.adaptive(minimum: 400, maximum: 800)),
-        GridItem(.adaptive(minimum: 400, maximum: 800)),
-        GridItem(.adaptive(minimum: 400, maximum: 800))
-    ]
     
     var body: some View {
         ScrollView {
-            #if os(iOS)
-                if prefersTabNavigation {
-                    listView
-                } else {
-                    gridView
-                }
-            #else
-            gridView
-            #endif
-        }
-        .foregroundStyle(.primary)
-        .toolbar {
-            ToolbarItem(placement: .automatic) {
-                if service.isLoading {
-                    ProgressView()
-                        .scaleEffect(0.6)
-                        .progressViewStyle(.circular)
-                } else {
-                    Button(action: {
-                        service.fetchHardware()
-                        service.fetchUsers()
-                        service.fetchAllMaintenances()
-                    }, label: {
-                        Label("Refresh", systemImage: "arrow.clockwise")
-                    })
+            LazyVStack(alignment: .leading, spacing: 20) {
+                StatsWidgetView()
+                Group {
+                    AssetCard()
+                        .transition(.move(edge: .leading))
+                    
+                    UsersCard()
+                        .transition(.move(edge: .trailing))
+                    
+                    MaintenanceCard()
+                        .transition(.move(edge: .bottom))
                 }
             }
+            .padding()
         }
+        .foregroundColor(.primary)
+        .navigationTitle("Dashboard")
+        .animation(.spring(response: 0.3), value: service.isLoading)
     }
     
-    var gridView: some View {
-        VStack(spacing: 10) {
-            StatsWidgetView()
-            LazyVGrid(columns: columns) {
-                AssetListWidget()
-                UsersWidgetView()
-                MaintenanceWidgetView()
+}
+
+struct CardModifier: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .padding()
+            .background {
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .fill(.background)
+                    .shadow(color: .black.opacity(0.1),
+                           radius: 8, x: 0, y: 4)
             }
-            Spacer()
-        }
-        .padding(10)
+            .overlay {
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .strokeBorder(.quaternary, lineWidth: 0.5)
+            }
     }
-    
-    var listView: some View {
-        VStack(spacing: 10) {
-            AssetListWidget()
-            UsersWidgetView()
-            MaintenanceWidgetView()
-        }
-        .padding(.horizontal)
+}
+
+extension View {
+    func cardStyle() -> some View {
+        modifier(CardModifier())
     }
 }
 
