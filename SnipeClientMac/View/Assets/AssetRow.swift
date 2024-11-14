@@ -1,6 +1,6 @@
 //
 //  AssetRow.swift
-//  SnipeClientMac
+//  SnipeManager
 //
 //  Created by Patrick Mifsud on 19/7/2024.
 //

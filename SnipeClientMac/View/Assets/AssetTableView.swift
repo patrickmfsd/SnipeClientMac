@@ -1,6 +1,6 @@
 //
 //  AssetTableView.swift
-//  SnipeClientMac
+//  SnipeManager
 //
 //  Created by Patrick Mifsud on 31/5/2024.
 //
@@ -14,8 +14,11 @@ struct AssetTableView: View {
     
     @SceneStorage("AssetTableConfig") private var columnCustomization: TableColumnCustomization<HardwareItem>
     
+
     @State private var selection: HardwareItem.ID?
     @State private var searchTerm: String = ""
+    
+    @State private var isShowingInspector = false
     
     var body: some View {
         VStack {
@@ -25,21 +28,20 @@ struct AssetTableView: View {
                         image
                             .resizable()
                             .aspectRatio(contentMode: .fit)
-                            .frame(width: 80, height: 80)
                             .padding(5)
-                            .background(Color.white, in: RoundedRectangle(cornerRadius: 15, style: .continuous))
                     } placeholder: {
                         if hardware.manufacturer?.name != "Apple" {
                             Image(systemName: "pc")
                                 .symbolRenderingMode(.multicolor)
                                 .font(.system(size: 50))
-                                .frame(width: 80, height: 80)
                         } else {
                             Image(systemName: "laptopcomputer")
                                 .font(.system(size: 50))
-                                .frame(width: 80, height: 80)
+                                .foregroundStyle(.gray)
                         }
                     }
+                    .frame(width: 80, height: 80)
+                    .background(Color.white, in: RoundedRectangle(cornerRadius: 15, style: .continuous))
                 }
                 .width(85)
                 TableColumn("Device Name") { hardware in
@@ -86,6 +88,7 @@ struct AssetTableView: View {
                 }
                 .customizationID("expectedCheckin")
             }
+
             .onAppear {
                 if service.hardwareItems.isEmpty {
                     service.fetchHardware(searchTerm: searchTerm)
@@ -97,7 +100,6 @@ struct AssetTableView: View {
             .onChange(of: searchTerm) { oldTerm, newTerm in
                 service.fetchHardware(searchTerm: newTerm)
             }
-            
             .onChange(of: service.hardwareItems) { oldItems, newItems in
                 if newItems.last != nil {
                     DispatchQueue.main.async {
@@ -107,6 +109,9 @@ struct AssetTableView: View {
                     }
                 }
             }
+        }
+        .onChange(of: selection) { newSelection in
+            isShowingInspector = newSelection != nil
         }
         .alert(item: $service.errorMessage) { error in
             Alert(

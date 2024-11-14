@@ -1,6 +1,6 @@
 //
 //  AssetDetailView.swift
-//  SnipeClientMac
+//  SnipeManager
 //
 //  Created by Patrick Mifsud on 7/30/24.
 //
@@ -53,11 +53,23 @@ struct AssetDetailView: View {
             }
             #else
             ToolbarItem(placement: .automatic) {
+                HStack(spacing: 10) {
+                    Button(action: {
+                            // Action
+                    }) {
+                        Label("Log Repair", systemImage: "wrench.and.screwdriver.fill")
+                    }
+                    .labelStyle(.titleAndIcon)
+                    
+                }
+            }
+            ToolbarItem(placement: .automatic) {
                 Button(action: {
                         // Action
-                }, label: {
-                    Label("Add", systemImage: "plus")
-                })
+                }) {
+                    Label("Check In", systemImage: "square.and.arrow.down.fill")
+                }
+                .labelStyle(.titleAndIcon)
             }
             ToolbarItem(placement: .primaryAction) {
                 Button(action: {
@@ -119,13 +131,23 @@ struct AssetDetailView: View {
                 LargeHeader(hardwareID: hardwareID)
                 AboutAssetView(hardwareID: hardwareID)
             }
-            VStack(alignment: .leading, spacing: 20) {
-                Text("Maintenance Jobs")
-                    .font(.title2)
-                    .fontWeight(.medium)
-                AssetMaintenanceView(hardwareID: hardwareID)
-                Spacer()
+            .frame(width: 400)
+            GroupBox {
+                VStack(alignment: .leading, spacing: 15) {
+                    Text("Maintenance Jobs")
+                        .font(.title2)
+                        .fontWeight(.medium)
+                    AssetMaintenanceView(hardwareID: hardwareID)
+                    Spacer()
+                }
             }
+            .groupBoxStyle(
+                CustomGroupBox(
+                    spacing: 8,
+                    radius: 8,
+                    background: .color(.secondary.opacity(0.1))
+                )
+            )
         }
         .padding(10)
     }
@@ -143,26 +165,6 @@ struct CompactHeader: View {
             VStack(alignment: .center, spacing: 15) {
                 image
                 text
-                HStack(spacing: 10) {
-                    Button(action: {
-                            // Action
-                    }) {
-                        Label("Check In", systemImage: "square.and.arrow.down.fill")
-                            .frame(maxWidth: .infinity)
-                    }
-                    .tint(.mint)
-                    
-                    Button(action: {
-                            // Action
-                    }) {
-                        Label("Log Repair", systemImage: "wrench.and.screwdriver.fill")
-                            .frame(maxWidth: .infinity)
-                    }
-                    .tint(.blue)
-                }
-                .buttonStyle(.bordered)
-                .buttonBorderShape(.roundedRectangle(radius: 15))
-                .controlSize(.large)
             }
         }
         .onAppear {
@@ -233,30 +235,9 @@ struct LargeHeader: View {
     var hardwareID: Int32
     
     var body: some View {
-        HStack(alignment: .center, spacing: 15) {
+        VStack(alignment: .leading, spacing: 15) {
             image
-            VStack(alignment: .leading) {
-                text
-                Spacer()
-                HStack(spacing: 10) {
-                    Button(action: {
-                            // Action
-                    }) {
-                        Label("Check In", systemImage: "square.and.arrow.down.fill")
-                    }
-                    .tint(.mint)
-                    
-                    Button(action: {
-                            // Action
-                    }) {
-                        Label("Log Repair", systemImage: "wrench.and.screwdriver.fill")
-                    }
-                    .tint(.blue)
-                }
-                .buttonStyle(.borderedProminent)
-                .controlSize(.large)
-            }
-            .frame(height: 145)
+            text
         }
         .onAppear {
             service.fetchSpecificHardware(id: hardwareID)

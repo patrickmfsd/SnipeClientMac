@@ -1,6 +1,6 @@
 //
 //  AboutAssetView.swift
-//  SnipeClientMac
+//  SnipeManager
 //
 //  Created by Patrick Mifsud on 8/19/24.
 //
@@ -16,6 +16,29 @@ struct AboutAssetView: View {
     
     var body: some View {
         VStack(spacing: 15) {
+            HStack {
+                VStack (alignment: .leading){
+                    Text("Checked In")
+                        .foregroundStyle(.secondary)
+                    Text("\(service.hardwareDetailItem?.checkinCounter ?? 0)")
+                        .font(.title2)
+                }
+                Spacer()
+                VStack (alignment: .leading){
+                    Text("Checked Out")
+                        .foregroundStyle(.secondary)
+                    Text("\(service.hardwareDetailItem?.checkoutCounter ?? 0)")
+                        .font(.title2)
+                }
+                Spacer()
+                VStack (alignment: .leading){
+                    Text("Requested")
+                        .foregroundStyle(.secondary)
+                    Text("\(service.hardwareDetailItem?.requestsCounter ?? 0)")
+                        .font(.title2)
+                }
+            }
+            .frame(height: 50)
             GroupBox(label: Text("Details")) {
                 VStack {
                     if let assetTag = service.hardwareDetailItem?.assetTag {
@@ -48,92 +71,6 @@ struct AboutAssetView: View {
                     }
                 }
             }
-//            GroupBox(label: Text("Notes")) {
-//                HStack {
-//                    Text(service.hardwareDetailItem?.notes ?? "No Asset Notes.")
-//                        .multilineTextAlignment(.leading)
-//                    Spacer()
-//                }
-//            }
-//            GroupBox(label: Text("Loan Status")) {
-//                if let assignedTo = service.hardwareDetailItem?.assignedTo?.name {
-//                    HStack {
-//                        Image(systemName: "person.circle.fill")
-//                            .symbolRenderingMode(.hierarchical)
-//                            .font(.largeTitle)
-//                        VStack(alignment: .leading) {
-//                            Text("Assigned To")
-//                                .font(.footnote)
-//                                .foregroundStyle(.secondary)
-//                            Text(assignedTo)
-//                                .font(.title2)
-//                                .fontWeight(.medium)
-//                        }
-//                        Spacer()
-//                    }
-//                } else {
-//                    HStack {
-//                        Image(systemName: "questionmark.circle")
-//                            .symbolRenderingMode(.hierarchical)
-//                            .font(.largeTitle)
-//                        VStack(alignment: .leading) {
-//                            Text("Unassigned")
-//                                .font(.title2)
-//                                .fontWeight(.medium)
-//                        }
-//                        Spacer()
-//                    }
-//                }
-//            }
-//            if service.hardwareDetailItem?.location?.name != nil || service.hardwareDetailItem?.rtdLocation?.name != nil || service.hardwareDetailItem?.lastCheckout != nil {
-//                GroupBox(label: Text("Loan Details")) {
-//                    VStack {
-//                        if let location = service.hardwareDetailItem?.location?.name {
-//                            DetailRow(title: "Location", value: location)
-//                        }
-//                        if let defaultLocation = service.hardwareDetailItem?.rtdLocation?.name {
-//                            Divider()
-//                            DetailRow(title: "Default Location", value: defaultLocation)
-//                        }
-//                        if let lastCheckout = service.hardwareDetailItem?.lastCheckout?.formatted {
-//                            Divider()
-//                            DetailRow(title: "Last Checkout", value: lastCheckout)
-//                        }
-//                        if let expectedCheckin = service.hardwareDetailItem?.expectedCheckin?.formatted {
-//                            Divider()
-//                            DetailRow(title: "Expected Check-In", value: expectedCheckin)
-//                        }
-//                    }
-//                }
-//            }
-            GroupBox {
-                HStack {
-                    Spacer()
-                    VStack {
-                        Text("Checked In")
-                            .foregroundStyle(.secondary)
-                        Text("\(service.hardwareDetailItem?.checkinCounter ?? 0)")
-                            .font(.title2)
-                    }
-                    Divider()
-                    VStack {
-                        Text("Checked Out")
-                            .foregroundStyle(.secondary)
-                        Text("\(service.hardwareDetailItem?.checkoutCounter ?? 0)")
-                            .font(.title2)
-                    }
-                    Divider()
-                    VStack {
-                        Text("Requested")
-                            .foregroundStyle(.secondary)
-                        Text("\(service.hardwareDetailItem?.requestsCounter ?? 0)")
-                            .font(.title2)
-                    }
-                    Spacer()
-                }
-                .frame(height: 50)
-            }
-
             GroupBox {
                 VStack {
                     if let updated = service.hardwareDetailItem?.updatedAt?.formatted {
@@ -147,13 +84,6 @@ struct AboutAssetView: View {
             }
             Spacer()
         }
-        .groupBoxStyle(
-            CustomGroupBox(
-                spacing: 10,
-                radius: 8,
-                background: .color(.secondary.opacity(0.3))
-            )
-        )
         .onAppear {
             service.fetchSpecificHardware(id: hardwareID)
         }

@@ -1,6 +1,6 @@
 //
 //  AboutAssetView.swift
-//  SnipeClientMac
+//  SnipeManager
 //
 //  Created by Patrick Mifsud on 3/6/2024.
 //

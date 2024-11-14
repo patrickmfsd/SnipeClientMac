@@ -1,6 +1,6 @@
 //
 //  AssetNavigationStack.swift
-//  SnipeClientMac
+//  SnipeManager
 //
 //  Created by Patrick Mifsud on 31/5/2024.
 //
@@ -8,11 +8,17 @@
 import SwiftUI
 
 struct AssetNavigationStack: View {
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+
     var body: some View {
         NavigationStack {
             Group {
-                #if os(iOS)
-                AssetsView()
+                #if os(iOS) && !os(tvOS)
+                if horizontalSizeClass == .compact {
+                    AssetsView()
+                } else {
+                    AssetListView()
+                }
                 #else
                 AssetTableView()
                 #endif
