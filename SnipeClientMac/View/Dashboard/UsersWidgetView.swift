@@ -66,13 +66,14 @@ struct UserItemView: View {
             image
                 .resizable()
                 .aspectRatio(contentMode: .fill)
-                .frame(width: 40, height: 40)
-                .clipShape(Circle())
         } placeholder: {
-            Image(systemName: "person.circle.fill")
-                .font(.system(size: 40))
-                .foregroundStyle(.secondary)
+            Image(systemName: "person.fill")
+                .font(.system(size: 25))
+                .foregroundStyle(.gray)
         }
+        .frame(width: 50, height: 50)
+        .background(.white)
+        .clipShape(Circle())
     }
     
     var details: some View {
