@@ -1,6 +1,6 @@
 //
 //  UserListView.swift
-//  SnipeClientMac
+//  SnipeManager
 //
 //  Created by Patrick Mifsud on 1/6/2024.
 //
@@ -13,36 +13,40 @@ struct UserListView: View {
     @State private var searchTerm: String = ""
 
     var body: some View {
-        List(service.userItem) { users in
-            HStack {
-                AsyncImage(url: URL(string: users.avatar ?? "")) { image in
-                    image
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .padding(5)
-                } placeholder: {
-                    Image(systemName: "person.crop.circle")
-                        .font(.system(size: 50))
-                }
-                .frame(width: 60, height: 60)
-                .padding(5)
-                .background(.white, in: RoundedRectangle(cornerRadius: 15, style: .continuous))
-                VStack(alignment: .leading) {
-                    Text("\(users.name)")
-                        .font(.headline)
-                    if let usersCode = users.employeeNum {
-                        Text("\(usersCode)")
-                            .font(.subheadline)
-                            .fontWeight(.medium)
-                            .foregroundColor(.secondary)
+        List(service.users) { users in
+            NavigationLink(
+                destination: UserDetailView(userID: Int32(users.id))
+            ) {
+                HStack {
+                    AsyncImage(url: URL(string: users.avatar ?? "")) { image in
+                        image
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                    } placeholder: {
+                        Image(systemName: "person.fill")
+                            .font(.system(size: 25))
+                            .foregroundStyle(.gray)
                     }
-                    Text("Assets: \(users.assetsCount)")
+                    .frame(width: 50, height: 50)
+                    .background(.white)
+                    .clipShape(.circle)
+                    VStack(alignment: .leading) {
+                        Text("\(users.name)")
+                            .font(.headline)
+                        if let usersCode = users.employeeNum {
+                            Text("\(usersCode)")
+                                .font(.subheadline)
+                                .fontWeight(.medium)
+                                .foregroundStyle(.secondary)
+                        }
+                        Text("Assets: \(users.assetsCount)")
+                    }
+                    Spacer()
                 }
-                Spacer()
             }
             .onAppear {
-                if users == service.userItem.last {
-                    service.fetchUsers(offset: service.userItem.count)
+                if users == service.users.last {
+                    service.fetchUsers(offset: service.users.count)
                 }
             }
         }

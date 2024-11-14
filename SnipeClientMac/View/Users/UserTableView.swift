@@ -1,6 +1,6 @@
 //
 //  UserTableView.swift
-//  SnipeClientMac
+//  SnipeManager
 //
 //  Created by Patrick Mifsud on 1/6/2024.
 //
@@ -18,9 +18,28 @@ struct UserTableView: View {
     
     var body: some View {
         VStack {
-            Table(service.userItem, selection: $selection, columnCustomization: $columnCustomization) {
+            Table(service.users, selection: $selection, columnCustomization: $columnCustomization) {
+                TableColumn("Profile") { user in
+                    AsyncImage(url: URL(string: user.avatar ?? "")) { image in
+                        image
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                    } placeholder: {
+                        Image(systemName: "person.fill")
+                            .font(.system(size: 25))
+                            .foregroundStyle(.gray)
+                    }
+                    .frame(width: 50, height: 50)
+                    .background(.white)
+                    .clipShape(Circle())
+                }
+                .width(60)
                 TableColumn("First Name") { user in
-                    Text(user.firstName)
+                    NavigationLink(
+                        destination: UserDetailView(userID: Int32(user.id))
+                    ) {
+                        Text(user.firstName)
+                    }
                 }
                 .customizationID("firstName")
                 TableColumn("Last Name") { user in
@@ -57,7 +76,7 @@ struct UserTableView: View {
                 .customizationID("consumablesCount")
             }
             .onAppear {
-                if service.userItem.isEmpty {
+                if service.users.isEmpty {
                     service.fetchUsers()
                 }
             }
@@ -67,7 +86,7 @@ struct UserTableView: View {
             .onChange(of: searchTerm) { oldTerm, newTerm in
                 service.fetchUsers(searchTerm: searchTerm)
             }
-            .onChange(of: service.userItem) { oldItems, newItems in
+            .onChange(of: service.users) { oldItems, newItems in
                 if newItems.last != nil {
                     DispatchQueue.main.async {
                         if newItems.count < service.userTotal {
