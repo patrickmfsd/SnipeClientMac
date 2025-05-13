@@ -1,4 +1,4 @@
-# SnipeIT Client [WiP]
+# SnipeIT Client [Development Paused]
 
 A SnipeIT built using SwiftUI for macOS, iOS, iPadOS, visonOS 
 
